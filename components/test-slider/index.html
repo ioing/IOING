@@ -1,0 +1,111 @@
+<style>
+	#slider {
+		position: relative;
+	 	height: 4dp;
+	}
+
+	.greay {
+		width: 100%;
+		height: 4dp;
+		border-radius: 2dp;
+	 	background: #5a5a5a;
+	 	overflow: hidden;
+	}
+
+	.light {
+		height: 4dp;
+		width: 100%;
+		border-radius: 2dp;
+		background: #007aff;
+		transform: translateX(-1000dp);
+	}
+
+	#circle {
+		position: absolute;
+		z-index: 9;
+		margin-top: -13dp;
+		width: 30dp;
+		height: 30dp;
+		border-radius: 15dp;
+		box-shadow: 0 4dp 4dp rgba(26,53,71,.25), 0 0 0 1dp rgba(26,53,71,.07);
+		background: #fff;
+	}
+
+</style>
+
+<script>
+	// 独立的组件作用域
+	// on-swiperight="open(event)" ： 当发生swiperight事件时执行open，如果open不存在会跳到全局查找；
+	// 注意查询components文档，这里存在一些默认变量，比如 root 和 components global 等
+
+	var sliderW, circleW, maxSlider;
+
+	function init() {
+		sliderW = DOM['light'].width();
+		circleW = DOM['circle'].width();
+
+		maxSlider = sliderW - circleW;
+	}
+
+	// 随便写写，有心的朋友花点时间整理下，然后发布出来，谢谢
+
+	window.on('resize', function () {
+		init();
+	})
+
+	init();
+
+	function move(event) {
+
+		var target = event.target,
+			x = event.deltaX,
+			start = target.data('x') || 0;
+		;
+
+		x = x + parseInt(start);
+
+		if ( x < 0 ) x = 0;
+		if ( x > maxSlider ) x = maxSlider;
+
+		target.style.set('transform', 'translate(' + x + 'px, 0px) translateZ(0px)');
+		DOM['light'].style.set('transform', 'translate(' + (x - sliderW) + 'px, 0px) translateZ(0px)');
+
+		target.data('oldvalue', x);
+	}
+
+	function end(event) {
+		var target = event.target,
+			x = target.data('oldvalue')
+		;
+
+		target.data('x', x);
+
+		// 将结果赋值给组件本身，便于外部获取信息，当然也可以采取别的方式
+		
+		components.attr("value", x)
+
+		// 也可以在这里加一个结束的惯性动画
+	}
+
+
+	var value = parseInt(DOM['slider'].attr('value'));
+
+	var defx = (value / 100) * sliderW;
+
+
+	DOM['circle'].style.set('transform', 'translate(' + defx + 'px, 0px) translateZ(0px)');
+	DOM['light'].style.set('transform', 'translate(' + (defx - sliderW) + 'px, 0px) translateZ(0px)');
+
+	DOM['circle'].data('x', defx);
+
+</script>
+
+<div uuid="slider" id="slider" value="{{value}}">
+	
+	<div uuid="circle" on-pan="move(event)" on-panend="end(event)" id="circle"></div>
+
+	<div class="greay">
+		<div uuid="light" class="light"></div>
+	</div>
+
+</div>

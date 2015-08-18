@@ -1,0 +1,18 @@
+{
+    "code": "1",
+    "banner": [
+        {
+            "gameId": "1"
+        },
+        {
+            "gameId": "2"
+        },
+        {
+            "gameId": "3"
+        },
+        {
+            "gameId": "0"
+        }
+    ],
+    "time": "0"
+}

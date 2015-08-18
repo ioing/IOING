@@ -1,0 +1,25 @@
+<div id="viewport">
+	<video autoplay="autoplay" loop="loop"> 
+		<source src="game-blur.mp4" type="video/mp4"> 
+		您的浏览器不支持此种视频格式。 
+	</video> 
+	<div class="overlay">
+		<div class="logo"></div>
+		<div class="logo_text">Game</div>
+		<div class="logo_des">Explore  Play  Share</div>
+
+		<div class="login_action">
+			<button id="phone_btn" class="phone" on-tap="show(event)"></button>
+			<button id="weibo_btn" class="weibo" on-tap="show(event)"></button>
+		</div>
+		<div id="phone_content_bg" class="phone_login_bg"></div>
+		<div id="phone_content_box" class="phone_login_box">
+			<button id="close_phone_content" class="close"></button>
+			<div class="icon-phone"></div>
+			<input id="phone_input" placeholder="Enter your phone number">
+			<button id="phone_next_sub" class="sub_button" transform="discover">NEXT</button>
+
+			<div class="note">Your phone number is safe, we promise.</div>
+		</div>
+	</div>
+</div>

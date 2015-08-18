@@ -1,0 +1,36 @@
+<header id="header">
+	<section>
+		<div class="pull-left">
+			<button class="header-icon-me" transform="me"></button>
+		</div>
+
+		<h1>{{lang.ioing}}</h1>
+
+		<div class="pull-right">
+		</div>
+	</section>
+</header>
+
+<footer id="footer">
+	<section>
+		<nav>
+			<ul>
+
+				<loop nav as value i>
+
+					<li>
+						<a transform="{{value.module}}" param="aa:cc,ee:ss">
+							<span class="icon nav-icon-{{value.module}}"></span>
+							<span class="title">{{lang[value.text]}}</span>
+						</a>
+						<div class="active" style="display:none">
+							<span class="icon nav-icon-{{value.module}}"></span>
+						</div>
+					</li>
+
+				</loop>
+
+			</ul>
+		</nav>
+	</section>
+</footer>

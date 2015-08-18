@@ -1,0 +1,28 @@
+/*!
+ * oblurlay v0.1.1
+ * 
+ * Licensed under MIT
+ * Author : blivesta
+ * 
+ */
+
+.oblurlay-upper {
+  height: 70px;
+  overflow: hidden;
+  background-color: #fff;
+  border-bottom: #ccc;
+}
+.oblurlay-contents {
+  position: relative;
+  height: 70px;
+}
+.oblurlay-contents-clone {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  opacity: .9;
+}
+.oblurlay-svg {
+  height: 70px;
+}
+/*# sourceMappingURL=oblurlay.css.map */

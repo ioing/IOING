@@ -1,0 +1,123 @@
+body {
+	background: #fff;
+}
+
+header {
+  -webkit-box-sizing: content-box;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 99;
+  width: 100%;
+  padding-top: 20dp;
+  height: 49dp;
+  background: rgba(255,255,255,.6);
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.iScrollLoneScrollbar {
+	padding-top: 71dp;
+}
+
+header .back_button {
+  position: absolute;
+  left: 0;
+  width: 46dp;
+  height: 36dp;
+  background: url('/frameworks/svg/icon-common-back-grey.svg') center no-repeat;
+  -webkit-background-size: auto 100%;
+}
+
+header h1 {
+  height: 42dp;
+  color: #3b94d9;
+  line-height: 1.5;
+  font-weight: 600;
+  font-size: 21dp;
+  font-family: "Helvetica","sans-serif";
+  text-align: center;
+}
+
+scroll {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	background: #fff;
+	overflow: hidden;
+}
+
+.note {
+	font-size: 14dp;
+	color: #999;
+	margin-bottom: 10dp;
+}
+
+.scroll-content {
+	padding:0 20dp;
+	box-sizing: content-box;
+}
+
+.top {
+	display: block;
+	width: 100%;
+	height: <$headerH + 20dp>;
+}
+.bottom {
+	display: block;
+	width: 100%;
+	height: $footerH;
+}
+
+.components {
+	margin-bottom: 15dp;
+	padding-bottom: 15dp;
+	border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.testinput {
+  display: block;
+  width: 100%;
+  padding: 0 10dp 0;
+  height: 44dp;
+  font-size: 18dp;
+  font-weight: 400;
+  border-radius: 6dp;
+  background: #f2f2f2;
+  border: 1px solid #ddd;
+}
+
+.follow-btn {
+	padding: 0 12dp;
+	height: 30dp;
+	text-align: center;
+	font-size: 15dp;
+	line-height: 30dp;
+	background: #2087fc;
+	border: 1px solid rgba(0,0,0,.1);
+	background-clip: border-box;
+	color: #fff;
+	font-weight: bold;
+	border-radius: 15dp;
+}
+.follow-btn .following {
+	display: none;
+}
+.following{
+	background: #ED143D;
+}
+.following .following {
+	display: block;
+}
+.following .follow {
+	display: none;
+}
+test-switch {
+	display: block;
+	margin: 10dp 0;
+}
+test-slider {
+	display: block;
+	margin: 40dp auto;
+}

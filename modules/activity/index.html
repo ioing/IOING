@@ -1,0 +1,14 @@
+<var feedData>
+	{
+		list: feed.rows,
+		lang: lang
+	}
+</var>
+
+<div id="wrapper">
+	<scroll id="scroller" class="feed" infinite cycles="5" template="listitem" url="./list.json">
+
+	</scroll>
+
+	<include list feedData></inclued>
+</div>

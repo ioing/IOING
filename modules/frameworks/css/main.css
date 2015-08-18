@@ -1,0 +1,179 @@
+body {
+	text-rendering: optimizeLegibility;
+	font-feature-settings: "liga", "kern";
+	font-family: "Helvetica Neue","Helvetica","Arial","Verdana","sans-serif";
+	background-color: #F0F3F4;
+}
+
+@global {
+	headerH : 62dp;
+	footerH : 60dp;
+}
+
+header {
+	position: absolute;
+	z-index: 9999;
+	top: 0;
+	right: 0;
+	left: 0;
+	padding-top: 20dp;
+	height: $headerH;
+	background-color: <feat.observer ? "rgba(255, 255, 255, .85)" : "rgba(255, 255, 255, 1)">;
+	background-clip: padding-box;
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	transform: translate(0px, 0px) translateZ(0px);
+}
+
+@section (header) {
+	@var {
+		bottom : 10px;
+	}
+	section {
+		position: relative;
+	}
+	.pull-right, .pull-left {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+	}
+	.pull-right {
+		right:15.5dp;
+		height: 42dp;
+		text-align: right;
+	}
+	.pull-left {
+		bottom: $bottom;
+		left: <10dp - 2px*5 +6dp+ $bottom>; 
+		height: 42dp;
+	}
+
+	h1 {
+		height: 42dp;
+		color: #3b94d9;
+		line-height: 1.5;
+		font-weight: 600;
+		font-size: 21dp;
+		font-family: "Helvetica","sans-serif";
+		text-align: center;
+	}
+}
+
+/**
+ * footer
+ * ============================================================================================
+ * 假如header内部有fragments或btn等则不在此处写
+*/
+footer {
+	position: absolute; /*头部固定*/
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 9999;
+	width: 100%;
+	height: $footerH;
+	background: <feat.observer ? "rgba(34, 34, 34, .8)" : "rgba(34, 34, 34, 1)">;
+	/*box-shadow: inset 0 30dp 30dp rgba(34, 34, 34,.5);*/
+	transform: translate(0px, 0px) translateZ(0px);
+}
+
+footer section {
+	position: relative;
+}
+
+footer nav ul {
+	display: $prefix+box;
+}
+
+footer nav ul li {
+    box-flex: 1; 
+    list-style: none;
+}
+
+footer nav ul li a {
+	display: block;
+	padding: 15dp 0;
+	font-size: 15dp;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	color: #b3b3b3;
+}
+
+footer nav ul li a.active, footer nav ul li a.pressed {
+	color: #fff;
+}
+
+footer nav ul li a .title {
+	display: none;
+	padding-top: 3dp;
+	line-height: 1;
+}
+
+footer nav ul li a .icon {
+	display: block;
+	margin: 0 auto;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	width: 30dp;
+	height: 30dp;
+	opacity: .4;
+	transform:scale(.7);
+}
+
+footer nav ul li a.active .icon {
+	opacity: 1;
+	transform:scale(1);
+}
+
+.reScaleBounce {
+	animation: reScaleBounce .4s linear;
+}
+
+.scaleBounce {
+	animation: scaleBounce .4s linear;
+}
+
+@-webkit-keyframes reScaleBounce {
+	0% {
+		-webkit-transform:scale(1.5);
+	}100%{
+		-webkit-transform:scale(1);
+	}
+}
+
+@-webkit-keyframes scaleBounce {
+	0% {
+		-webkit-transform:scale(.6);
+	}50%{
+		-webkit-transform:scale(1); 
+	}70%{
+		-webkit-transform:scale(1.1); 
+	}100%{
+		-webkit-transform:scale(1);
+	}
+}
+
+
+.header-icon-me {
+	width: 32dp;
+	height: 32dp;
+	background-image: url('svg/header-icon-me.svg');
+	background-size: cover;
+	background-position: center;
+}
+
+.nav-icon-activity {
+	background-image: url('svg/nav-icon-home.svg');
+}
+
+.nav-icon-discover {
+	background-image: url('svg/nav-icon-discover.svg');
+}
+
+.nav-icon-message, .nav-icon-boutique {
+	background-image: url('svg/nav-icon-message.svg');
+}
+
+.nav-icon-me, .nav-icon-test1 {
+	background-image: url('svg/nav-icon-me.svg');
+}

@@ -1,0 +1,63 @@
+* {
+	user-select: none; /* Prevent copy paste for all elements except text fields */
+	tap-highlight-color: rgba(0, 0, 0, 0); /* set highlight color for user interaction */
+	touch-callout: none; /* prevent the popup menu on any links*/
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body, input, textarea, select, button {
+	text-rendering: optimizeLegibility;
+	font-smoothing: antialiased;
+	osx-font-smoothing: grayscale;
+	font-feature-settings: "liga", "kern";
+}
+
+body {
+	/*-webkit-text-size-adjust:none;*/
+	background-color: #fff;
+	color: #333;
+	font-style: normal;
+	font-family: "Myriad Set Pro","Lucida Grande","Helvetica Neue","Helvetica","Arial","Verdana","sans-serif";
+	font-size: 1em;
+	line-height: 1.4444;
+	font-weight: 400;
+	display: -webkit-box;
+    /* We want to layout our first container vertically */
+    box-orient: vertical;
+    /* we want our child elements to stretch to fit the container */
+	box-align: stretch;
+} /* General styles that apply to elements not contained within other classes and styles */
+
+input, textarea, *[contenteditable="true"] {
+	user-select: initial;
+	touch-callout: initial;
+	appearance: none;
+	border: 0;
+	outline: 0;
+}
+
+button {
+	background-color: transparent;
+	border: 0;
+	outline: 0;
+}
+
+/**
+ * common
+ * ==============================================================
+ */
+ul li { list-style: none; }
+a { text-decoration: none; }
+
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+.cl { zoom: 1; }
+	.cl:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; overflow: hidden; }

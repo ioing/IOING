@@ -1,0 +1,169 @@
+#viewport {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+}
+	#viewport video {
+		position: absolute;
+		top: -2px;
+		width: 100vw;
+		height: <100vw * 1.78>;
+	}
+
+	#viewport .overlay {
+		position: absolute;
+		top: 80dp;
+		bottom: 0;
+		z-index: 99;
+		width: 100%;
+      	background-image: -webkit-linear-gradient(rgba(0,0,0,.0), rgba(0,0,0,.7));
+      	overflow: hidden;
+	}
+		.logo {
+			margin: <100vh * .05> auto 10dp;
+			width: 120dp;
+			height: 70dp;
+			background: url('svg/logo.svg') center no-repeat;
+			background-size: 90%;
+		}
+		.logo_text {
+			margin-bottom: 10dp;
+			color: #fff;
+			font-size: 30dp;
+			text-align: center;
+			font-weight: 800;
+			text-shadow: 1px 1px 1px #fff;
+		}
+		.logo_des {
+			color: #47d8cb;
+			font-size: 20dp;
+			text-align: center;
+		}
+
+		.login_action {
+			position: absolute;
+			bottom: 10dp;
+			width: 100%;
+			text-align: center;
+		}
+
+		.phone {
+			width: 132dp;
+			height: 40dp;
+			margin-right: 10dp;
+			background: #47d8cb url('svg/phone.svg') center no-repeat;
+			background-size: auto 70%;
+			border: 0;
+			border-radius: 40dp;
+		}
+		.weibo {
+			width: 132dp;
+			height: 40dp;
+			background: #fd5968 url('svg/weibo.svg') center no-repeat;
+			background-size: auto 70%;
+			border: 0;
+			border-radius: 40dp;
+		}
+
+		.phone_login_bg {
+			position: absolute;
+			left: <100vw * -2>;
+			bottom: <100vw * -2>;
+			width: <100vw * 4>;
+			height: <100vw * 4>;
+			z-index: 99;
+			border-radius: <100vw * 2>;
+			background: #47d8cb;
+			transform: scale(0) translateZ(0px);
+		}
+
+		.show_login_bg {
+			transform: scale(1) translateZ(0px);
+			animation: scaleBounce .4s linear;
+		}
+
+		@keyframes scaleBounce {
+			0% {
+				transform: scale(0) translateZ(0px);
+			}100%{
+				transform: scale(1) translateZ(0px);
+			}
+		}
+
+		.phone_login_box {
+			opacity: 0;
+			visibility: hidden;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 101;
+		}
+
+			.phone_login_box .close {
+				display: block;
+				position: absolute;
+				top: 5dp;
+				left: 5dp;
+				width: 30dp;
+				height: 30dp;
+				background: url('svg/close.svg') center no-repeat;
+				background-size: 60%;
+			}
+
+			.show_login_box {
+				visibility: visible;
+				animation-name: fadein;
+				animation-delay: 400ms;
+				animation-fill-mode: forwards;
+			}
+
+			@keyframes fadein {
+			    from { opacity: 0; }
+			    to { opacity: 1; }
+			}
+
+			.icon-phone {
+				margin: 60dp auto 30dp;
+				width: 80dp;
+				height: 80dp;
+				background: url('svg/phone.svg') center no-repeat;
+				background-size: auto 100%;
+				border: 0;
+			}
+
+			#phone_input {
+				display: block;
+				margin: 0px auto 30dp;
+				width: 70%;
+				max-width: 520dp;
+				height: 32dp;
+				border-radius: 4dp;
+				padding: 0 10dp;
+				font-size: 14dp;
+			}
+
+			.sub_button {
+				display: block;
+				margin: 0 auto;
+				width: 113dp;
+				height: 35dp;
+				border: 2dp solid #fff;
+				color: #fff;
+				font-weight: bold;
+				font-size: 20dp;
+				border-radius: 6dp;
+			}
+
+			.note {
+				position: absolute;
+				bottom: 15dp;
+				width: 100%;
+				text-align: center;
+				color: #fff;
+				font-size: 14dp;
+			}
