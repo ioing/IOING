@@ -45,7 +45,7 @@ IOING. Frameworks 是全球最先进的HTML5开源移动应用程序开发框架
 ###准备
 <p>下载并解压缩到电脑。</p>
 ###创建模块目录
-<p>解压后可以看到 <kbd>index.html</kbd> <kbd>frameworks</kbd> <kbd>modules</kbd> <kbd>config</kbd> 等几个文件，接下来打开 <kbd>modules</kbd> 文件夹，会发现里面包含两个预置的模块：<kbd>frameworks</kbd> 和 <kbd>components</kbd></p>
+<p>解压后可以看到 <kbd>index.html</kbd> <kbd>frameworks</kbd> <kbd>modules</kbd> <kbd>components</kbd> 等几个文件，接下来打开 <kbd>modules</kbd> 文件夹，会发现里面包含一个预置的模块：<kbd>frameworks</kbd> 即主视图模块 </p>
 <p>在 <kbd>modules</kbd> 文件夹中新建一个命名为 <kbd>demo</kbd> 的文件夹，<kbd>demo</kbd> 就是一个新的模块目录了。</p>
 ###创建模块配置
 <p>在 <kbd>demo</kbd> 模块文件夹下创建一个 <kbd>config.js</kbd> 的空javascript文件，将下面的配置复制后粘贴进入后保存。</p>
