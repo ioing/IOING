@@ -91,3 +91,45 @@ body {
 }
 ```
 <p>了解更多关于<a href="http://www.ioing.com/?id=css#clever-css"> Clever CSS语法拓展的用法</a>。</p>
+
+###注册默认模块
+<p>打开<kbd>frameworks</kbd>模块文件夹中的<kbd>config.js</kbd>把config中的 'index' 属性改为模块名，如下示例：</p>
+```javascript
+define({
+  resources : {
+    script: {
+    },
+    source: {
+      index: "index.html"
+    },
+    style: {
+      common: "css/common.css",
+      main: "css/main.css"
+    },
+    data: {
+      lang: "./lang/zh-CN.json"
+    }
+  },
+  config : {
+    index : "test",	//设定默认模块为test模块
+    style : ["common", "main"],
+    script :[],
+    source: ["index"],
+    data : ["lang"],
+    iframe : false,
+    update : false
+  }
+})
+```
+###恭喜完成！
+<p>请打开你的 "web server" 服务，比如"http://localhost/你的项目目录"，到此一个简单的webapp demo就完成了，更多使用方法请详细阅读文档。</p>
+
+##关于性能
+<p>性能问题分为两个方面，以webGL或canvas绘图为主的应用主要性能问题可能是javascript运算速度，而对于以DOM结构为主的应用的性能问题多数都是和视图重绘以及内存不足有关。</p>
+<p>HTML能够形象的创建视图，同时它也需要一个强大聪明的大脑，这就是浏览器复杂的解释过程，这个过程比起其它语言的视图解释都要复杂得多，因此不是HTML不够快，而是很多时候我们被强大的解释器惯坏了，使用了不合理的布局方案。</p>
+<p>关于如何提升性能框架给出了沙箱以及<a href="http://www.ioing.com/?id=dom#dom-tag-scroll">无限滚动</a>的解决方案，但开发在开发过程中依旧应该注意合理使用布局以及CSS3动画，更多提升性能的开发注意事项可查看社区专栏。</p>
+
+##关于发布
+<p>IOING.Framework并不包含打包工具，开发者可根据使用自己熟悉的打包工具进行封装。</p>
+<p>封装也可以分为两种方案，一种方案是将所有文件放在服务器，客户端需要一个等待主界面，需要增加appcache文件支持，程序只需要第一次从服务器载入以后可以进行离线访问，同时也方便日后直接在服务端对软件直接升级，第二种方案是将所有应用代码直接打到包中，直接访问内部链接(由于phoneGap等都会去除程序跨域限制，不需要考虑跨域问题)。</p>
+<p>尽管IOING.Framework 的性能卓越，但速度是没有上限的，对于低版本浏览器推荐使用打包chrome核心的方法，能提高至少一倍的速度体验。</p>
