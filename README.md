@@ -89,7 +89,7 @@ define({
     data : ["home"],
     sandbox : true,
     mirroring: {
-      target: "#blurlay"
+      clip: [60,0,60,0]
     }
   }
 })
