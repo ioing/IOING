@@ -1,3 +1,6 @@
+![引擎介绍封面](https://github.com/ioing/IOING/blob/master/frameworks/static/iopic.jpeg?raw=true)
+
+
 # 面向未来的前端复引擎
 
 ### IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案，真正实现用 H5 技术构建大型 web 视图应用
