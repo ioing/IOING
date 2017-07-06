@@ -1,0 +1,131 @@
+.date-plugin {
+  background: rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  width: 100%;
+  height: 100%;
+  display: none;
+  font-family: "Helvetica Neue",HelveticaNeue,"Helvetica-Neue",Helvetica,"BBAlpha Sans",sans-serif;
+}
+.date-plugin * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-clip: padding-box;
+}
+.date-plugin .d-date-box {
+  position: absolute;
+  bottom: 0;
+  background-color: #c9ccd3;
+  width: 100%;
+}
+.date-plugin .d-date-info {
+  display: none;
+  color: #333;
+  text-align: center;
+  font-size: 14dp;
+}
+.date-plugin .d-date-wrap {
+  margin-top: 10dp;
+  width: 100%;
+  height: 120dp;
+  position: relative;
+}
+.scroll-wrap {
+  display: flex;
+  position: relative;
+  height: 100%;
+}
+.scroll-wrap > div {
+  position: relative;
+  flex: 1;
+}
+.date-plugin .d-time-wrap {
+  border-top: 1dp solid #f70;
+}
+.date-plugin .d-time-wrap .d-date-cell {
+  width: 50%;
+}
+.date-plugin .d-date-mark {
+  background-color: #eee;
+  border-top: 1dp solid rgba(0,0,0,.2);
+  border-bottom: 1dp solid rgba(0,0,0,.2);
+  position: absolute;
+  top: 40dp;
+  left: 0;
+  width: 100%;
+  height: 40dp;
+}
+.date-plugin .d-date-cell {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.date-plugin .d-date-cell li {
+  height: 40dp;
+  line-height: 40dp;
+  font-size: 18dp;
+  font-weight: bold;
+  text-align: center;
+}
+.date-plugin .d-date-btns {
+  padding: 7dp 12dp 0;
+  height: 38dp;
+  background: #eeeff1;
+  border: 1px solid rgba(0,0,0,.2);
+  border-left: 0;
+  border-right: 0;
+}
+.date-plugin .d-date-btns .d-btn {
+  display: block;
+  border: none;
+  color: #007fff;
+  font-size: 16dp;
+}
+.date-plugin .d-date-btns #d-okBtn {
+  float: right;
+}
+.date-plugin .d-date-btns #d-cancleBtn {
+  float: left;
+}
+
+
+@if (theme == 'android') {
+  .date-plugin .d-date-box {
+    border-top: 1px solid #092e47;
+    background-color: rgba(3,17,26,0.9);
+    background-image: linear-gradient(top, rgba(11,60,94,0.9),rgba(6,31,49,0.9) 3%,rgba(0,2,3,0.9));
+  }
+  .date-plugin .d-date-wrap {
+    width: auto;
+    margin: 10dp;
+    background: linear-gradient(top, #bbb 0%, #fff 30%, #fff 70%, #bbb 100%);
+    border-radius: 6dp;
+  }
+  .scroll-wrap > div {
+      border-left: 2px solid #acacac;
+  }
+  .scroll-wrap > div:first-child {
+    border-left: 0;
+  }
+  .date-plugin .d-date-mark {
+    z-index: 1;
+    border-top: 2px solid rgb(0, 107, 182);
+    border-bottom: 2px solid rgb(0, 107, 182);
+    background-image: none;
+    background-color: rgba(13,148,242,0.3);
+    background-image: linear-gradient(top, rgba(85,180,246,0.3),rgba(37,159,244,0.3) 3%,rgba(11,133,218,0.3));
+    box-shadow: rgba(0,0,0,0.2) 0 3dp 3dp;
+  }
+  .date-plugin .d-date-info {
+    padding-top: 7dp;
+    color: rgba(255,255,255,.6);
+  }
+  .date-plugin .d-date-btns .d-btn {
+    color: #008eda;
+  }
+}
+

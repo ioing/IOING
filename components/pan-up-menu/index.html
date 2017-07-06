@@ -1,0 +1,83 @@
+<style>
+	planupmenu {
+		display: none;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+	}
+	blacklayer {
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+		background-color: rgba(0,0,0,.25);
+		opacity: 0;
+		transition: opacity 200ms linear;
+	}
+	upmenu {
+		display: block;
+		position: absolute;
+		z-index: 2;
+		right: 9dp;
+		bottom: 9dp;
+		left: 9dp;
+		transform: translate(0px, 0px) translateZ(0px);
+	}
+	menucount {
+		display: block;
+		min-height: 55dp;
+		background-color: #fff;
+		border-radius: 12dp;
+		font-size: 18dp;
+		color: #333;
+	}
+	cancleup {
+		display: block;
+		margin-top: 9dp;
+		height: 55dp;
+		background-color: #fff;
+		border-radius: 12dp;
+		font-size: 18dp;
+		text-align: center;
+		line-height: 55dp;
+		color: #6666cc;
+	}
+</style>
+
+<script>
+	var planupmenu = node('planupmenu')
+	  , blacklayer = node('blacklayer')
+
+	function close (event) {
+		blacklayer.addClass('')
+		blacklayer.style.opacity = 0
+		setTimeout(function () {
+			planupmenu.style.display = 'none'
+		}, 300)
+	}
+
+	function open (event) {
+		planupmenu.style.display = 'block'
+		setTimeout(function () {
+			blacklayer.style.opacity = 1
+		}, 1)
+	}
+
+	open()
+
+</script>
+
+<planupmenu uuid="planupmenu">
+	<blacklayer uuid="blacklayer" on-tap="close(event)"></blacklayer>
+	<upmenu>
+		<menucount>
+		</menucount>
+		<cancleup on-tap="close(event)">取消</cancleup>
+	</upmenu>
+</planupmenu>

@@ -1,0 +1,307 @@
+<style>
+	* {
+	  user-select: none;
+	  tap-highlight-color: rgba(0, 0, 0, 0);
+	  touch-callout: none;
+	  margin: 0;
+	  padding: 0;
+	  box-sizing: border-box;
+	}
+
+	scroll {
+		position: relative;
+		border-bottom: solid 1px rgba(0,0,0,.1);
+		background: @(device.feat.prefixStyle('backdrop-filter') ? 'rgba(255,255,255,.8)' : '#fff');
+		backdrop-filter: blur(20dp);
+		background-clip: padding-box;
+	}
+
+	scroll, scroll scrolling {
+		height: @(height || 40)dp;
+		background: #fff;
+	}
+
+	scroll scrolling {
+		z-index: 10000;
+	}
+	
+	nav {
+		display: block;
+	}
+
+	ul {
+		display: block;
+		margin: 0;
+		padding: 0;
+		height: @(height || 40)dp;
+		white-space: nowrap;
+	}
+
+	ul li {
+		display: inline-block;
+		list-style: none;
+		text-align: center;
+	}
+
+	@if (!slide) {
+		ul {
+			display: box;
+			width: 100%;
+		}
+
+		ul li {
+			display: list-item;
+			box-flex: 1;
+		}
+
+		.active .tab {
+			border-bottom-color: rgba(80, 210, 194, 1);
+		}
+	}
+
+	@if (slide) {
+		.light-line {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			margin-bottom: -1px;
+			width: 10px;
+			height: 3dp;
+			background: rgba(80, 210, 194, 1);
+			transition: all .3s ease;
+		}
+	}
+
+	.tab {
+		height: 40dp;
+		margin: 0 auto;
+		max-width: 106dp;
+		line-height: 40dp;
+		border-bottom: 3dp solid transparent;
+		font-size: 15dp;
+		font-weight: 400;
+		color: #bbb;
+	}
+
+	.active .tab {
+		color: #333;
+	}
+		.tab small {
+			font-size: 12dp;
+		}
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: 10001;
+		width: 30dp;
+		height: @(height || 40)dp;
+		background-image: linear-gradient(90deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.90) 50%);
+	}
+</style>
+
+<if inject>
+	<include name="{inject}"></include>
+</if>
+
+<template navbar>
+	<nav>
+		<ul>
+			<loop nav as value key>
+				<li class="{{key == 0 ? 'active' : ''}}" on-tap="tabSwitch(event, {{key}})">
+					<include name="{{value}}"></include>
+				</li>
+			</loop>
+			<div uuid="light-line" class="light-line"></div>
+		</ul>
+	</nav>
+</template>
+
+<scroll uuid="tab-bar-scroll" x y="false" scrollbars="false">
+	<scrolling>
+		<include navbar></include>
+	</scrolling>
+	<div class="overlay"></div>
+</scroll>
+
+
+<script>
+	var scrollers = scope.useScroller
+
+	var tabBarScroll = node('tab-bar-scroll').scroller
+	var tabContentScroll = scope.slide ? node(scope.slide).scroller : null
+	var parentScroller = DOMS[scope.parentScroller] ? DOMS[scope.parentScroller].scroller : null
+	var scrollTop = scope.scrollTop ? scope.scrollTop*device.ui.scale : components.offsetTop
+
+	var subEnabled = false
+	var parallax = scope.parallax !== 'none' || scrollTop < 200*device.ui.scale
+	var tabswitch = null
+
+	// 取消视差效果
+	if ( parentScroller ) {
+		if ( !parallax ) {
+			parentScroller.on('scroll', function (type, event) {
+				if ( parentScroller.y > -(scrollTop - 100) ) {
+					subEnabled = false
+				} else {
+					subEnabled = true
+				}
+
+				for (var i = 0, l = scrollers.length; i < l; i++) {
+					if ( DOMS[scrollers[i]].scroller.y == 0 && parentScroller.y > -scrollTop ) {
+						DOMS[scrollers[i]].scroller.enabled = subEnabled
+					}
+				}
+			})
+		}
+
+		var oldY
+		for (var i = 0, l = scrollers.length; i < l; i++) {
+			DOMS[scrollers[i]].scroll.on('scroll', function (type, event) {	
+				if ( this.y >= 0 || parentScroller.y > -scrollTop ) {
+					this.options.stopPropagation = false
+				} else {
+					this.options.stopPropagation = true
+
+					// if ( oldY < this.y ) {
+					// 	this.options.stopPropagation = true
+					// } else {
+					// 	if ( parentScroller.y > -scrollTop ) {
+					// 		console.log(9)
+					// 		this.options.stopPropagation = false
+					// 	}
+					// }
+				}
+
+				oldY = this.y
+			})
+		}
+	}
+
+	if ( tabContentScroll ) {
+		tabContentScroll.on('scrollend', function (type) {
+			if ( type === 'break' ) return
+			tabSwitch(null, this.currentPage.pageX)
+		})
+	}
+
+	var swipeContentTimeId = null
+
+	function tabSwitch (event, key) {
+		if ( !event ) {
+			var self = root.find('nav li')[key]
+		} else {
+			var self = event.self
+		}
+
+		if ( tabswitch == key ) return
+
+		scope.content = scope.content || scope.useScroller
+
+		var contentElement = DOMS[scope.content[key]]
+		var preContentElement = node(scope.content[tabswitch || scope.tabswitch])
+		var contentScroll = DOMS[scope.useScroller[key]]
+
+		tabswitch = key
+
+		root.find('nav li').removeClass('active')
+		self.addClass('active')
+
+		// 为模块加参数
+		var param = scope.params[key] || {}
+		application.transform.status(null, {"tabswitch": key}.extend(param))
+
+		if ( !scope.slide ) {
+			for (var i = 0; i < scope.content.length; i++) {
+				DOMS[scope.content[i]].style.display = 'none'
+				DOMS[scope.content[i]].style.zIndex = '-1'
+			}
+
+			contentElement.style.display = ''
+			contentElement.style.visibility = ''
+			contentElement.style.zIndex = '9'
+		} else {
+			tabContentScroll.goToPage(key, 0, 400)
+			setTimeout(function () {
+				var x = tabBarScroll.x - (self.offsetLeft + self.offsetWidth/2 - tabBarScroll.wrapperWidth/2 + tabBarScroll.x)
+
+				if ( x > tabBarScroll.minScrollX ) {
+					x = tabBarScroll.minScrollX
+				} else if ( x < tabBarScroll.maxScrollX ) {
+					x = tabBarScroll.maxScrollX
+				}
+			
+			
+				tabBarScroll.scrollTo(x, 0, 600)
+			}, 100)
+
+			contentElement.trigger('show')
+			preContentElement.trigger('hidden')
+		}
+
+		if ( contentScroll && contentScroll.scroller ) {
+			var scroller = contentScroll.scroller
+
+			if ( (scroller.options.infinite || scroller.options.finite) && !scroller.infiniteDataLength ) {
+				if ( swipeContentTimeId ) {
+					clearTimeout(swipeContentTimeId)
+					swipeContentTimeId = setTimeout(function () {
+						scroller.revert(true, true)
+					}, 600)
+				} else {
+					scroller.revert(true, true)
+					swipeContentTimeId = 1
+				}
+			}
+
+			// debug del--
+			
+			if ( scroller.infiniteElements ) {
+				scroller.refresh()
+				setTimeout(function () {
+					scroller.refresh()
+				}, 300)
+			}
+		}
+
+
+		// setTimeout(function () {
+		// 	parentScroller.scrollTo(0, -scrollTop, 300)
+		// },100)
+
+		
+
+		if ( scope.slide ) {
+			slidetab()
+		}
+	}
+
+	// slidetab
+
+	var light_line = DOM['light-line']
+
+	function slidetab () {
+		var target = root.find('.active div')[0] || root.find('div')[0]
+		var left = target.offsetLeft
+		var width = target.offsetWidth / 10
+
+		light_line.css({
+			"transform-origin": "left",
+			"transform": "translate(" + left + "px, 0) scale(" + width + ", 1) translateZ(0)"
+		})
+	}
+
+	if ( scope.tabswitch !== undefined ) {
+		tabSwitch(null, scope.tabswitch)
+	} else {
+		slidetab()
+	}
+
+	// resize 
+
+	window.on('resize orientationchange', function () {
+		slidetab()
+	})
+
+</script>

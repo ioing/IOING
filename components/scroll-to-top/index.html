@@ -1,0 +1,110 @@
+<style>
+	.scroll-top-btn {
+		position: absolute;
+		z-index: 999;
+		right: 10dp;
+		bottom: 10dp;
+		width: 40dp;
+		height: 40dp;
+		background-clip: padding-box;
+		border: solid 1px rgba(0,0,0,.1);
+		border-radius: 21dp;
+		transform: translate(0, 100%) translateZ(0);
+		transition: all .3s;
+		opacity: 0;
+	}
+
+	@if (bottom) {
+		.scroll-top-btn {
+			bottom: [bottom];
+		}
+	}
+
+	.scroll-top-btn-c {
+		height: 100%;
+		width: 100%;
+		border-radius: 21dp;
+		background: rgba(255,255,255,.9);
+	}
+
+	.icon-top {
+		position: absolute;
+		top: 10dp;
+		left: 10dp;
+		display: block;
+		height: 20dp;
+		width: 20dp;
+		background: url('top.svg') no-repeat center;
+		background-size: 20dp auto;
+	}
+</style>
+
+<if styler>
+	<include name="{{styler}}"></include>
+</if>
+
+<script>
+	/*
+		***=== 组件 data 解释 ===***
+
+		styler : 附带样式
+		scroller : 滚动条uuid
+		pagenum : 翻页数
+		maxstep : 最大回滚路程
+	*/
+
+	var scroller = DOMS[scope.scroller] || components.previousScroller
+	
+	if ( scroller ) {
+
+		var scroll = scroller.scroller
+		var top = scroll.wrapperHeight * (scope.pagenum || 3)
+		var btn = DOM['scrollTopBtn']
+		var maxstep = scope.maxstep || 1000
+
+		scroll.on('scroll', function (event) {
+			if ( Math.abs(scroll.y) > top ) {
+				btn.css({
+					"opacity" : "1",
+					"transform" : "translate(0, 0) translateZ(0)"
+				})
+			} else {
+				btn.css({
+					"opacity" : "0",
+					"transform" : "translate(0, 300px) translateZ(0)"
+				})
+			}
+		})
+
+		function scrollToTop (event) {
+			var step = Math.abs(scroll.y)
+	
+			// 回滚过长时忽略动画封锁更新且直接到达顶部然后刷新
+
+			if ( step > maxstep ) {
+				if ( scroll.infiniteElements ) {
+					scroll.resetInfinite(60)
+				} else {
+					scroll.scrollTo(0, 0, 300)
+				}
+			} else {
+				scroll.stopInfinite = false
+				scroll.scrollTo(0, 0, step/3)
+				setTimeout(function () {
+					scroll.refresh()
+				}, step/3+100)
+			}
+
+			btn.css({
+				"opacity" : "0",
+				"transform" : "translate(0, 300px) translateZ(0)"
+			})
+		}
+	}
+</script>
+
+<div uuid="scrollTopBtn" on-tap="scrollToTop(event)" class="scroll-top-btn">
+	<div class="scroll-top-btn-c">
+		<i class="icon-top"></i>
+	</div>
+</div>

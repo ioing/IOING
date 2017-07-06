@@ -1,0 +1,156 @@
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+scroll {
+	position: relative;
+	width: 100%;
+	background: #f9f9f9;
+	/*border: 1px solid #e8e8e8 !important;*/
+	overflow: hidden;
+	border-radius: 6dp;
+	opacity: 0;
+}
+
+scroll.error scrolling {
+	border-left: solid 2dp #FE3824;
+}
+
+scrolling {
+	display: inline-block;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #333;
+	background: none;
+	font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 20dp;
+	font-size: 13dp;
+	font-weight: normal;
+	tab-size: 4;
+	hyphens: none;
+	max-height: 99999dp;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	background: #ddd;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	display: inline-block;
+	padding: 6dp 12dp;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: none;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: 1dp;
+	border-radius: 4dp;
+	white-space: normal;
+}
+
+.token.script.language-javascript {
+	tab-size: 4;
+}
+.token.tag {
+	tab-size: 0;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.operator,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #003399;
+}
+
+.token.punctuation {
+	color: #333;
+}
+
+.token.tag > .token.punctuation {
+	color: #003399;
+}
+
+.token.number,
+.token.boolean {
+	color: #ed143d;
+}
+
+.token.selector,
+.token.attr-name,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #009999;
+}
+
+.token.string,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+	color: #ed143d;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #ed143d;
+}
+
+.token.attr-value .punctuation.sign {
+	color: #009999;
+}
+
+.token.attr-value .punctuation.quotes {
+	color: #ed143d;
+}
+
+.token.function {
+	color: #003399;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: #fb2a70;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}

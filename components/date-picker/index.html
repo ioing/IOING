@@ -1,0 +1,59 @@
+<style src="css/datePicker.css"></style>
+
+<if styler>
+	<include name="{styler}"></include>
+</if>
+
+
+<script src="js/datePicker.js"></script>
+
+<div uuid="date-plugin" class="date-plugin"></div>
+
+
+<template name="main-html">
+	<div uuid=d-date-box class="d-date-box">
+		<!-- <div class="d-date-title">请选择日期</div> -->
+		<div class="d-date-btns"><button class="d-btn" id="d-cancleBtn">取消</button><button class="d-btn" id="d-okBtn">确定</button></div>
+		<p class="d-date-info">
+			<span class="d-day-info"></span>
+			<span class="d-return-info"></span>
+		</p>
+	</div>
+</template>
+
+<template date>
+	<div class="d-date-wrap">
+        <div class="d-date-mark"></div>
+
+        <div class="scroll-wrap">
+	    	<div id="yearScroll">
+	    	</div>
+
+	    	<div id="monthScroll">
+	    	</div>
+
+	    	<div id="dayScroll">
+	    	</div>
+    	</div>
+	</div>
+</template>
+
+<template time>
+	<div class="d-date-wrap d-time-wrap">
+		<div class="d-date-mark"></div>
+
+		<div class="d-hour-wrap d-date-cell" id="hourScroll"><ul></ul></div>
+		<div class="d-minute-wrap d-date-cell" id="minuteScroll"><ul></ul></div>
+	</div>
+</template>
+
+<template month>
+	<div class="d-date-mark"></div>
+		<div class="d-year-wrap d-date-cell" style="width:50%" uuid="yearScroll"><ul></ul></div>
+		<div class="d-month-wrap d-date-cell" style="width:50%" id="monthScroll"><ul></ul></div>
+	</div>
+</template>
+
+<template btn>
+	
+</template>

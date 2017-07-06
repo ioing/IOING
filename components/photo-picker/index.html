@@ -1,0 +1,332 @@
+<style>
+    .photo-picker {
+        padding: 0;
+        padding-top: <(100vw-20dp)*0.0217> ;
+        height: <(100vw-20dp)*0.7-2px>;
+        font-size: 15dp;
+        line-height: 21dp;
+        color: rgba(153, 153, 153, 1);
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .btn-choose-photo {
+        height: <(100vw-20dp)*0.57>;
+        position: relative;
+        position: absolute;
+        top: <(100vw-20dp)*0.123>;
+        width: 100%;
+    }
+
+    .selected-img-container {
+        position: relative;
+        margin: auto;
+        width: 100%;
+        height: 43vw;
+        z-index: 90;
+    }
+
+    .selected-img {
+        width: 62vw;
+        height: 43vw ;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .uploading {
+        width: 100%;
+        height: 43vw ;
+        z-index: 99;
+        background: #fff;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 65dp 0 0 0;
+        position: absolute;
+    }
+
+    .rotate-container {
+        width: 20dp;
+        height: 20dp;
+        border: 1px solid rgba(0,0,0,0) !important;
+        position: absolute;
+        left: 50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .icon-lodaing {
+        display: block;
+        width: 20dp;
+        height: 20dp;
+        background: url('./svg/loading.svg') center no-repeat;
+        background-size: contain;
+    }
+
+    .notice-text {
+        padding-left: 10dp;
+        height: 22dp;
+    }
+
+    .notice-text span {
+        height: 22dp;
+    }
+
+    .picborder {
+        display: block;
+        border: 1px solid rgba(80, 210, 194, 1);
+        width: 80dp;
+        height: 80dp;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .btn-choose-photo label {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 66%;
+        top:32.5dp;
+    }
+
+    .btn-choose-photo label input {
+        visibility: hidden;
+        width: 79.5dp;
+    }
+
+    .icon-choose-photo {
+        display: inline-block;
+        width: 25dp;
+        height: 25dp;
+        background: url("./svg/icon_plus.svg") center no-repeat;
+        background-size: cover;
+        position: absolute;
+        left: 50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .show-demo {
+        position: absolute;
+        right: 9dp;
+        bottom: 8dp;
+        height: 14dp;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+    }
+
+    .icon-demo {
+        display: inline-block;
+        width: 9dp;
+        height: 12dp;
+        background: url('./svg/icon_idea.svg') center no-repeat;
+        background: cover;
+    }
+
+    .show-demo span{
+        padding: 0 0 0 4dp;
+    }
+
+    .small {
+        font-size: 10dp;
+        line-height: 14dp;
+        color: rgba(153, 153, 153, 1);
+    }
+    .notice-text .small {
+        line-height: 21dp;
+    }
+
+    .icon-delete {
+        display: block;
+        position: absolute;
+        right: 12dp;
+        bottom: 6dp;
+        width: 16dp;
+        height: 15dp;
+        background: url('./svg/icon_delete.svg') center no-repeat;
+        background-size: contain;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+
+.delete-icon-container {
+    position: absolute;
+    right: <19vw-30dp>;
+    bottom: -12dp;
+    display: block;
+    width: 32dp;
+    height: 32dp;
+}
+
+
+</style>
+
+
+<script>
+    root.find(".file-input")[0].addEventListener("change",loadImageFile,false)
+    var oFReader = new FileReader(), rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i
+    oFReader.onloadend = function (oFREvent) {
+        var filename = root.find(".file-input")[0].files[0].name
+        var pic = oFREvent.target.result
+        root.find('.uploading').addClass('hidden')
+        if(root.find(".file-input")[0].files[0].size < 5242881){
+            /*上传图片*/
+            uploadImg(filename, pic)
+        }else{
+            showAlert("图片大小不能超过5M")
+        }
+    };
+    function loadImageFile() {
+        if (root.find('.file-input')[0].files.length === 0) {
+            return
+        }
+        var oFile = root.find('.file-input')[0].files[0]
+        if (!rFilter.test(oFile.type)) {
+            showAlert("请确定上传的文件为图片格式")
+            return;
+        }
+        root.find('.uploading').removeClass('hidden')
+        oFReader.readAsDataURL(oFile)
+    }
+    function deletePicHandler(e){
+        document.body.find('.'+scope.alertLayerClass).trigger(scope.alertEventName,{
+            content: scope.alertMsg,
+            style: 'background-color:#fff; color:#333; border:none;',
+            btn: [scope.confirm, scope.cancel],
+            yes: function(){
+                root.find('.selected-img')[0].css({"background":"#fff"})
+                root.find('.btn-add-pic')[0].removeClass("hidden")
+                root.find('.selected-img-container')[0].addClass("hidden")
+                root.find(".file-input")[0].value = null
+                DOMS[scope.dataStore].attr('valuetxt','')
+            },
+            no: function(){
+                return
+            }
+        })
+
+    }
+
+    function uploadFail(){
+        root.find('.selected-img')[0].css({"background":"#fff"})
+        root.find('.btn-add-pic')[0].removeClass("hidden")
+        root.find('.selected-img-container')[0].addClass("hidden")
+        root.find(".file-input")[0].value = null
+        DOMS[scope.dataStore].attr('valuetxt','')
+        showAlert("图片上传失败")
+        root.find('.uploading').addClass('hidden')
+
+
+    }
+
+    function showAlert (msg) {
+        document.body.find('.'+scope.alertLayerClass).trigger(scope.alertEventName,{
+            content: msg,
+            style: 'background-color:#fff; color:#333; border:none;',
+            btn: [scope.confirm]
+        })
+    }
+
+    function uploadImg(filename, url){
+
+        var data = {
+            "filename": filename,
+            "pic": encodeURIComponent(url)
+        }
+
+        var url = DATA.config.imgPostUrl;
+        root.find('.uploading').removeClass('hidden')
+
+        promise.ajax("post", url, data, {}, {withCredentials:true}).then(function (err, data, res) {
+            var rs = {}
+            if (!err) {
+                var rs = JSON.parse(data)
+                if (rs && rs.status && rs.status.status_code == 0) {
+                    /*图片上传成功*/
+                    DOMS[scope.dataStore].attr('valuetxt',rs.result)
+
+                    /*bugfix:当图片过大时，base64的预览失败*/
+                    var img = new Image();
+                    img.src = rs.result;
+                    img.onload=function(){
+                        root.find('.uploading').addClass('hidden')
+                        root.find('.selected-img')[0].css({"background":"url('"+ rs.result + '?w=' + 180*device.ui.scale +"') center no-repeat","background-size":"cover"})
+                        root.find('.selected-img')[0].attr('imgurl',rs.result)
+                        root.find('.btn-add-pic')[0].addClass("hidden")
+                        root.find('.selected-img-container')[0].removeClass("hidden")
+                        DOMS[scope.dataStore].parent()[0].removeClass("warn")
+
+                    };
+                    img.onerror=function(){
+                        root.find('.uploading').addClass('hidden')
+                        root.find('.selected-img')[0].css({"background":"url('"+ rs.result + '?w=' + 180*device.ui.scale +"') center no-repeat","background-size":"cover","border":"1px solid #ddd"})
+                        root.find('.selected-img')[0].attr('imgurl',rs.result)
+                        root.find('.btn-add-pic')[0].addClass("hidden")
+                        root.find('.selected-img-container')[0].removeClass("hidden")
+                        DOMS[scope.dataStore].parent()[0].removeClass("warn")
+                    }
+
+                }else{
+                    if (rs && rs.status && rs.status.status_code == 10026) {
+                        var currentUrl = encodeURIComponent(top.location.href)
+                        top.location.href = DATA.config.loginApi + "?redirect=" + currentUrl
+                    }else {
+                        uploadFail()
+                    }
+                }
+            }else {
+                uploadFail()
+            }
+
+        });
+
+    }
+
+    function preview(e){
+        if(scope.previewContainerUUID && scope.enterFormPreviewImgUUID){
+            DOMS[scope.previewContainerUUID].removeClass('hidden');
+            DOMS[scope.enterFormPreviewImgUUID].src =  e.target.attr('imgurl')
+        }
+    }
+
+    function showDemoPic (e) {
+        if(scope.previewContainerUUID && scope.enterFormPreviewImgUUID){
+            DOMS[scope.previewContainerUUID].removeClass('hidden');
+            DOMS[scope.enterFormPreviewImgUUID].src =  scope.demoPicUrl;
+        }
+    }
+</script>
+
+<div uuid="photoPicker" class="photo-picker">
+    <div class="notice-text">
+        <span >{{text1}}</span>
+        <span class="small">{{txtSmall}}</span>
+    </div>
+    <div class="btn-choose-photo">
+        <div class="uploading hidden">
+            <div class="rotate-container">
+                <loading-default color="#999999"></loading-default>
+            </div>
+        </div>
+        <div class="{{defaultValue?'selected-img-container':'selected-img-container hidden'}}">
+            <div on-tap="preview(event)" class="selected-img" uuid="img" style="{{defaultValue?('background:url('+ defaultValue +') center no-repeat;background-size:cover;'):'#fff'}}" imgurl="{{defaultValue}}" ></div>
+            <div class="delete-icon-container" on-tap="deletePicHandler(event)">
+                <i class="icon-delete"></i>
+            </div>
+        </div>
+        <label>
+            <div class="{{defaultValue?'picborder btn-add-pic hidden':'picborder btn-add-pic'}}"><span class="icon-choose-photo"></span></div>
+            <input class="file-input" uuid="uploadImage" type="file" name="myPhoto" />
+        </label>
+    </div>
+    <div class="show-demo" on-tap="showDemoPic(event)">
+        <i class="icon-demo"></i>
+        <span class="small">{{txtShowDemo}}</span>
+    </div>
+</div>

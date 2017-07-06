@@ -1,0 +1,44 @@
+
+
+<script>
+    canvasLoading()
+    function canvasLoading () {
+        var size = 16 * device.ui.scale
+                , opts = {
+                    shape: "roundRect",
+                    diameter: size * devicePixelRatio,
+                    density: 12,
+                    speed: 1,
+                    FPS: 12,
+                    range: 0.95,
+                    color: scope.color || "#ffffff"
+                }
+
+
+        var container = node('loader')
+
+        var loader = new Loader(container, {id: 'loader-headpic', safeVML: true})
+        loader.setShape(opts.shape)
+        loader.setDiameter(opts.diameter)
+        loader.setDensity(opts.density)
+        loader.setSpeed(opts.speed)
+        loader.setFPS(opts.FPS)
+        loader.setRange(opts.range)
+        loader.setColor(opts.color)
+        loader.show()
+
+        loader.cont.style.position = "absolute"
+        loader.cont.style.zIndex = 999
+        loader.cont.style.top = loader.cont.style.left = "50%"
+        loader.cont.style.marginTop = loader.cont.style.marginLeft = size * -0.5 + "px"
+        loader.cont.style.width = loader.cont.style.height = size + "px"
+
+        var canvas = loader.cont.children
+        for (var i = canvas.length - 1; i >= 0; i--) {
+            canvas[i].style.width = canvas[i].style.height = size + "px"
+        }
+    }
+</script>
+
+<i class="loading-container" uuid="loader">
+</i>

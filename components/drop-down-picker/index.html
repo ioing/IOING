@@ -1,0 +1,252 @@
+<style>
+    .list-item{
+        color:rgba(153, 153, 153, 1);
+        height: 40dp;
+        line-height: 15dp;
+        text-align: center;
+        display: block;
+        width: 100%;
+        margin: 0;
+        position: relative;
+    }
+
+    /* 下拉选择框 */
+    .drop-down {
+        padding: 0;
+    }
+
+    .drop-down-label {
+        display: block;
+        width: 100%;
+        position: relative;
+        height: 100%;
+        font-size: 15dp;
+        font-weight: normal;
+        color: rgba(153, 153, 153, 1);
+    }
+
+    .icon-arrow {
+        position: absolute;
+        right: 10.5dp;
+        display: block;
+        width: 12dp;
+        height: 7dp;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .icon-arrow-down {
+        background: url("./svg/icon_arrow_down.svg") center no-repeat;
+        background-size: contain;
+    }
+
+    .icon-arrow-up {
+        background: url("./svg/icon_arrow_up.svg") center no-repeat;
+        background-size: contain;
+    }
+
+    .drop-down-options {
+        -webkit-appearance: none;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        border: 0;
+        background: transparent;
+        font-size: 15dp;
+        font-weight: normal;
+        color: rgba(51, 51, 51, 1);
+    }
+
+    .option {
+        width: 100%;
+        text-align: center;
+    }
+
+    /*表单元素公共用样式 start*/
+    .value-holder-left {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding-left: 9.5dp;
+        height: <40dp-2px>;
+        line-height: <40dp-2px>;
+        font-size: 15dp;
+        color: rgba(153, 153, 153, 1);
+    }
+
+    .value-holder {
+        position: absolute;
+        top: 0;
+        height: <40dp-2px>;
+        line-height: <40dp-1px>;
+        font-size: 15dp;
+        color: rgba(153, 153, 153, 1);
+    }
+
+    .value-holder.center {
+        left: 0;
+        width: 100%;
+    }
+
+    .value-holder.left {
+        width: 100%;
+        right: 28.5dp;
+        text-align: right;
+    }
+
+    .info-block input {
+        color: rgba(51, 51, 51, 1);
+    }
+
+    .opacity0 {
+        opacity: 0;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    select {
+        outline: none;
+        border: none;
+    }
+
+    .value-holder.active {
+        color: rgba(51, 51, 51, 1);
+    }
+
+</style>
+
+<script>
+    /*必备配置如下：
+    *  {
+         "subject":lang.career, //选择器的名称
+         "optionArr":careerList.result.list, //数据源，是个数组
+         "type":"career", //类型，这是因为数据源不同，显示的字段名不同，根据type来控制显示哪个字段
+         "leftText":false,//false表明是居中下拉框 ，true为文字在左侧
+         "dataStore":"enterFormCareer", //外部存储option值的元素的uuid
+         "defaultValueId":mock.result.career //默认值，有false和真实的值两种情况
+     }
+    */
+    /*如果option有默认值*/
+
+    if(scope.defaultValueId){
+        var selectedIndex = root.find(".drop-down-options")[0].selectedIndex;
+        if(root.find(".option")[selectedIndex].attr('valueid') == scope.defaultValueId) {
+            /*有默认值*/
+            root.find(".value-holder")[0].addClass("active");
+            root.find(".value-holder")[0].html(root.find(".option")[selectedIndex].value);
+        } else {
+            /*没有默认值*/
+            var valueId = root.find("option")[selectedIndex].attr("valueid");
+            DOMS[scope.dataStore].attr("valueid","");
+            DOMS[scope.dataStore].attr("valuetxt","")
+            DOMS[scope.dataStore].parent()[0].addClass("warn");
+            root.find(".value-holder")[0].removeClass("active");
+            root.find(".value-holder")[0].html(scope.subject);
+        }
+    }
+
+     root.find(".drop-down-options")[0].addEventListener("change",hiddenCover,false);
+     root.find(".drop-down-options")[0].addEventListener("blur",function(){
+         /*使箭头向下*/
+         root.find('.icon-arrow').removeClass('icon-arrow-up').addClass('icon-arrow-down');
+     },false);
+
+    function hiddenCover(e,str){
+        if(str){
+            root.find('.icon-arrow').removeClass('icon-arrow-down').addClass('icon-arrow-up');
+        }else{
+            root.find('.icon-arrow').removeClass('icon-arrow-up').addClass('icon-arrow-down');
+        }
+        var selectedIndex = root.find(".drop-down-options")[0].selectedIndex;
+
+        var valueId = root.find("option")[selectedIndex].attr("valueid");
+        DOMS[scope.dataStore].attr("valueid",valueId);
+        DOMS[scope.dataStore].attr("valuetxt",root.find("option")[selectedIndex].html())
+        DOMS[scope.dataStore].parent()[0].removeClass("warn");
+
+        var selectedDate = root.find(".drop-down-options")[0].value;
+        if(selectedDate != "placeholder"){
+            root.find(".value-holder")[0].addClass("active");
+            root.find(".value-holder")[0].html(root.find(".drop-down-options")[0].value);
+        }else{
+            root.find(".value-holder")[0].removeClass("active");
+            root.find(".value-holder")[0].html("placeholder");
+        }
+    }
+
+</script>
+
+<div class="list-item drop-down">
+    <label class="drop-down-label">
+        <span class="value-holder-left {{leftText?'':'hidden'}}">{{subject}}</span>
+        <span class="value-holder {{leftText?'left':'center'}}">{{leftText?'':subject}}</span>
+        <i class="icon-arrow icon-arrow-down {{leftText?'':'hidden'}}"></i>
+        <!--如果有默认值，设置默认值-->
+        <if is="defaultValueId != false">
+            <selecter on-focus="hiddenCover(event,'sss')" class="default-from-ele drop-down-options opacity0" uuid="selector">
+                <switch case="type">
+                    <case is="city">
+                        <loop data="optionArr" as value key>
+                            <if is="defaultValueId == (value.pid + '-' + value.id)">
+                                <option class="option" selected valueid="{{value.pid}}-{{value.id}}" cityid="{{value.id}}" pid="{{value.pid}}">{{value.pvalue}}-{{value.value}}</option>
+                            </if>
+                            <if is="defaultValueId != (value.pid + '-' + value.id)">
+                                <option class="option" valueid="{{value.pid}}-{{value.id}}" cityid="{{value.id}}" pid="{{value.pid}}">{{value.pvalue}}-{{value.value}}</option>
+                            </if>
+                        </loop>
+                    </case>
+                    <case is="career">
+                        <loop data="optionArr" as value key>
+                            <if is="defaultValueId == value.code">
+                                <option class="option" selected valueid="{{value.code}}" codeid="{{value.code}}">{{value.name}}</option>
+                            </if>
+                            <if is="defaultValueId != value.code">
+                                <option class="option" valueid="{{value.code}}" codeid="{{value.code}}">{{value.name}}</option>
+                            </if>
+                        </loop>
+                    </case>
+                    <case is="gender">
+                        <loop data="optionArr" as value key>
+                            <if is="defaultValueId == value.index">
+                                <option class="option" selected valueid="{{value.index}}" uuid="{{value.index}}">{{value.txt}}</option>
+                            </if>
+                            <if is="defaultValueId != value.index">
+                                <option class="option" valueid="{{value.index}}" uuid="{{value.index}}">{{value.txt}}</option>
+                            </if>
+                            <!--<option class="option" selected="{{defaultValueId == value.index? 'selected':''}}" valueid="{{value.index}}" uuid="{{value.index}}">{{value.txt}}</option>-->
+                        </loop>
+                    </case>
+                </switch>
+            </selecter>
+        </if>
+        <!--如果没有默认值，不设置默认值 -->
+        <if is="defaultValueId == false">
+            <selecter on-focus="hiddenCover(event,'tap')" class="default-from-ele drop-down-options opacity0" uuid="selector">
+                <switch case="type">
+                    <case is="city">
+                        <loop data="optionArr" as value key>
+                            <option class="option" valueid="{{value.pid}}-{{value.id}}" cityid="{{value.id}}" pid="{{value.pid}}">{{value.pvalue}}-{{value.value}}</option>
+                        </loop>
+                    </case>
+                    <case is="career">
+                        <loop data="optionArr" as value key>
+                            <option class="option" valueid="{{value.code}}" codeid="{{value.code}}">{{value.name}}</option>
+                        </loop>
+                    </case>
+                    <case is="gender">
+                        <loop data="optionArr" as value key>
+                            <option class="option" valueid="{{value.index}}" uuid="{{value.index}}">{{value.txt}}</option>
+                        </loop>
+                    </case>
+                </switch>
+            </selecter>
+        </if>
+
+    </label>
+</div>

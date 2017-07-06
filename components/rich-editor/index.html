@@ -1,0 +1,186 @@
+<style>
+.content {
+	padding: 15dp;
+	padding-bottom: 100dp;
+	width: 100%;
+	min-height: 100vh;
+	background: #fff;
+	color: #999;
+	font-size: 16dp;
+}
+
+.content.active {
+	color: #333;
+}
+
+.content img {
+	width: 100%;
+	height: auto;
+	background-color: #e8e8e8;
+}
+
+.img-loading {
+	display: block;
+	padding: 5dp 0; 
+	width: 100%;
+	min-height: 40dp;
+	background-color: #fff;
+	background: url(svg/loading.svg) center no-repeat;
+	background-size: auto 80%;
+}
+
+.img-loading {
+	margin: 5dp 0;
+	width: 100%;
+}
+</style>
+
+<if styler>
+	<include name="{styler}"></include>
+</if>
+
+<script import global>
+    var Editor = @import('editor')
+</script>
+
+<script>
+
+var editor = node(scope.htmlarea || 'content')
+
+if ( scope.contentdocument !== 'null' ) editor.innerHTML = scope.contentdocument
+
+global.call(function (node, scope) {
+	new Editor(node(scope.htmlarea || 'content'), {
+		uploader : node(scope.uploader),
+		placeholader : scope.placeholader
+	})
+}, node, scope)
+
+register('setContent', function (value) {
+	editor.html(value)
+})
+
+register('getContent', function () {
+	return editor.html()
+})
+
+register('getInput', function () {
+	return editor
+})
+
+var keyboardEventKey = 0
+  , noKeyDownThenInsertBr = false
+
+editor.on('input paste insertimage', function () {
+	var content = editor.innerHTML
+
+	if ( !content || content == scope.placeholader || content == '&nbsp;' ) {
+		components.trigger('isempty')
+	} else {
+		components.trigger('notempty')
+	}
+}).on('keydown input', function (e) {
+
+	if ( e.type == 'input' ) {
+		if ( keyboardEventKey-1 == 0 ) {
+			keyboardEventKey = 0
+		} else {
+			e.keyCode = 8
+			e.noKeyDown = true
+		}
+	} else {
+		keyboardEventKey = 1
+	}
+
+	if ( e.keyCode == 8 ) {
+		var range = this.getSelectionRangeInsert()
+
+		if ( !range ) return
+		if ( device.os.ios ) return
+
+		var preElement = range.startContainer
+
+
+		if ( preElement == this && preElement.childNodes.length ) {
+			preElement = preElement.childNodes[preElement.childNodes.length - 1]
+		}
+
+		if ( e.noKeyDown ) {
+			if ( this.childNodes[0].nodeType !== Node.TEXT_NODE && this.childNodes[0].nodeName !== 'BR' ) {
+				this.insertBefore(document.createElement('br'), this.childNodes[0])
+
+				noKeyDownThenInsertBr = true
+			}
+
+			if ( noKeyDownThenInsertBr && this.childNodes.length <= 4 ) {
+				this.innerHTML = null
+			}
+		}
+
+		if ( !preElement ) return
+
+		if ( preElement.nodeType !== Node.TEXT_NODE ) {
+			if ( preElement.nodeName == 'SPAN' ) {
+
+				if ( $$(preElement).closest(this) ) {
+
+					if ( preElement.children.length == 1 && preElement.innerText == '' ) {
+						preElement.remove()
+					} else {
+						var images = preElement.find('img')
+
+						images[images.length-1].remove()
+					}
+
+					preElement.remove()
+
+					e.returnValue = false
+					return false
+				}
+			} else if ( preElement.nodeName == 'IMG' ) {
+				if (  $$(preElement).closest(this) ) {
+					preElement.remove()
+				}
+			}
+		}
+	}
+}).on('focus', function () {
+	var that = this
+
+	setTimeout(function () {
+		var range = that.getSelectionRangeInsert()
+		var selection = this.getSelection()
+
+		if ( !range ) return
+
+		var preElement = range.startContainer
+		
+		if ( preElement.nodeName == 'SPAN' ) {
+
+			range.collapse(false)
+
+			var content = range.createContextualFragment('')
+			range.insertNode(content)
+
+            range.setEndAfter(preElement.previousSibling)
+            range.setStartAfter(preElement.previousSibling)
+
+            selection.removeAllRanges()
+            selection.addRange(range)
+
+			// that.setSelectionRange(that.selectionStart+1,that.selectionStart+1)
+			// that.focus()
+
+		}
+
+	}, 0)
+
+	
+})
+
+
+</script>
+
+<if not="htmlarea">
+	<htmlarea uuid="content" free class="content" scroll-offset="{{scrolloffset || 50}}"></htmlarea>
+</if>

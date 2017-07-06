@@ -1,0 +1,97 @@
+<style>
+	* {
+		box-sizing: content-box;
+	}
+	.switch {
+		display: inline-block;
+		margin: 4dp;
+		width: 60dp;
+		border: 2dp solid #E8EAEC;
+		border-radius: 27dp;
+		background: #FAFAFB;
+	}
+
+	.switch, .circle {
+		height: 30dp;
+		transition: .4s;
+	}
+
+	.circle {
+	  width: 30dp;
+	  border-radius: 15dp;
+	  box-shadow: 0 4dp 4dp rgba(26,53,71,.25), 0 0 0 1dp rgba(26,53,71,.07);
+	  background: #fff;
+	}
+
+	.circle.active {
+		width: 36dp;
+	}
+
+	.switch.active {
+		border-color: #41C955;
+		background: #52D468;
+	}
+
+	.switch.active .circle {
+		transform: translateX(calc(60dp - 35dp)); /*100% 的单位会让某些低版本系列产生不好的渲染效果或不支持*/
+	}
+
+	.switch.active.end .circle {
+		transform: translateX(calc(60dp - 30dp)); /*100% 的单位会让某些低版本系列产生不好的渲染效果或不支持*/
+	}
+</style>
+
+<if styler>
+	<include name="{styler}"></include>
+</if>
+
+<script>
+	// 独立的组件作用域
+	// on-swiperight="open(event)" ： 当发生swiperight事件时执行open，如果open不存在会跳到全局查找；
+	// 注意查询components文档，这里存在一些默认变量，比如 root 和 components global 等
+
+	var switchBox = node("switch")
+	  , circleBtn = node("circle")
+
+	function start (event) {
+		switchBox.removeClass('end')
+		circleBtn.addClass('active')
+
+		components.trigger('on')
+	}
+
+	function end (event) {
+		switchBox.addClass('end')
+		circleBtn.removeClass('active')
+
+		components.trigger('off')
+	}
+
+	if ( scope.value == 'on' ) {
+		switchBox.addClass('active end')
+	}
+
+	components.on('set', function (e) {
+		if ( e.data == 'on' ) {
+			switchBox.addClass('active end')
+		} else if ( e.data == 'off' ) {
+			switchBox.removeClass('active end')
+		}
+	})
+
+	switchBox.addEventListener('touchmove', function (e) {
+		e.stopPropagation()
+	}, false)
+
+	switchBox.addEventListener('mousedown', function (e) {
+		e.stopPropagation()
+	}, false)
+
+	switchBox.addEventListener('mousemove', function (e) {
+		e.stopPropagation()
+	}, false)
+</script>
+
+<div uuid="switch" class="switch" value="{value}" toggle-class="active | panright panleft" on-panstart="start(event)" on-panend="end(event)">
+  <div uuid="circle" class="circle"></div>
+</div>

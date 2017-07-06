@@ -1,0 +1,37 @@
+<style compile>
+    img {
+        height: {{size || 36}}dp;
+    }
+    div {
+
+    }
+</style>
+
+
+<switch case=type>
+    <case is="audio">
+        <img src="audio.svg">
+    </case>
+    <case is="ball-triangle">
+        <img src="ball-triangle.svg">
+    </case>
+    <case is="bars">
+        <img src="bars.svg">
+    </case>
+    <case is="circles">
+        <img src="circles.svg">
+    </case>
+    <case is="grid">
+        <img src="grid.svg">
+    </case>
+    <case is="puff">
+        <img src="puff.svg">
+    </case>
+    <case is="oval">
+        <img src="oval.svg">
+    </case>
+    <case default>
+        <img src="oval.svg">
+    </case>
+</switch>
+

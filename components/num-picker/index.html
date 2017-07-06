@@ -1,0 +1,200 @@
+<style>
+    .list-item{
+        height: 40dp;
+        line-height: 15dp;
+        font-size: 15dp;
+        text-align: center;
+        display: block;
+        width: 100%;
+        position: relative;
+        font-weight: normal;
+        color: rgba(74, 74, 74, 1);
+        opacity: 1;
+    }
+
+    .num-picker {
+        padding: 0 10.5dp 0 9dp;
+        box-sizing: border-box;
+        height: <40dp-2px>;
+        line-height: <40dp-2px>;
+    }
+
+    .num-picker .txt{
+        position: relative;
+        text-align: left;
+        color:rgba(153, 153, 153, 1);
+    }
+
+    .num-picker .btns{
+        height: 40dp;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .num-pic-btn {
+        display: inline-block;
+        width: 25dp;
+        height: 30dp;
+    }
+
+    .btns .rs-count {
+        color: rgba(74, 74, 74, 1);
+        font-size: 15dp;
+        margin-right: 1px;
+        text-align: center;
+        font-size: 15dp;
+        line-height: 21dp;
+    }
+
+    .btn-minus, .rs-count, .btn-plus {
+        width: 25dp;
+        height: 30dp;
+        display: inline-block;
+        border-radius: 3dp;
+        font-style: normal;
+        box-sizing: border-box;
+        border: none;
+        position: absolute;
+    }
+
+    .btn-minus {
+        background: rgba(238, 238, 238, 1);
+        right: 63.5dp;
+        top: 5dp;
+    }
+
+    .rs-count {
+        background: rgba(238, 238, 238, 1);
+        right: 36.5dp;
+        top: 5dp;
+    }
+
+    .btn-plus {
+        background: rgba(238, 238, 238, 1);
+        right: 10.5dp;
+        top: 5dp;
+    }
+
+    /*表单元素公共用样式 start*/
+    .form input::-webkit-input-placeholder{
+        font-size: 15dp;
+        font-weight: normal;
+        color: rgba(153, 153, 153, 1);
+        opacity: 1;
+    }
+
+    .value-holder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding-left: 9.5dp;
+        height: 100%;
+        line-height: <40dp-1px>;
+        font-size: 15dp;
+        color: rgba(153, 153, 153, 1);
+    }
+
+    .info-block input {
+        color: rgba(51, 51, 51, 1);
+    }
+
+    .opacity0 {
+        opacity: 0;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    select {
+        outline: none;
+        border: none;
+    }
+
+    .btn-minus.disabled {
+        background: rgba(247, 247, 247, 1);
+    }
+
+    .np-icon-minus {
+        width: 10dp;
+        height: 14dp;
+        display: block;
+        border-bottom: 1dp solid rgba(153, 152, 153, 1);
+        position: absolute;
+        top: 0;
+        left: 7.5dp;
+    }
+
+    .np-icon-plus {
+        width: 10dp;
+        height: 10dp;
+        display: block;
+        background: url('./svg/icon_plus.svg') center no-repeat;
+        background-size: contain;
+        position: relative;
+        position: absolute;
+        top: 10dp;
+        left: 7.5dp;
+    }
+
+</style>
+
+
+<script>
+    /* 必备配置如下：
+     {
+     "txt":lang.localTime,//选择器名字
+     "dataStore":"enterFormStayTime",//外部存储option值的元素的uuid
+     "defaultValue":mock.result.features.stayTime //默认值，有false和真实的值两种情况
+     }
+    */
+    root.find(".rs-count")[0].addEventListener("input",function(){
+        if(root.find('.rs-count')[0].value < 1){
+            root.find('.btn-minus')[0].addClass("disabled");
+        }else{
+            root.find('.btn-minus')[0].removeClass("disabled");
+        }
+        DOMS[scope.dataStore].attr("valuetxt",root.find(".rs-count")[0].value);
+        DOMS[scope.dataStore].parent()[0].removeClass("warn");
+    },false);
+
+
+function plusHandler(e){
+    root.find('.rs-count')[0].value++;
+    DOMS[scope.dataStore].attr("valuetxt",root.find(".rs-count")[0].value);
+    DOMS[scope.dataStore].parent()[0].removeClass("warn");
+    if(root.find('.rs-count')[0].value < 1){
+        root.find('.btn-minus')[0].addClass("disabled");
+    }else{
+        root.find('.btn-minus')[0].removeClass("disabled");
+    }
+}
+
+function minusHandler(e){
+    if(root.find('.rs-count')[0].value > 0){
+        root.find('.rs-count')[0].value--;
+        DOMS[scope.dataStore].attr("valuetxt",root.find(".rs-count")[0].value);
+        DOMS[scope.dataStore].parent()[0].removeClass("warn");
+    }
+    if(root.find('.rs-count')[0].value < 1){
+        root.find('.btn-minus')[0].addClass("disabled");
+    }else{
+        root.find('.btn-minus')[0].removeClass("disabled");
+    }
+}
+
+</script>
+
+<div class="list-item num-picker">
+    <div class="txt">{{txt}}</div>
+    <div class="btns">
+        <div class="num-pic-btn btn-minus disabled" on-tap="minusHandler(event)">
+            <i class="np-icon-minus"></i>
+        </div>
+        <input readonly="readonly" class="rs-count" uuid="rs-count" type="text" value="{{defaultValue == false?String(0):(defaultValue || '0')}}" />
+        <div class="num-pic-btn btn-plus" on-tap="plusHandler(event)">
+            <i class="np-icon-plus"></i>
+        </div>
+    </div>
+</div>

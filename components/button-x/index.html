@@ -1,0 +1,93 @@
+<style>
+	.btn {
+		position: relative;
+		border: none;
+		color: white;
+		overflow: hidden;
+		margin: 4dp 0;
+		padding: 5dp 25dp;
+		text-transform: uppercase;
+		height: 40dp;
+		color: #fff;
+		font-size: 18dp;
+		font-weight: normal;
+		background-color: #000;
+		user-select: none;
+	    user-drag: none;
+	    outline: none;
+	    tap-highlight-color: rgba(0, 0, 0, 0);
+	    border: 1px solid rgba(0, 0, 0, 0.1);
+	}
+
+	.btn canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	@if (margin) {
+		.btn {
+			margin: <margin>;
+		}
+	}
+
+	@if (feel) {
+		.btn {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	@if (border) {
+		.btn {
+			border: <border>;
+		}
+	}
+
+	@if (width) {
+		.btn {
+			width: <width>;
+		}
+	}
+
+	@if (height) {
+		.btn {
+			width: <height>;
+		}
+	}
+
+	@if (background) {
+		.btn {
+			background-color: <background>;
+		}
+	}
+
+	@if (radius) {
+		.btn {
+			border-radius: <radius>dp;
+		}
+	}
+</style>
+
+<if styler>
+	<include name="{{styler}}"></include>
+</if>
+
+<script import global>
+	// button 组件全局lib
+	var light = @import('tap-light')
+</script>
+
+<script>
+	var button = node('button'),
+		color = scope.light
+
+	global.call(function (button, color) {
+		var canvas = light.init(button, {
+						color : color
+					})
+	}, button, color)
+</script>
+
+<button uuid="button" class="btn">{{components.innerHTML}}</button>

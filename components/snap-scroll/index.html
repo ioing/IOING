@@ -1,0 +1,148 @@
+<style>
+	scroll {
+		width: 100%;
+		height: [height || '100%'];
+	}
+	scroll .row-item {
+		float: left;
+		height: 100%;
+		color: #fff;
+		text-align: center;
+		background-size: cover;
+	}
+
+	scroll > scrollbar {
+		bottom: 7dp;
+		left: 50%;
+		height: 7dp;
+		transform: translate(-50%, 0);
+		line-height: 0;
+		font-size: 0;
+		overflow: visible;
+	}
+
+	scroll > scrollbar > indicator {
+		position: absolute;
+		z-index: 9;
+		width: 4dp;
+		height: 4dp;
+		background: #fff;
+		border-radius: 4dp;
+	}
+
+	scrollbar .dot {
+		display: inline-block;
+		width: 4dp;
+		height: 4dp;
+		background: rgba(255,255,255,.5);
+		border-radius: 4dp;
+	}
+
+	scrollbar.preview {
+		display: flex;
+		height: 25dp !important;
+	}
+
+	scrollbar.preview indicator {
+		width: 45dp !important;
+		height: 25dp !important;
+		background: rgba(255,255,255,0);
+		border: 2dp solid #00dcff;
+		border-radius: 0 !important;
+	}
+
+	scrollbar .preview-item {
+		display: inline-block;
+		background-position: center;
+		background-size: cover;
+		width: 45dp;
+		height: 25dp;
+		border: 1dp solid rgba(255,255,255,.5);
+	}
+</style>
+
+<if styler>
+	<include name={styler}></include>
+</if>
+
+<scroll uuid="banner-scroll" stop-propagation="auto" x snap indicator y="false" scrollbars="false" fade-scrollbars="false">
+    <scrolling style="height:200dp;width:{{list.length*100}}%">
+        <loop list as value key>
+            <div class=row-item style="width:{{100/list.length}}%;background-image:url({value});">
+            	<if content>
+            		<include name={content}></include>
+            	</if>
+            </div>
+        </loop>
+    </scrolling>
+
+    <scrollbar class="{{preview ? 'preview' : ''}}">
+        <indicator uuid="dotty"></indicator>
+        <if is="list.length>1">
+            <loop list as value i>
+            	<if preview>
+            		<div class=preview-item style="margin: 0 {{i==list.length-1 ? '0' : '4dp'}} 0 {{i==0 ? '0' : '4dp'}};background-image:url({value})"></div>
+        		</if><else>
+                	<div class=dot style="margin: 0 {{i==list.length-1 ? '0' : '4dp'}} 0 {{i==0 ? '0' : '4dp'}};"></div>
+                </else>
+            </loop>
+        </if>
+    </scrollbar>
+</scroll>
+
+<if timeout>
+	<script>
+		var bannerScroll = node('banner-scroll')
+		var bannerScroller = bannerScroll.scroller
+		var fragment = components.parentFragment
+		var dotty = node('dotty')
+		var timeout = scope.timeout || 3000
+		var bannerTimeId
+
+		bannerScroll.on('touchstart', function () {
+			clearInterval(bannerScroller.bannerTimeId)
+		}).on('touchend', function () {
+			showbanner()
+		})
+
+		function showbanner () {
+
+			bannerTimeId = setInterval(function () {
+				if ( !bannerScroller ) return clearInterval(bannerTimeId)
+
+				if ( bannerScroller.wrapper.offsetHeight == 0 || bannerScroller.finger >= 0 ) return
+
+				if ( bannerScroller.maxScrollX == bannerScroller._x ) {
+					bannerScroller.scrollTo(0,0, 1000)
+					bannerScroller.currentPage.pageX = 0
+				} else {
+					bannerScroller.next()
+				}
+				
+			}, timeout)
+		}
+
+		showbanner()
+
+		if ( fragment ) {
+			fragment.on('show', function () {
+				clearInterval(bannerScroller.bannerTimeId)
+				showbanner()
+			})
+
+			fragment.on('hidden', function () {
+				clearInterval(bannerScroller.bannerTimeId)
+			})
+		}
+
+		components.on('show', function () {
+			clearInterval(bannerScroller.bannerTimeId)
+			showbanner()
+		})
+
+		components.on('hidden', function () {
+			clearInterval(bannerScroller.bannerTimeId)
+		})
+
+	</script>
+</if>
