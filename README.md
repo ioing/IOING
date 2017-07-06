@@ -1,4 +1,5 @@
-![引擎介绍封面](https://github.com/ioing/IOING/blob/master/frameworks/static/iopic.jpeg?raw=true)
+<p align="center"><a href="https://ioing.com" target="_blank"><img width="320"src="https://github.com/ioing/IOING/blob/master/frameworks/static/iopic.jpeg?raw=true"></a></p>
+
 
 
 # 面向未来的前端复引擎
