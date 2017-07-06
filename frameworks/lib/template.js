@@ -1,641 +1,469 @@
-define(function(require, exports, module) {
+// 有无相生，难易相成，长短相形，高下相盈，音声相和，前後相随。恒也。
+
+define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
     'use strict';
 
-    var CSS = require("CSS"),
-        DOM = require("DOM"),
-        Async = require("Async"),
-        extend = require('Extend')
-    ;
+    var CSS = require('~/css')
+    var DOM = require('~/dom')
 
-    function Template () {
-        'use strict';
+    function Template (id) {
 
         if ( !(this instanceof Template) ) {
-            return new Template();
+            return new Template(id)
         }
 
-        this.init();
+        if ( !id ) return
+
+        this.init(id)
     }
 
     Template.prototype = {
-        init : function () {
-            this._events = {};
-
-            // include lib;
-
-            this.css = CSS();
-            this.async = Async();
-        },
-
-        setup : function (id) {
-            var config = this.config;
+        init : function (id) {
+            var that = this
 
             // include lib
+            
+            this.id = id
 
-            this.dom = DOM();
-            this.dom.css = this.css;
+            this.css = new CSS()
+            this.dom = new DOM()
 
-            // 配置过滤
-
-            this.filter(config);
+            this.module = App.modules[id]
+            this.config = this.module.config
+            this.target = this.module.elements.container
         },
 
-        on : function (type, fn) {
-            var types = type.split(' ');
-
-            for (var i = 0, l = types.length; i < l; i++) {
-
-                var type = types[i];
-
-                if ( !this._events[type] ) {
-                    this._events[type] = [];
-                }
-
-                this._events[type].push(fn);
-            }
-        },
-
-        off : function (type, fn) {
-            var types = type.split(' ');
-
-            for (var i = 0, length = types.length; i < length; i++) {
-
-                var type = types[i];
-
-                if ( !this._events[type] ) {
-                    return;
-                }
-
-                var index = this._events[type].indexOf(fn);
-
-                if ( index > -1 ) {
-                    this._events[type].splice(index, 1);
-                }
-            }
-        },
-
-        trigger : function (type) {
-            if ( !this._events[type] ) {
-                return;
-            }
-
-            var i = 0,
-                l = this._events[type].length;
-
-            if ( !l ) {
-                return;
-            }
-
-            for ( ; i < l; i++ ) {
-                this._events[type][i].apply(this, [].slice.call(arguments, 1));
-            }
-        },
-
-        include : function (target, id, callback) {
-            if ( !id ) return;
-
-            var that = this;
-
-            this.id = id;
-            this.target = target;
-            this.callback = callback;
-
-            this.module = application.modules[id];
-            this.config = this.module.config;
-
-            this.setup(id);
-
-            this.async.get(id, this.config, function (sids, data) {
-                that.compile(id, sids, data);
-            })
-        },
-
-        iframe : function (style, mirroring) {
-            return '<!DOCTYPE html>'
-                + '<html' + (mirroring ? ' class="mirroring"' : '') + '>'
-                + '<head>'
-                + '<style>' + style + '</style>'
-                + '</head>'
-                + '<body>'
-                + '</body>'
-                + '</html>';
-        },
-
-        clipView : function (context) {
-            var clip = this.config.mirroring.clip;
-
-            var view = document.createElement('div');
-                view.css({
-                    "position"  : "absolute",
-                    "top"       : clip[0] + 'dp',
-                    "right"     : clip[1] + 'dp',
-                    "bottom"    : clip[2] + 'dp',
-                    "left"      : clip[3] + 'dp',
-                    "width"     : "100%",
-                    "overflow"  : "hidden"
-                })
-
-            var mask = document.createElement('div');
-                mask.css({
-                    "position"  : "absolute",
-                    "top"       : "-" + clip[0] + 'dp',
-                    "right"     : "-" + clip[1] + 'dp',
-                    "bottom"    : "-" + clip[2] + 'dp',
-                    "left"      : "-" + clip[3] + 'dp',
-                    "width"     : "100%"
-                })
-
-            if ( context ) mask.appendChild(context);
-
-            view.appendChild(mask);
-
-            return  context ? view : [view, mask];
-        },
-
-        mirroring : function (style, dom) {
-            var id = this.id,
-                target,
-                mirroring,
-                module = this.module,
-                options = this.config.mirroring
-            ;
-
-            var frameContent = document.createElement('iframe');
-
-                // set sandbox;
-
-                frameContent.attr({
-                    "name"      : "mirroring-" + id,
-                    "src"       : "about:blank",
-                    "seamless"  : "seamless",
-                    "sandbox"   : "allow-same-origin allow-scripts",
-                    "class"     : "module-mirroring-context"
-                }).css({
-                    "position"  : "absolute",
-                    "z-index"   : "-1",
-                    "top"       : '0',
-                    "right"     : '0',
-                    "bottom"    : '0',
-                    "left"      : '0',
-                    "width"     : "100%",
-                    "height"    : "100%",
-                    "border"    : "0",
-                    "filter"    : options.filter || "none"
-                })
-
-            // set clip mirroring
-
-            if ( options.filter ) {
-                var container = document.createElement('div');
-                    container.css({
-                        "position"  : "absolute",
-                        "z-index"   : "-1",
-                        "top"       : '0',
-                        "right"     : '0',
-                        "bottom"    : '0',
-                        "left"      : '0',
-                        "width"     : "100%",
-                        "height"    : "100%",
-                        "overflow"  : "hidden"
-                    })
-
-                    container.appendChild(frameContent);
-
-                mirroring = container;
-            } else {
-                container = frameContent 
-            }
-
-            // target
-
-            if ( options.target ) {
-                target = typeof options.target == 'string' ? document.querySelector(options.target) : options.target;
-            } else {
-                target = module.elements.container;
-            }
-
-            // insert
-
-            target.appendChild(mirroring);
-
-            // frame : document and window;
-
-            var frameDoc = frameContent.contentDocument;
-            var frameWindow = frameContent.contentWindow.window;
-
-            // set application;
-
-            application.modules[id].elements.mirroring = {
-                container   : frameContent,
-                window      : frameWindow,
-                document    : frameDoc
-            };
-
-            frameDoc.open();
-            frameDoc.write(this.iframe(style, true));
-            frameDoc.close();
-
-            frameDoc.body.appendChild(dom);
-        },
-
-        sandbox : function (style, dom) {
-            var that = this,
-                id = this.id,
-                module = this.module,
-                config = this.config
-            ;
-
-            var frameContent = document.createElement('iframe');
-
-                // set sandbox;
-
-                frameContent.attr({
-                    "name"     : id, 
-                    "src"      : "about:blank",
-                    "seamless" : "seamless",
-                    "sandbox"  : typeof config.sandbox == "string" ? config.sandbox : "allow-scripts allow-top-navigation allow-same-origin",
-                    "style"    : "position: absolute; z-index: 0; width: 100%; height: 100%; border: 0"
-                })
-
-            // creat clip view
-
-            if ( config.clip ) {
-
-                this.target.appendChild(this.clipView(frameContent));
-
-            } else {
-
-                this.target.appendChild(frameContent);
-
-            }
-
-            // frame : document and window;
-
-            var frameWindow = frameContent.contentWindow.window;
-            var frameDocument = frameContent.contentDocument;
-
-            // set application;
-
-            application.modules[id].elements.sandbox = {
-                container   : frameContent,
-                window      : frameWindow,
-                document    : frameDocument
-            }
-
-            // set sandbox;
-
-            frameWindow.module = module;
-            frameWindow.application = application;
-
-            // react DATA ROOT;
-
-            frameWindow.DOM = this.dom.DOM.root;
-            frameWindow.DATA = this.dom.DATA;
-
-            // updata data && updata view;!!!!!!
-
-            frameWindow.application.update = function (id) {
-                id = id ? id : that.config.source[0];
+        render : function (id, module, source) {
+            var that = this
+            
+            /*
+             * dimension 确保多个异步数据完成后执行当前到达的dimension模块
+             */
+
+            if ( id && source ) {
+
+                /**
+                 * appcache + 本地数据缓存，造成无异步加载
+                 * 模版解析的过程导致loading被阻塞
+                 * 认为产生异步加载，第一时间展示loading
+                 * transform.to().then() then依赖于to函数异步 
+                */
                 
-                that.async.source(id, that.config, 'data').then(function (err, sids, data) {
-                    if ( !err && data ) {
-                        that.dom.update(id, 0, data);
-                    }
-                });
-            };
+                // module onprefetch
+                
+                source[2] = typeof module.onprefetch == 'function' ? (module.onprefetch(source[2]) || source[2]) : source[2]
+                
+                // prefetch callback
 
-            frameDocument.open();
-            frameDocument.write(this.iframe(style));
-            frameDocument.close();
-
-            // compatible window;
-
-            extend(frameWindow);
-
-            // ready event;
-
-            frameDocument.ready(function () {
-
-                // setup moderation;
-
-                moderation(frameWindow);
-
-                // insert dom to body;
-
-                frameDocument.body.appendChild(dom[0]);
-
-                // trigger dom is ready;
-
-                that.dom.space(frameWindow, frameDocument.body).end();
-
-                // creat mirroring;
-
-                if ( config.mirroring ) that.mirroring(style, dom[1]);
-
-                // setup require;
-
-                that.require('sandbox', function () {
-
-                    // event trigger;
-
-                    this.trigger("complete", {
-                        type   : "sandbox",
-                        id     : id,
-                        module : module
-                    });
+                this.fetched(module, function () {
+                    that.write(that.compile(id, source[0], source[1], source[2]))
                 })
-
-                // callback;
-
-                that.callback && that.callback();
-
-            })
-
-            // loaded event;
-
-            frameWindow.load(function () {
-
-                // event trigger;
-
-                that.trigger("load", {
-                    type   : "sandbox",
-                    id     : id,
-                    module : module
-                })
-            })
-        },
-
-        // embed contenter
-
-        wrap : function (id, style, dom, type) {
-            
-            // creat css;
-
-            var css = document.createElement('style');
-                css.name = id;
-                css.innerHTML = style;
-
-            var body = document.createElement('div');
-                body.id = "module-" + id + "-context";
-                body.name = id;
-                body.className = "module-context";
-
-            // inset style;
-
-            id == 'frameworks' && type == 0 ? document.head.appendChild(css) : body.appendChild(css);
-
-            body.appendChild(dom);
-
-            return body;
-        },
-
-        // free module;
-
-        embed : function (style, dom) {
-            var id = this.id,
-                config = this.config
-            ;
-            
-            var body = this.wrap(id, style, dom[0], 0);
-
-            // 主框架与模块分离;
-
-            if ( config.shadow ) {
-
-                // creat clip view
-
-                if ( config.clip ) {
-
-                    var clipView = this.clipView(),
-                        view = clipView[0],
-                        mask = clipView[1]
-                    ;
-
-                    this.target.appendChild(view);
-
-                    var shadow = mask.createShadowRoot();
-
-                } else {
-
-                    var shadow = this.target.createShadowRoot();
-
-                }
-
-                // inset dom;
-
-                shadow.appendChild(body);
-
-            } else {
-
-                // creat clip view
-
-                if ( config.clip ) {
-
-                    // inset dom;
-
-                    this.target.appendChild(this.clipView(body));
-
-                } else {
-
-                    // inset dom;
-
-                    this.target.appendChild(body);
-                }
             }
 
-            // trigger dom is ready;
-
-            this.dom.space(window, body).end();
-
-            // creat mirroring;
-
-            if ( config.mirroring ) this.mirroring(style, this.wrap(id, style, dom[1], 1));
-
-            // setup require;
-
-            this.require('embed', function () {
-
-                // event trigger;
-
-                this.trigger("complete", {
-                    type   : "embed",
-                    id     : id,
-                    module : this.module
-                });
-            });
-
-            // callback;
-
-            this.callback && this.callback();
-            
+            return this
         },
 
-        compile : function (id, sids, data) {
-            this.css.setup({
-                module     : id,
-                root       : "modules/",
+        write : function (source) {
+            this.config.sandbox ? this.sandbox(source[0], source[1]) : this.embed(source[0], source[1])
+        },
+
+        compile : function (id, sids, suri, data) {
+
+            this.module.scope = data.data = {}.extend(
+                App.modules.frameworks.scope || {},
+                {
+                    module : this.module,
+                    config : this.config,
+                    params : this.module.param,
+                    device : device
+                },
+                data.data)
+            
+            this.css.init(id).setup({
                 data       : {
-                    module     : id,
+                    module     : this.module,
                     config     : this.config,
-                    dpi        : device.ui.dpi,
-                    width      : device.ui.width,
-                    height     : device.ui.height,
+                    params     : this.module.param,
+                    scope      : data.data,
+                    device     : device,
                     os         : device.os,
+                    dpi        : device.ui.dpi,
                     feat       : device.feat,
                     prefix     : device.feat.prefix
                 },
-                wrap       : (this.config.sandbox || this.config.shadow || id == 'frameworks') ? null : "#module-" + id + "-context"
-            })
-            
-            data.data.extend({
-                module : {
-                    id     : id,
-                    uri    : "modules/" + id + "/",
-                    param  : this.module.param || []
-                },
-                device : device
+                descendant       : (this.config.sandbox || this.config.shadowbox || id == 'frameworks') ? null : "#module-" + id + "-context"
             })
 
-            this.dom.setup({
-                module     : id,
-                root       : "modules/",
+            // init 清除 Dom 的未完成异步回调
+
+            this.dom.init(this.module, App.sandbox, {}.extend(App.modules.frameworks.helper, this.module.helper), this.css).setup({
+                suri       : suri,
                 dids       : sids.data,
                 sids       : sids.source,
                 parallel   : this.config.mirroring
             })
 
-            this.write(
+            return [
                 this.css.render(this.config.style, sids.style, data.style), 
                 this.dom.render(this.config.source[0], data.source, data.data)
-            )
+            ]
         },
 
-        write : function (style, dom) {
-            this.config.sandbox ? this.sandbox(style, dom) : this.embed(style, dom);
+        include : function (id) {
+            var that = this
+            var module = this.module
+            var config = this.config
+            var dimension = module.dimension
+            var prefetched = module.prefetch[dimension]
+
+            // 如果存在缓存并且没有被定义为强制刷新模块
+
+            if ( prefetched ) {
+                return this.render(id, module, prefetched)
+            }
+
+            App.async.fetch(id, config, module.param, function () {
+
+                // render
+
+                that.render(id, module, arguments)
+
+                if ( module.config.cache && !module.config.update ) {
+                    module.prefetch[module.dimension] = arguments
+                    module.updatetime[module.dimension] = Date.now()
+                }
+            }, function () {
+                that.errored(module)
+            })
         },
 
-        require : function (type, callback) {
-            var that = this,
-                uri,
-                load,
-                url = [],
-                id = this.id,
-                root = "modules/",
-                module = this.module,
-                config = module.config,
-                script = config.script,
-                resources = module.resources,
-                requires = config.require || {},
-                moderation
-            ;
+        scope : function (sandbox, context, content) {
+            var id = this.id
+            var dom = this.dom
+            var config = this.config
+            var module = this.module
+            var scopeWindow = sandbox.window
+            var scopeDocument = sandbox.document
 
-            if ( script.length ) {
-                for (var i = 0, l = script.length; i < l; i++) {
-                    uri = resources.script[script[i]];
+            // set sandbox
 
-                    uri = uri.split(/\:\:/);
+            scopeWindow.module = this.module
+            scopeWindow.App = scopeWindow.application = App
 
-                    if ( uri.length == 2 ) {
-                        id = uri[0];
-                        uri = uri[1];
-                    } else {
-                        uri = uri[0];
-                    }
+            // valid window
 
-                    if ( uri.indexOf('://') > 0 ) {
-                        
-                    } else if ( uri.indexOf('/') == 0 ) {
-                        uri = root + uri.substr(1);
-                    } else if ( uri.indexOf('./') == 0 ) {
-                        uri = root + id + uri.substr(1);
-                    } else if ( uri.indexOf('-/') == 0 ) {
-                        uri = root + this.id + uri.substr(1);
-                    } else {
-                        uri = root + id + '/' + uri;
-                    }
+            scopeWindow.validWindow = scopeWindow
 
-                    url.push(uri);
+            // react DATA ROOT
+
+            scopeWindow.TOP = window
+            scopeWindow.DOM = scopeWindow.DOMS = dom.DOM[0]
+            scopeWindow.DATA = scopeWindow.SCOPE = scopeWindow.scope = dom.DATA
+            scopeWindow.root = context
+            scopeWindow.node = dom.getElementById
+
+            // set application
+
+            App.modules[id].addElement('sandbox', sandbox)
+            App.modules[id].addElement('context', context)
+            App.modules[id].addElement('content', content)
+
+            // 模块错误收集
+
+            scopeWindow.onerror = function () {
+                App.trigger('error', {
+                    id : id,
+                    module : module
+                })
+            }
+
+            if ( sandbox.window !== window ) {
+                
+                // compatible window
+
+                __defineUnify__(sandbox.window)
+                __defineProto__(sandbox.window)
+
+            }
+        },
+
+        trick : function (sandbox, context) {
+            if ( sandbox.window === window ) return
+
+            var that = this
+
+            // valid window
+
+            sandbox.window.validWindow = sandbox.window.vwindow = window
+            sandbox.window.validDocument = sandbox.window.vdocument = window.document
+
+
+            sandbox.window.document.extendProperty("getElementById", function (id) { return that.dom.DOM[0][id] || context.find('#' + id)[0] || window.document.getElementById(id) })
+            sandbox.window.document.extendProperty("getElementsByName", function (name) { return context.find('*[name=' + name + ']').toArray() || window.document.getElementsByName(name) })
+            sandbox.window.document.extendProperty("getElementsByClassName", function (name) { return context.find('.' + name).toArray() || window.document.getElementsByClassName(name) })
+            sandbox.window.document.extendProperty("getElementsByTagName", function (name) { return context.find(name).toArray() || window.document.getElementsByTagName(name) })
+            sandbox.window.document.extendProperty("getElementsByTagNameNS", function (name, namespace) { return window.document.getElementsByTagNameNS(name, namespace) })
+            
+        },
+
+        wrap : function (id, style, dom, type) {
+
+            // creat css
+
+            var css = document.createElement('style')
+                css.name = id
+                css.innerHTML = style
+
+            var body = document.createElement("module-context")
+                body.id = "module-" + id + "-context"
+                body.name = id
+                body.className = "module-context"
+
+            // inset style
+
+            id == 'frameworks' && type == 0 && !this.config.shadowbox 
+                ? document.head.appendChild(css) 
+                : body.appendChild(css)
+
+            body.appendChild(dom)
+
+            return body
+        },
+
+        script : function () {
+            var id = this.id
+            var module = this.module
+            var config = module.config
+            var path = ''
+            var script = '' 
+              
+            config.script.each(function (i, name) {
+                path = module.resources.script[name]
+
+                if ( path ) {
+                    script += '<script src=' + App.realpath(id, null, path) + '></script> \n'
+                } else {
+                    App.console.error('resources.script["' + name + '"] is not definde')
+                }
+            })
+
+            return script
+        },
+
+        style : function (style) {
+            return '<style>' + style + '</style>'
+        },
+
+        blakbox : function (target, style, script, content, puppet) {
+            var sandbox = new Sandbox(true, true, true)
+            var module = this.module
+            var config = module.config
+
+            sandbox.iframe.attr({
+                "name"     : this.id, 
+                "src"      : "about:blank",
+                "seamless" : "seamless"
+            }).css(content ? {
+                "display"  : "none"
+            } : {
+                "display" : "block", 
+                "position" : "absolute", 
+                "z-index" : "0",
+                "width" : "100%", 
+                "height" : "100%", 
+                "border" : "0"
+            })
+
+            // set sandbox
+            
+            if ( puppet ) {
+                sandbox.iframe.attr("sandbox", "allow-same-origin")
+            } 
+            else {
+                if ( typeof config.sandbox === "string" && !(config.sandbox.indexOf("allow-same-origin") !== -1 && config.sandbox.indexOf("allow-scripts") !== -1) ) {
+                    sandbox.iframe.attr("sandbox", config.sandbox)
                 }
             }
 
-            // load;
+            // append sandbox
 
-            load = requires.use && requires.use.load || url;
+            target.appendChild(sandbox.iframe)
 
-            // return
+            // puppet
 
-            if ( !load ) return callback && callback.call(this);
+            if ( puppet ) {
+                sandbox.init().open().write(style).close()
 
-            // extend
-
-            requires.config = {
-                vars  : modules.data.vars || {},
-                paths : modules.data.paths || {}
-            }.extend(requires.config || {});
-
-            // sandbox || embed
-
-            switch (type) {
-                case 'embed':
-                    if ( requires.config ) modules.config(requires.config);
-
-                    require.async(load, function () {
-                        requires.use && requires.use.callback && requires.use.callback.apply(this, arguments)
-                        callback && callback.call(that)
-                    })
-
-                    break;
-
-                case 'sandbox':
-                    moderation = module.elements.sandbox.window.modules;
-
-                    // updata fetchedList
-
-                    moderation.data.fetchedList = modules.data.fetchedList;
-
-                    if ( requires.config ) moderation.config(requires.config);
-
-                    moderation.use(url, function () {
-                        requires.use && requires.use.callback && requires.use.callback.apply(this, arguments)
-                        callback && callback.call(that)
-                    })
-
-                    break;
+                return sandbox
             }
 
+            // init sandbox
+
+            sandbox.init().extend()
+
+            // end sandbox
+
+            sandbox.open()
+
+            // reload App
+
+            sandbox.window.addEventListener('beforeunload', function (e) {
+                if ( App._EXISTS !== -1 ) {
+                    App._EXISTS = -1
+                    setTimeout(function () {
+                        top.location.reload() 
+                    }, 0)
+                }
+            })
+
+            // scope sandbox, order: open then scope
+
+            this.scope(sandbox, content || sandbox.document, content || sandbox.iframe)
+
+            sandbox.write(style, script)
+            sandbox.close()
+
+            // sandbox writed
+
+            sandbox.window.addEventListener('touchmove', preventDefaultEvent, false)
+
+            return sandbox
         },
 
-        // config filter;
+        mirroring : function (style, dom) {
+            var mirroring = this.config.mirroring
 
-        filter : function (config) {
+            if ( !mirroring ) return
 
-            // shadowRoot;
+            var that = this
+            var module = this.module
+            var sandbox = this.blakbox(this.target, this.style(style), null, null, true)
 
-            if ( device.feat.shadowRoot == false ) {
-                config.shadow = false;
-            }
+            sandbox.iframe.css({
+                "z-index"   : "-1",
+                "filter"    : mirroring.filter || "none"
+            })
 
-            // if is Bad GPU exit;
+            // insert dom to body
 
-            if ( this.id == 'frameworks' || device.feat.isBadAndroid || !device.feat.observer ) {
-                config.mirroring = false;
-            }
+            sandbox.document.body.appendChild(dom)
 
-            if ( device.feat.isBadTransition ) {
-                config.animation = false;
-            }
+            module.addElement('mirroring', sandbox.iframe)
+        },
 
-            if ( config.mirroring && config.mirroring.clip && !config.mirroring.target ) {
-                config.clip = true;
+        container : function (target) {
+            var mirroring = this.config.mirroring
+            var clip = mirroring ? mirroring.clip : false
 
-                if ( !config.mirroring.filter ) {
-                    config.mirroring.filter = "blur(20px)";
-                }
-            }
+            var mask = document.createElement('mask')
+            var view = document.createElement('view')
+
+            mask.appendChild(view)
+
+            // in module
+            
+            this.target.appendChild(mask)
+            this.module.addElement('mask', mask)
+            this.module.addElement('view', view)
+            this.module.clipView(clip)
+
+            return this.config.shadowbox && view.createShadowRoot ? view.createShadowRoot() : view
+        },
+
+        sandbox : function (style, dom) {
+            var that = this
+            var module = this.module
+            var container = this.container()
+            var sandbox = this.blakbox(container, this.style(style), this.script())
+
+            // ready event
+
+            sandbox.document.ready(function () {
+
+                // insert dom to body
+
+                sandbox.document.body.appendChild(dom[0])
+
+                // over
+
+                that.over(module, sandbox.window, sandbox.document.body)
+
+                // creat mirroring
+
+                that.mirroring(style, dom[1])
+            })
+        },
+
+        embed : function (style, dom) {
+            var id = this.id
+            var module = this.module
+            var config = this.config
+            var content = this.wrap(id, style, dom[0], 0)
+            var container = this.container()
+            var sandbox = this.blakbox(container, null, this.script(), content)
+
+            // append context
+
+            container.appendChild(content)
+
+            // trick 移形幻影 乾坤大挪移
+
+            this.trick(sandbox, content)
+
+            // over
+                
+            this.over(module, sandbox.window, content)
+
+            // creat mirroring
+
+            this.mirroring(style, dom[1])
+        },
+
+        over : function (module, window, content) {
+
+            var that = this
+
+            // readied
+
+            this.readied(module, function () {
+
+                // trigger dom is ready
+
+                that.dom.space(window, content)
+                        .load(function () { 
+                            that.loaded(module)
+                        })
+                        .end(0)
+            })
+        },
+
+        prefetch : function (callback) {
+            this.fetched = callback
+
+            return this
+        },
+
+        then : function (callback) {
+            this.readied = callback
+
+            return this
+        },
+
+        get : function (callback) {
+            this.loaded = callback
+
+            this.include(this.id)
+
+            return this
+        },
+
+        error : function (callback) {
+            this.errored = callback
+
+            return this
         }
 
     }
 
-
-    return Template;
+    module.exports = Template
 })

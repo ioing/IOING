@@ -1,441 +1,977 @@
-define(function(require, exports, module) {
-    'use strict';
+// 天下皆知美之为美，斯恶已。皆知善之为善，斯不善已
 
-    var browser = {
-          isBadTransition : device.feat.isBadTransition,
-          isBadGPU        : device.feat.isBadAndroid,
-          hasObserver     : device.feat.observer,
-          prefixStyle     : {
-                                transform : device.feat.prefixStyle('transform'),
-                                translateZ : device.feat.prefixStyle('perspective') ? ' translateZ(0)' : ''
-                            }
-        };
+define('~/transform', [], function (require, module, exports) {
+    
+    'use strict'
 
-    // Trans to this module;
+    var rAF = window.requestAnimationFrame
+
+    // Trans to this module
 
     function Transform () {
-        'use strict';
 
         if ( !(this instanceof Transform) ) {
-            return new Transform();
+            return new Transform()
         }
 
-        this.default = {
-            visible : "translate(0, 0)" + browser.prefixStyle.translateZ,
-            hidden  : "translate(200%, 200%)" + browser.prefixStyle.translateZ
-        }
-
-        this.init();
     }
 
     Transform.prototype = {
-        init : function () {
-            var that = this;
+        init : function (DNA) {
 
-            // event
+            var that = this
 
-            this._events = {};
+            this.DNA = DNA
+            this.LIMIT = []
+            this.singleflowtimes = 0
 
             // go to history
 
-            window.bind('hashchange', function (event) {
+            window.on("hashchange popstate", function (event) {
 
-                // no hashchange
+                // hashchange popstate
 
-                if ( that.hashchange == false ) return that.hashchange = true;
+                if ( !App.id || App.equalsParam(that.prehistory, location.hash) ) return
 
-                // level == 0 return
+                // pre history
 
-                if ( that.module && that.module.level == 0 ) return;
+                that.prehistory = location.hash
 
-                var md = location.hash.replace("#","").split("$");
+                // EXISTS
 
-                if ( md[0] ) {
-                    application.transform.to(md.length == 2 ? md : md[0], -1);
-                }
+                that.back()
+
+                // unique
+
+                setTimeout(function () {
+                    that.prehistory = null
+                }, 0)
             })
 
-            // reset viewport;
-            /* use preserve-3d */
+            // creat relative view
 
-            document.documentElement.style.height = document.body.style.height = "100%";
-            document.body.style.overflow = "hidden";
+            var relativeViewport = document.createElement('relative-windows')
+                relativeViewport.id = "relative-viewport"
+                relativeViewport.style.position = "absolute"
+                relativeViewport.style.zIndex = 1
+                relativeViewport.style.width = relativeViewport.style.height = "100%"
+                relativeViewport.style.overflow = "hidden"
 
-            // creat complex view;
+                // set DNA
 
-            application.complexViewport = document.createElement('div');
-            application.complexViewport.id = "complex-viewport";
-            application.complexViewport.style.position = "fixed";
-            application.complexViewport.style.width = application.complexViewport.style.height = "100%";
-            application.complexViewport.style.overflow = "hidden";
-            document.body.appendChild(application.complexViewport);
+                DNA(relativeViewport)
 
-            // creat absolute view;
+            App.relativeViewport = relativeViewport
 
-            application.absoluteViewport = document.createElement('div');
-            application.absoluteViewport.id = "absolute-viewport";
-            application.absoluteViewport.style.position = "fixed";
-            application.absoluteViewport.style.width = application.absoluteViewport.style.height = "100%";
-            application.absoluteViewport.style.overflow = "hidden";
-            document.body.appendChild(application.absoluteViewport);
+            // creat absolute view
+
+            var absoluteViewport = document.createElement('absolute-windows')
+                absoluteViewport.id = "absolute-viewport"
+                absoluteViewport.style.position = "absolute"
+                absoluteViewport.style.zIndex = 10000
+                absoluteViewport.style.width = absoluteViewport.style.height = "100%"
+                absoluteViewport.style.overflow = "hidden"
+
+                // set DNA
+
+                DNA(absoluteViewport)
+
+            App.absoluteViewport = absoluteViewport
+
+            // append to document
+
+            document.body.appendChild(App.relativeViewport)
+            document.body.appendChild(App.absoluteViewport)
         },
 
-        hash : function (id, param) {
+        setup : function (options) {
+
+            this.options = options
+
+            var currpage = options.currpage
+            var homepage = options.homepage
+            var exists = options.exists
+            var singleflow = options.singleflow
+            var singlelocking = options.singlelocking
+
+            if ( singleflow ) {
+
+                // inset homepage history
+                
+                if ( !exists && currpage !== homepage ) {
+                    this.hash(homepage, null, 0)
+                }
+
+                if ( singlelocking && homepage ) {
+                    this.hash(homepage, null, 1)
+                }
+            }
+        },
+
+        back : function () {
+
+            // Target module id & param
+
+            var route = App.route()
+            var id = route.id || this.options.homepage || 'frameworks'
+            var param = route.param
+            var module = App.modules[id]
+
+            // level == 0 return
+
+            if ( this.options.singlelocking && this.module.config.level === 0 ) {
+
+                this.singleflowtimes++
+
+                this.hash(this.id, this.param, 1)
+
+                // exit App
+
+                App.trigger('exit', { singleflow : this.singleflowtimes})
+
+                return
+            }
+
+            this.singleflowtimes = 0
+
+            // no module or no hashchange block trans
             
-            // no hashchange
+            if ( this.id === id && App.equalsParam(this.param, param) ) return
+            
+            // continuity back or trans to module
 
-            this.hashchange = false;
+            if ( this.options.singleflow && module && module.config.level !== 0 && module.config.level >= this.module.config.level ) {
 
-            document.location.hash = id + (param ? "$" + param : "");
+                // back to >> 0 
 
-            return this;
+                return window.history.back()
+            }
+
+            // to
+
+            this.to(id, param, -1)
+
+            // history back event
+
+            App.trigger('back', { id : id, module : module })
         },
 
-        to : function (md, history) {
-            var that = this,
-                id = typeof md == "object" ? md[0] : md,
-                od = this.od,
-                ids = od ? [id, od] : [id],
-                param = typeof md == "object" ? md[1] : null,
-                module,
-                modules
-            ;
+        hash : function (id, param, prepush) {
 
-            history = history || 1;
+            id = id || this.id
 
-            // md=[id,param]
+            // prepush
 
-            if ( typeof md == "object" ) {
-                id = md[0];
-                param = md[1];
+            prepush = prepush === undefined ? true : prepush
+
+            // remot module id
+            
+            id = this.reid(id)
+
+            // param trim all \s
+
+            param = param ? '/' + param.replace(/\s/g, '') : ''
+
+            switch (prepush) {
+                case 0:
+                    window.history.replaceState({ id : id }, null, '#' + id + param)
+
+                    break
+                case 1:
+                    window.history.pushState({ id : id }, null, '#' + id + param)
+
+                    break
+                default:
+                    window.location.hash = id + param
+
+                    break
+            }
+            
+            // mark EXISTS
+
+            App.exists(true)
+        },
+
+        status : function (id, param, push) {
+            // param = (this.module.param || this.param || {}).extend(param).objectToParams()
+
+            id = id || this.id
+            param = param.objectToParams()
+
+            // push or replace
+
+            if ( push ) {
+                this.hash(id, param)
+            } else {
+
+                // remot module id
+            
+                history.replaceState({}, null, '#' + this.reid(id) + (param ? '/' + param.replace(/\s/g, '') : ''))
             }
 
-            // 检测模块配置
+            this.module.setParam(param)
+        },
 
-            if ( !application.modules[id] ) {
-                application.get(id, function () {
-                    that.to(md, history);
-                }, this)
-                return false;
+        reid : function (id) {
+            
+            // remot module id
+            
+            return /\//.test(id) && id.indexOf('[') !== 0 ? '[' + id + ']' : id
+        },
+
+        get : function (id, od, input) {
+            var that = this
+            var nofind = that.options.nofindpage || '404'
+
+            // open loading
+
+            this.loading(od, 1)
+
+            App.get(id, function (module) {
+
+                if ( !App.modules[id] && id !== module.id ) {
+                    App.modules[id] = module.cloneAsNew(id)
+                }
+                
+                // close loading
+
+                that.loading(od, 0)
+
+                // RE
+
+                that.to.apply(that, input)
+            }, function () {
+                if ( id === nofind ) return
+                that.loading(od, 0)
+                that.to(nofind)
+            })
+
+            return this
+        },
+
+        to : function (id, param, history) {
+            var that = this
+
+            // filter
+            
+            if ( this.inProcess === 0 ) return this
+
+            // in the process
+
+            this.inProcess = 0
+
+            // is number ? go to history
+
+            if ( !isNaN(id) ) {
+                that.inProcess = -1
+
+                switch (Number(id)) {
+                    case -1:
+                        window.history.back()
+                        return this
+                    break
+                    case 0:
+                        return this
+                    break
+                }
             }
+
+            // check module config
+
+            if ( App.modules[id] === undefined ) {
+                this.inProcess = -1
+                return this.get(id, od, arguments)
+            }
+
+            // nomal param url
+
+            param = App.getParam(param)
+
+            // this extend
+
+            this.id = id
+            this.param = param
+            this.callback = noop  // reset callback
+
+            // od & id
+
+            var od = this.od
+            var ids = od ? [id, od] : [id]
+            var module = App.modules[id]
+            var modulu = App.modules[od]
+            var moduli = od ? [module, modulu] : [module]
+
+            // self module
+
+            this.self = id == od
+
+            // close pre loading
+
+            this.loading(od, 0)
+
+            // check fetch
+
+            this.fetch(module, param)
+
+            // activity page = this page ? return
+
+            if ( od && this.self && module.dimension === param && module.loaded && !module.update ) {
+                that.inProcess = -1
+                return this
+            }
+
+            // module cheak end then apply this
+
+            this.ids = ids
+            this.module = module
+            this.modulu = modulu
+            this.moduli = moduli
 
             // set param && update
+            
+            module.rsetParam().setParam(param, true)
 
-            if ( param ) this.param(id, param);
+            // get animation
 
-            // set id
+            this.animation = (this.self || !od || od === 'frameworks') 
+                                ? false
+                                : (history == -1 ? modulu : module).config.animation
 
-            this.id = id;
-            this.ids = ids;
-
-            // activity page = this page ? return;
-
-            if ( od && id == od ) return;
-
-            // modules;
-
-            this.module = module = application.modules[id];
-            this.modules = modules = [module, application.modules[od]];
-
-            // this module is undefined ? return;
-
-            if ( module == undefined ) {
-                throw 'IOING ERROR { module[' + id + '] is not defined }';
+            if ( this.animation == true || this.animation == "inherit" ) {
+                this.animation = App.frameworks.config.animation
             }
 
-            // module is infinite or module Ele ? creat new elements;
+            if ( typeof this.animation == "string" ) {
+                this.animation = this.animations(this.animation)
+            }
 
-            if ( module.elements == undefined ) {
-                this.container(id);
-            } else {
-                if ( module.update == true ) {
+            this.cutting = od && module.config.absolute != modulu.config.absolute ? true : false
 
-                    // clear old page;
+            // module is infinite or module Ele ? creat new elements
 
-                    module.elements.container.innerHTML = null;
+            if ( !module.elements.container ) this.container(id)
 
-                    // open loading;
+            // 初始化模块
 
-                    this.loading(id, 1);
+            // transform start
 
-                    // update page;
+            this.start(function () {
 
-                    application.template.include(module.elements.container, id, function (data) {
-                        that.loading(id, 0);
+                // return trans to
+
+                if ( that.module !== module ) return
+
+                // first page
+
+                if ( !od ) {
+                    that.cut()
+                    that.end()
+                }
+
+                // pre module
+
+                App.id = that.od = id === "frameworks" ? null : id
+                App.module = module
+
+                // history -1 ? 0 : ++
+                /**
+                 * push history build pre view
+                 * hashchange 应该在试图转换之前插入，因为右滑会退效果会记录hashchange后的dom改变视图
+                */
+
+                if ( history !== -1 ) that.hash(id, param, history)
+
+                // build content
+
+                that.build(id, function (module, callback) {
+
+                    callback = callback || noop
+
+                    // not first ?
+
+                    if ( od ) {
+                        that.transform(function () {
+                            callback()
+                            that.inProcess = 1
+                        })
+                    } else {
+                        callback()
+                        that.inProcess = 1
+                    }
+                })
+
+            })
+
+            return this
+        },
+
+        // 检测cache 周期
+
+        fetch : function (module, param) {
+
+            if ( Date.now() - module.updatetime[param] > module.config.cache * 1000 ) {
+                delete module.prefetch[param]
+
+                module.dimension = false
+            }
+
+            // is prefetched ?
+
+            this.prefetched = module.prefetch[param] ? true : false
+        },
+
+        build : function (id, readied) {
+            var that = this
+              , modules = App.modules
+              , module = modules[id]
+
+            if ( !module.loaded 
+                || module.update === true 
+                || module.config.update === true ) 
+            {   
+                module.destroy(1)
+
+                if ( that.prefetched || module.config.preview ) {
+                    that.include(id, null, readied)
+                } else {
+                    rAF(function () {
+                        readied(module, function () {
+                            that.include(id, null, function (module, callback) { 
+                                callback()
+                            })
+                        })
                     })
                 }
-            }
-
-            this.transformStart();
-
-            // is first ?;
-            if ( od ) {
-                var modeChange = modules[0].config.complex != modules[1].config.complex ? true : false,
-                    animation = (history === 1 ? modules[0].config.animation : modules[1].config.animation) || function (event) { event.callback(); }
-                ;
-
-                animation({
-                    "browser" : browser,
-                    "reverse" : history == 1 ? false : true,
-                    "viewport": [application.complexViewport, application.absoluteViewport],
-                    "view"    : modeChange ? [modules[0].config.complex === true ? application.complexViewport : application.absoluteViewport, modules[1].config.complex === true ? application.complexViewport : application.absoluteViewport] : [modules[0].elements.container, modules[1].elements.container],
-                    "modules" : modules,
-                    "callback": function (end) {
-                                    if ( modeChange ) {
-                                        that.changeViewport(end);
-                                    }
-                                    
-                                    that.transformEnd(end);
-                                }
-                })
             } else {
-                this.changeViewport();
-                this.transformEnd();
-            }
-
-
-            // history;
-            if ( history > 0 ) {
-                this.hash(id, param);
-            }
-
-            this.od = application.activity = id;
-        },
-
-        on : function (type, fn) {
-            var types = type.split(' ');
-
-            for ( var i = 0, l = types.length; i < l; i++ ) {
-
-                var type = types[i];
-
-                if ( !this._events[type] ) {
-                    this._events[type] = [];
-                }
-
-                this._events[type].push(fn);
+                readied(module)
             }
         },
 
-        off : function (type, fn) {
-            var types = type.split(' ');
+        limit : function (id, module) {
+            var index = this.LIMIT.indexOf(id)
 
-            for ( var i = 0, l = types.length; i < l; i++ ) {
+            // 不可被极限破坏
+            
+            if ( module.config.destroy === false ) return
 
-                var type = types[i];
+            // 将已有模块推移
 
-                if ( !this._events[type] ) {
-                    return;
-                }
+            if ( index !== -1 ) this.LIMIT.splice(index, 1)
 
-                var index = this._events[type].indexOf(fn);
+            // push 此模块记录
 
-                if ( index > -1 ) {
-                    this._events[type].splice(index, 1);
-                }
+            this.LIMIT.push(id)
+
+            // limit module
+
+            if ( this.LIMIT.length > this.options.limit ) {
+                App.modules[this.LIMIT.splice(0, 1)].clearCache(true, true).destroy(-1)
+            }
+
+        },
+
+        reset : function (id, rested) {
+            var module = App.modules[id]
+            var config = module.config
+            var container = module.elements.container
+            var frameworks = id == "frameworks" ? true : false
+
+            // clear style
+
+            container.style.cssText = ''
+
+            if ( !frameworks ) {
+                container.css({
+                    "position" : "absolute",
+                    "z-index" : (Number(module.config.level) || 0) + 1,
+                    "background" : config.background || "",
+                    "transform" : rested ? "translate(0, 0)" : "translate(200%, 200%)"
+                })
             }
         },
 
-        _execEvent : function (type) {
-            if ( !this._events[type] ) {
-                return;
+        update : function (id, param, prefetch, readied) {
+            this.include(id, function (module, render) { 
+                if ( prefetch ) {
+                    prefetch(render)
+                } else {
+                    render()
+                }
+            }, function (module, render) { 
+                if ( readied ) {
+                    readied(render)
+                } else {
+                    render()
+                }
+            })
+        },
+
+        include : function (id, prefetch, readied) {
+            var that = this
+            var module = App.modules[id]
+            var dimension = module.dimension
+
+            // no update && status == waiting return
+
+            if ( module.inupdate !== true && module.status[dimension] === 0 ) return
+
+            // lock module
+
+            module.status[dimension] = 0
+            module.timeout = false
+
+            // limit
+
+            this.limit(id, module)
+
+            // open loading
+
+            module.loading(1)
+
+            // preload on event
+
+            if ( typeof module.events.preload === "function" ) {
+                module.events.preload()
             }
 
-            var i = 0,
-                l = this._events[type].length;
+            // include module page
 
-            if ( !l ) {
-                return;
-            }
+            module.Template = App.template(id).prefetch(function (module, callback) {
 
-            for ( ; i < l; i++ ) {
-                this._events[type][i].apply(this, [].slice.call(arguments, 1));
-            }
+                // callback
+                
+                if ( prefetch ) {
+                    prefetch(module, callback)
+                } else {
+                    callback()
+                }
+
+            }).then(function (module, callback) {
+
+                // module status
+
+                module.status[dimension] = 'loaded'
+
+                // module element loaded
+                
+                module.loaded = true
+
+                // callback
+                
+                if ( readied ) {
+                    readied(module, callback)
+                } else {
+                    callback()
+                }
+
+                // prefetch callback
+
+                that.callback(module)
+
+            }).get(function (module) {
+
+                // close loading
+
+                module.loading(0)
+
+                // preload on event
+
+                if ( typeof module.events.load === "function" ) {
+                    module.events.load()
+                }
+
+                // timeout refresh
+
+                if ( module.timeout ) {
+                    if ( id == 'frameworks' ) return
+                    setTimeout(function () {
+                        module.refresh(dimension)
+                    }, 100)
+                }
+
+            }).error(function (module) {
+
+                // module status
+
+                module.status[dimension] = 'error'
+                
+                // close loading
+
+                module.loading(0)
+
+                // onerror
+                
+                if ( typeof module.onerror === "function" ) {
+                    module.onerror()
+                }
+            })
         },
 
         loading : function (id, display) {
-            var module = application.modules[id];
+            var modules = App.modules
+              , module = modules[id]
+              , loader
+
+            if ( !module || module.refreshing ) return
+
+            // 全局 loading 设定
+            
+            loader = module.events.loading
+            loader = typeof loader == 'function' ? loader : loader !== false ? App.modules.frameworks.events : null
+
+            if ( typeof loader == 'function' ) {
+                return loader.apply(this, arguments)
+            }
+
+            loader = module.elements.loader
+
+            // open loader or close loader
 
             switch (display) {
                 case 0:
-                    loader = module.elements.loader;
-                    if ( loader === 'undefined' ) return;
-                    module.elements.loader.cont.style.display = "none";
-                    loader.hide();
 
-                    this._execEvent("loadingEnd", id, module.elements.loader);
+                    if ( !loader ) return
 
-                    break;
+                    loader.hide()
+                    module.elements.loader.hidden = true
+                    module.elements.loader.cont.remove()
+
+                    delete module.elements.loader
+
+                    break
+                    
                 case 1:
-                    var Loader = require('Loader');
-                    var size = 30 * device.ui.scale;
-                    var opts = {
-                        shape: "roundRect",
-                        diameter: size * device.ui.scale,
-                        density: 12,
-                        speed: 1,
-                        FPS: 12,
-                        range: 0.95,
-                        color: "#999999"
-                    };
 
-                    if ( module.config.loader ) {
-                        $.extend(opts, module.config.loader);
+                    if ( loader && loader.hidden === false ) return
+
+                    var size = 38 * device.ui.scale
+                      , opts = {
+                            shape: "roundRect",
+                            diameter: size * devicePixelRatio,
+                            density: 12,
+                            speed: 1,
+                            FPS: 12,
+                            range: 0.95,
+                            color: "#999999"
+                        }
+                      , config = module.config.loader || modules['frameworks'].config.loader
+
+                    // loader config
+
+                    if ( config ) {
+                        opts.extend(config)
                     }
 
-                    var container = application.modules[id].elements.container;
+                    loader = new Loader(module.elements.container, {safeVML: true})
+                    loader.setShape(opts.shape)
+                    loader.setDiameter(opts.diameter)
+                    loader.setDensity(opts.density)
+                    loader.setSpeed(opts.speed)
+                    loader.setFPS(opts.FPS)
+                    loader.setRange(opts.range)
+                    loader.setColor(opts.color)
 
-                    var loader = new Loader(container, {id: 'loader-' + id, safeVML: true});
-                        loader.setShape(opts.shape);
-                        loader.setDiameter(opts.diameter);
-                        loader.setDensity(opts.density);
-                        loader.setSpeed(opts.speed);
-                        loader.setFPS(opts.FPS);
-                        loader.setRange(opts.range);
-                        loader.setColor(opts.color);
-                        loader.show();
+                    loader.cont.style.position = "absolute"
+                    loader.cont.style.zIndex = 999
+                    loader.cont.style.top = loader.cont.style.left = "50%"
+                    loader.cont.style.marginTop = loader.cont.style.marginLeft = size * -0.5 + "px"
+                    loader.cont.style.width = loader.cont.style.height = size + "px"
 
-                        loader.cont.style.position = "absolute";
-                        loader.cont.style.zIndex = 999;
-                        loader.cont.style.top = loader.cont.style.left = "50%";
-                        loader.cont.style.marginTop = loader.cont.style.marginLeft = size * -0.5 + "px";
-                        loader.cont.style.width = loader.cont.style.height = size + "px";
+                    loader.cont.children.each(function (i, can) {
+                        can.style.width = can.style.height = size + "px"
+                    })
 
-                    var canvas = loader.cont.children;
-                    for (var i = canvas.length - 1; i >= 0; i--) {
-                        canvas[i].style.width = canvas[i].style.height = size + "px";
-                    }; 
+                    loader.show()
 
-                    application.modules[id].elements.loader = loader;
+                    module.elements.loader = loader
+                    module.elements.loader.hidden = false
 
-                    this._execEvent("loadingStart", id, module.elements.loader);
-
-                    break;
+                    break
             }
 
-        },
-
-        // set module param;
-        param : function (id, paramStr) {
-            var module = application.modules[id];
-
-            // if this module cache param != param ? updata = ture;
-            
-            application.modules[id].update = module.param && module.param._string != paramStr ? true : false;
-            application.modules[id].param = typeof paramStr == 'string' ? paramStr.toParams() : [];
-
-            application.modules[id].param._string = paramStr;
-        },
-
-        reset : function (id) {
-            var container = application.modules[id].elements.container,
-                style = container.style
-            ;
-
-            style.cssText = "";
-            style.position = "fixed";
-            style.top = style.right = style.bottom = style.left = 0;
-            style.width = style.height = "100%";
-            style.set("transform", "translate(0, 0) translateZ(0) scale(1, 1)");
-        },
-
-        refresh : function (id) {
-            var that = this;
-
-            var container = application.modules[id].elements.container;
-
-            if ( !container ) return console.log("refresh : container is not defined in this module");
-
-            // open loading;
-            this.loading(id, 1);
-            
-            // include module page;
-            application.template.include(container, id, function (data) {
-                // close loading;
-                that.loading(id, 0);
-            })
         },
 
         container : function (id) {
-            var that = this;
-            var target = this.module.config.complex === true ? application.complexViewport : application.absoluteViewport;
+            var that = this
+              , module = App.modules[id]
+              , config = module.config
+              , target = config.absolute === false ? App.relativeViewport : App.absoluteViewport
 
-            var container = document.createElement('section');
-                container.id = "module-" + id;
-                container.className = "module-container"
+            var container = document.createElement("module-container")
+                container.setAttribute("name", id)
+                container.setAttribute("type", id === "frameworks" ? "frameworks" : "module")
 
-            application.modules[id].elements = {
-                "container" : container
-            };
+            // set DNA
 
-            this.reset(id);
+            this.DNA(container)
 
-            // preload on event;
-            if ( typeof this.module.preload === "function" ) {
-                this.module.preload(container);
+            // set module container
+
+            module.addElement('container', container)
+
+            // reset status
+
+            this.reset(id, this.cutting || !this.animation)
+
+            // append
+
+            target.appendChild(container)
+        },
+
+        animations : function (type) {
+            var viewin,
+                viewout,
+                reverse,
+                width,
+                height
+
+            function reset (event) {
+                viewin = event.view[0].Animate()
+                viewout = event.view[1].Animate()
+                reverse = event.reverse
+
+                width = device.ui.width
+                height = device.ui.height
             }
 
-            target.appendChild(container);
+            switch (type) {
+                case 'flip':
+                    return [function (event) {
+                                reset(event)
+                                reverse = reverse ? -1 : 1
+                                viewin.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*reverse).end(function () {
+                                    viewout.duration(400).perspective(1000).rotate3d(0, 1, 0, -90*reverse).end(function () {
+                                        viewout.duration(0).opacity(0).end()
+                                        viewin.duration(0).opacity(1).end(function () {
+                                            viewin.duration(400).rotate3d(0, 1, 0, 0).end(function () {
+                                                event.callback(false)
+                                            })
+                                        })
+                                    })
+                                })
+                            }]
+                break
+                case 'fade':
+                    return [function (event) {
+                                reset(event)
+                                viewin.duration(0).to(0, 0, 0).opacity(0).end(function () {
+                                    viewin.duration(400).opacity(1).end(function () {
+                                        event.callback(false)
+                                    })
+                                })
+                            },
+                            function (event) {
+                                reset(event)
+                                viewin.duration(0).to(0, 0, 0).opacity(1).end(function () {
+                                    viewout.duration(400).opacity(0).end(function () {
+                                        event.callback(false)
+                                    })
+                                })
+                            }]
+                break
+                case 'slide':
+                    return [function (event) {
+                                reset(event)
+                                viewin.duration(0).to(width, 0, 0).end(function () {
+                                    viewout.duration(400).to(-width, 0, 0).end()
+                                    viewin.duration(400).to(0, 0, 0).end(function () {
+                                        event.callback(false)
+                                    })
+                                })
+                            },
+                            function (event) {
+                                reset(event)
+                                viewin.duration(0).to(-width, 0, 0).end(function () {
+                                    viewin.duration(400).to(0, 0, 0).end()
+                                    viewout.duration(400).to(width, 0, 0).end(function () {
+                                        event.callback(false)
+                                    })
+                                })
+                            }]
+                break
+                default:
+                    return false
+                break
+            }
+        },
 
-            // if this module need network;
-            if ( application.modules[id].network ) {
-                if ( navigator.onLine === false ) {
-                    window.addEventListener("online", function () {
-                        that.refresh(id);
-                    }, false);
+        transform : function (callback) {
+            var that = this
+            var module = this.module
+            var modulu = this.modulu
+            var modules = this.moduli
+            var cutting = this.cutting
+            var backset = (modules.length === 1 || module.config.level === modulu.config.level) ? false : (module.config.level > modulu.config.level ? 0 : 1)
+            var reverse = backset === 0 ? false : true
+            var animation = function (event) { event.callback() }
 
-                    return this._execEvent("offline", id, this.module);
+            // get animation
+            
+            if ( backset !== false ) {
+                if ( typeof this.animation === "function" ) {
+                    animation = this.animation
+                } else if ( typeof this.animation === "object" ) {
+                    animation = this.animation[this.animation.length === 2 ? backset : 0] 
                 }
             }
 
-            // open loading;
-            this.loading(id, 1);
+            // prefetched
 
-            // include module page;
-            application.template.include(container, id, function (data) {
-                // close loading;
-                that.loading(id, 0);
-            }) 
-
-        },
-
-        transformStart : function () {
-
-            this.modules[0].elements.container.style.set("transform", this.default.visible);
-
-            this._execEvent("transformStart", this.ids, this.modules);
-        },
-
-        transformEnd : function (end) {
-
-            if ( end ) return;
-
-            if ( this.modules[1] ) {
-
-                this.reset(this.id);
-                this.modules[1].elements.container.style.set("transform", this.default.hidden);
-
+            if ( this.prefetched ) {
+                callback()
+                callback = noop
             }
 
-            // include
+            // animation end
 
-            this._execEvent("transformEnd", this.ids, this.modules);
+            function end (stillness) {
+                if ( cutting ) {
+                    that.cut(stillness)
+                }
+                
+                that.end(stillness)
+
+                // module dispatch
+
+                that.dispatch()
+
+                // callback
+
+                callback()
+            }
+
+            rAF(function () {
+                animation({
+                    "view"     : cutting ? [module.config.absolute === false ? App.relativeViewport : App.absoluteViewport, modulu.config.absolute === false ? App.relativeViewport : App.absoluteViewport] : [module.elements.container, modulu.elements.container],
+                    "viewport" : [App.relativeViewport, App.absoluteViewport],
+                    "modules"  : modules,
+                    "reverse"  : reverse,
+                    "backset"  : backset,
+                    "callback" : end
+                })
+            })
         },
 
-        changeViewport: function (end) {
+        dispatch : function () {
+            var events = {
+                    ids : this.ids, 
+                    modules : this.moduli
+                }
+
+            try {
+                if ( this.cutting ) {
+                   App.frameworks.trigger(this.module.config.absolute == true ? 'hidden' : 'show') 
+                }
+
+                this.module.trigger('show', events)
+                this.modulu.trigger('hidden', events)
+            } catch (e) {}
+        },
+
+        start : function (callback) {
+
+            // transformstart on event
+
+            if ( typeof this.module.events.transformstart === "function" ) {
+                if ( this.module.events.transformstart() === false ) {
+                    return false
+                }
+            }
             
-            if ( end ) return;
+            
+            /*
+                没有动画或不适合动画设备
+                先隐藏－当前模块－再显示－未来模块 先释放内存有助于加快显示
+            */
 
-            if ( this.module.config.complex === true ) {
-                application.absoluteViewport.style.set("transform", this.default.hidden);
-                application.complexViewport.style.set("transform", this.default.visible);
-            } else {
-                application.complexViewport.style.set("transform", this.default.hidden);
-                application.absoluteViewport.style.set("transform", this.default.visible);
+            if ( !this.animation || this.cutting ) {
+                this.module.elements.container.css({"transform": "translate(0, 0)"})
             }
+
+            // start
+
+            callback()
+
+            // event
+            
+            App.trigger("transformstart", {
+                ids: this.ids,
+                modules: this.moduli
+            })
+        },
+
+        end : function (stillness) {
+
+            /*
+             * cutting 模块类型集装箱视图切换
+            */
+
+            if ( this.modulu ) {
+                if ( !this.animation || !stillness ) {
+                    this.modulu.elements.container.css({"transform": "translate(200%, 200%)"})
+
+                    this.reset(this.id, true)
+
+                    // clear cache
+            
+                    if ( !this.modulu.config.cache && !this.self ) {
+                        this.modulu.destroy(1)
+                    }
+                }
+
+                // reset transition-duration
+
+                this.modulu.elements.container.css({
+                    "transition-duration" : "0ms"
+                })
+            }
+
+            // transformend on event
+
+            if ( typeof this.module.events.transformend == "function" ) {
+                this.module.events.transformend()
+            }
+
+            // transformend event
+
+            App.trigger("transformend", {
+                ids: this.ids,
+                modules: this.moduli
+            })
+        },
+
+        cut : function (stillness) {
+            
+            /*
+             * cut : 场景切牌
+             * 没有动画时直接切牌视窗
+            */
+
+            if ( !this.animation || !stillness ) {
+
+                // clear style
+
+                App.relativeViewport.style.cssText = ''
+                App.absoluteViewport.style.cssText = ''
+
+                // change view
+                
+                if ( this.module.config.absolute === false ) {
+                    App.absoluteViewport.css({"transform": "translate(200%, 200%)"})
+                    App.relativeViewport.css({"transform": "translate(0, 0)"})
+                } else {
+                    App.relativeViewport.css({"transform": "translate(200%, 200%)"})
+                    App.absoluteViewport.css({"transform": "translate(0, 0)"})
+                }
+            }
+
+        },
+
+        then : function (callback) {
+            this.callback = callback || noop
         }
     }
 
 
-    return Transform;
+    module.exports = Transform
 })

@@ -1,37 +1,12 @@
-define(function(require, exports, module) {
-    'use strict';
+// 合抱之木，生於毫末；九层之台，起於累土；千里之行，始於足下。
+
+define('~/move', [], function (require, module, exports) {
+    'use strict'
 
     var browser = {
             prefixStyle : device.feat.prefixStyle
         }
-
-    var hasTranslate3d = function () {
-        //device.feat.prefixStyle('perspective') && typeof getComputedStyle === 'function';
-
-        var prop = device.feat.prefixStyle('transform');
-
-        if (!prop || !window.getComputedStyle) {
-            return false;
-
-        } else {
-            var map = {
-              webkitTransform: '-webkit-transform',
-              OTransform: '-o-transform',
-              msTransform: '-ms-transform',
-              MozTransform: '-moz-transform',
-              transform: 'transform'
-            }
-        };
-
-        var el = document.createElement('div');
-        el.style[prop] = 'translate3d(1px,1px,1px)';
-        document.body.insertBefore(el, null);
-        var val = getComputedStyle(el).getPropertyValue(map[prop]);
-        document.body.removeChild(el);
-
-        return null != val && val.length && 'none' != val;
-
-    };
+    var rAF = requestAnimationFrame
 
 
     /**
@@ -42,7 +17,7 @@ define(function(require, exports, module) {
           'in':                'ease-in'
         , 'out':               'ease-out'
         , 'in-out':            'ease-in-out'
-        , 'snap':              'cubic-bezier(0,1,.5,1)'
+        , 'snap':              'cubic-bezier(0, 1, .5, 1)'
         , 'linear':            'cubic-bezier(0.250, 0.250, 0.750, 0.750)'
         , 'ease-in-quad':      'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
         , 'ease-in-cubic':     'cubic-bezier(0.550, 0.055, 0.675, 0.190)'
@@ -68,7 +43,7 @@ define(function(require, exports, module) {
         , 'ease-in-out-expo':  'cubic-bezier(1.000, 0.000, 0.000, 1.000)'
         , 'ease-in-out-circ':  'cubic-bezier(0.785, 0.135, 0.150, 0.860)'
         , 'ease-in-out-back':  'cubic-bezier(0.680, -0.550, 0.265, 1.550)'
-    };
+    }
 
 
 
@@ -79,14 +54,12 @@ define(function(require, exports, module) {
     var after = (function () {
 
         var hasTransitions = device.feat.prefixStyle('transition')
-        , transitionend = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd'
-        ;
-
+        
         function after (el, fn) {
-            if ( !hasTransitions ) return fn();
-            $(el).bind(transitionend, fn);
-            return fn;
-        };
+            if ( !hasTransitions ) return fn()
+            el.bind('transitionend', fn)
+            return fn
+        }
 
         /**
         * Same as `after()` only the function is invoked once.
@@ -98,39 +71,29 @@ define(function(require, exports, module) {
         */
 
         after.once = function (el, fn) {
-            after(el, function () {
-                  $(el).unbind(transitionend, fn);
-                  fn();
+            var callback = function () {
+                  el.unbind('transitionend', callback)
+                  fn()
                 }
-            )
+                
+            after(el, callback)
         }
 
-        return after;
+        return after
 
-    })();
-
-    var has3d = hasTranslate3d();
-
-    /**
-    * CSS Translate
-    */
-
-    var translate = has3d
-    ? ['translate3d(', ', 0)']
-    : ['translate(', ')'];
+    })()
 
     /**
     * Get computed style.
     */
 
-    var style = window.getComputedStyle
-    || window.currentStyle;
+    var style = window.getComputedStyle || window.currentStyle
 
     /**
     * Export `ease`
     */
 
-    Move.ease = ease;
+    Move.ease = ease
 
     /**
     * Defaults.
@@ -139,30 +102,25 @@ define(function(require, exports, module) {
     *
     */
 
-    Move.defaults = {
-        duration: 500
-    };
-
 
     Move.select = function (selector) {
-        if ('string' != typeof selector) return selector;
-        return $(selector)[0];
-    };
+        if ('string' != typeof selector) return selector
+        return $(selector)[0]
+    }
 
     function Move (el) {
-        if (!(this instanceof Move)) return new Move(el);
-        if ('string' == typeof el) el = $(el)[0];
-        if (!el) throw new TypeError('Move must be initialized with element or selector');
-        this.el = el;
-        this._props = {};
-        this._rotate = 0;
-        this._transitionProps = [];
-        this._transforms = [];
-        this.duration(Move.defaults.duration)
-    };
+        if (!(this instanceof Move)) return new Move(el)
+        if ('string' == typeof el) el = $(el)[0]
+        if (!el) return
+        this.el = el
+        this._props = {}
+        this._rotate = 0
+        this._transitionProps = []
+        this._transforms = {}
+        this.duration(0)
+    }
 
-
-    var proto = Move.prototype;
+    var proto = Move.prototype
 
     /**
     * Buffer `transform`.
@@ -173,92 +131,122 @@ define(function(require, exports, module) {
     */
 
     proto.transform = function (transform) {
-        this._transforms.push(transform);
-        return this;
-    };
+        var prop = transform.match(/\w+\b/)
+
+        this._transforms[prop] = transform
+
+        return this
+    }
+
+    proto._applyTransform = function () {
+        var transform = []
+
+        for (var i in this._transforms) {
+            transform.push(this._transforms[i])
+        }
+
+        if ( transform.length ) {
+            this.setProperty('transform', transform.join(' '))
+        }
+
+        return this
+    }
 
     proto.skew = function (x, y) {
-        return this.transform('skew('
-          + x + 'deg, '
-          + (y || 0)
-          + 'deg)');
-    };
+        return this.transform('skew(' + x + 'deg, ' + (y || 0) + 'deg)')
+    }
 
     proto.skewX = function (n) {
-        return this.transform('skewX(' + n + 'deg)');
-    };
+        return this.transform('skewX(' + n + 'deg)')
+    }
 
     proto.skewY = function (n) {
-        return this.transform('skewY(' + n + 'deg)');
-    };
+        return this.transform('skewY(' + n + 'deg)')
+    }
 
     proto.translate =
-    proto.to = function (x, y) {
-        return this.transform(translate.join(''
-          + x +'px, '
-          + (y || 0)
-          + 'px'));
-    };
+    proto.translate3d =
+    proto.to = function (x, y, z) {
+        x = x != undefined ? x : null
+        y = y != undefined ? y : null
+        z = z != undefined ? z : null
+
+        if ( x !== null && y !== null && z !== null ) {
+            this.transform('translate3d(' + (x ? x + 'px' : 0) + ',' + (y ? y + 'px' : 0) + ',' + (z ? z + 'px' : 0) + ')')
+            return this
+        }
+
+        x && this.x(x)
+        y && this.y(y)
+        z && this.z(z)
+
+        return this
+    }
 
     proto.translateX =
     proto.x = function (n) {
-        return this.transform('translateX(' + n + 'px)');
-    };
+        return this.transform('translateX(' + n + 'px)')
+    }
 
     proto.translateY =
     proto.y = function (n) {
-        return this.transform('translateY(' + n + 'px)');
-    };
+        return this.transform('translateY(' + n + 'px)')
+    }
 
     proto.translateZ =
     proto.z = function (n) {
-        return this.transform('translateZ(' + n + 'px)');
-    };
+        return this.transform('translateZ(' + n + 'px)')
+    }
 
     proto.scale = function (x, y) {
         return this.transform('scale('
           + x + ', '
           + (y || x)
-          + ')');
-    };
+          + ')')
+    }
+
+    proto.opacity = function (val) {
+        this._props['opacity'] = val
+        return this
+    }
 
     proto.scaleX = function (n) {
         return this.transform('scaleX(' + n + ')')
-    };
+    }
 
     proto.matrix = function (m11, m12, m21, m22, m31, m32) {
-        return this.transform('matrix(' + [m11,m12,m21,m22,m31,m32].join(',') + ')');
-    };
+        return this.transform('matrix(' + [m11,m12,m21,m22,m31,m32].join(',') + ')')
+    }
 
     proto.scaleY = function (n) {
         return this.transform('scaleY(' + n + ')')
-    };
+    }
 
     proto.rotate = function (n) {
-        return this.transform('rotate(' + n + 'deg)');
-    };
+        return this.transform('rotate(' + n + 'deg)')
+    }
 
     proto.rotateX = function (n) {
-        return this.transform('rotateX(' + n + 'deg)');
-    };
+        return this.transform('rotateX(' + n + 'deg)')
+    }
 
     proto.rotateY = function (n) {
-        return this.transform('rotateY(' + n + 'deg)');
-    };
+        return this.transform('rotateY(' + n + 'deg)')
+    }
 
     proto.rotateZ = function (n) {
-        return this.transform('rotateZ(' + n + 'deg)');
-    };
+        return this.transform('rotateZ(' + n + 'deg)')
+    }
 
     proto.rotate3d = function (x, y, z, d) {
-        return this.transform('rotate3d(' + x + 'px, ' + y + 'px,' + z +'px,' + d + 'deg)');
-    };
+        return this.transform('rotate3d(' + x + ', ' + y + ',' + z +',' + d + 'deg)')
+    }
 
     proto.perspective = function (z) {
-        this.el.parentNode.style.set('transform-style', 'preserve-3d');
-        this.el.parentNode.style.set('perspective', z + 'px');
-        return this;
-    };
+        this.el.parentNode.style.set('transform-style', 'preserve-3d')
+        this.el.parentNode.style.set('perspective', z + 'px')
+        return this
+    }
 
     /**
     * Set transition easing function to to `fn` string.
@@ -276,9 +264,9 @@ define(function(require, exports, module) {
     */
 
     proto.ease = function (fn) {
-        fn = ease[fn] || fn || 'ease';
-        return this.setProperty('transition-timing-function', fn);
-    };
+        fn = ease[fn] || fn || 'ease'
+        return this.setProperty('transition-timing-function', fn)
+    }
 
     /**
     * Set animation properties
@@ -290,12 +278,12 @@ define(function(require, exports, module) {
     */
 
     proto.animate = function (name, props) {
-        for (var i in props){
-          if ( props.hasOwnProperty(i) ) {
-            this.setProperty('animation-' + i, props[i])
-          }
+        for (var i in props) {
+            if ( props.hasOwnProperty(i) ) {
+                this.setProperty('animation-' + i, props[i])
+            }
         }
-        return this.setProperty('animation-name', name);
+        return this.setProperty('animation-name', name)
     }
 
     /**
@@ -309,9 +297,10 @@ define(function(require, exports, module) {
     proto.duration = function (n) {
         n = this._duration = 'string' == typeof n
           ? parseFloat(n) * 1000
-          : n;
-        return this.setProperty('transition-duration', n + 'ms');
-    };
+          : n
+
+        return this.setProperty('transition-duration', n + 'ms')
+    }
 
     /**
     * Delay the animation by `n`.
@@ -322,11 +311,12 @@ define(function(require, exports, module) {
     */
 
     proto.delay = function (n) {
-        n = 'string' == typeof n
+        n = this._delay = 'string' == typeof n
           ? parseFloat(n) * 1000
-          : n;
-        return this.setProperty('transition-delay', n + 'ms');
-    };
+          : n
+
+        return this.setProperty('transition-delay', n + 'ms')
+    }
 
     /**
     * Set `prop` to `val`, deferred until `.end()` is invoked.
@@ -338,9 +328,9 @@ define(function(require, exports, module) {
     */
 
     proto.setProperty = function (prop, val) {
-        this._props[prop] = val;
-        return this;
-    };
+        this._props[prop] = val
+        return this
+    }
 
     /**
     * Set `prop` to `value`, deferred until `.end()` is invoked
@@ -352,11 +342,10 @@ define(function(require, exports, module) {
     * @api public
     */
 
-    proto.set = function (prop, val) {
-        this.transition(prop);
-        this._props[prop] = val;
-        return this;
-    };
+    proto.style = function (prop, val) {
+        this._props[prop] = val
+        return this
+    }
 
     /**
     * Increment `prop` by `val`, deferred until `.end()` is invoked
@@ -369,13 +358,13 @@ define(function(require, exports, module) {
     */
 
     proto.add = function (prop, val) {
-        if (!style) return;
-        var self = this;
+        if (!style) return
+        var self = this
         return this.on('start', function () {
-          var curr = parseInt(self.current(prop), 10);
-          self.set(prop, curr + val + 'px');
-        });
-    };
+          var curr = parseInt(self.current(prop), 10)
+          self.set(prop, curr + val + 'px')
+        })
+    }
 
     /**
     * Decrement `prop` by `val`, deferred until `.end()` is invoked
@@ -388,13 +377,13 @@ define(function(require, exports, module) {
     */
 
     proto.sub = function (prop, val) {
-        if (!style) return;
-        var self = this;
+        if (!style) return
+        var self = this
         return this.on('start', function () {
-          var curr = parseInt(self.current(prop), 10);
-          self.set(prop, curr - val + 'px');
-        });
-    };
+          var curr = parseInt(self.current(prop), 10)
+          self.set(prop, curr - val + 'px')
+        })
+    }
 
     /**
     * Get computed or "current" value of `prop`.
@@ -405,8 +394,8 @@ define(function(require, exports, module) {
     */
 
     proto.current = function (prop) {
-        return style(this.el).getPropertyValue(prop);
-    };
+        return style(this.el).getPropertyValue(prop)
+    }
 
     /**
     * Add `prop` to the list of internal transition properties.
@@ -417,10 +406,10 @@ define(function(require, exports, module) {
     */
 
     proto.transition = function (prop) {
-        if (!this._transitionProps.indexOf(prop)) return this;
-        this._transitionProps.push(prop);
-        return this;
-    };
+        if ( !this._transitionProps.indexOf(prop) ) return this
+        this._transitionProps.push(prop)
+        return this
+    }
 
     /**
     * Commit style properties, aka apply them to `el.style`.
@@ -431,11 +420,14 @@ define(function(require, exports, module) {
     */
 
     proto.applyProperties = function () {
-        for (var prop in this._props) {
-          this.el.style.set(prop, this._props[prop]);
-        }
-        return this;
-    };
+        var that = this
+        
+        rAF(function () {
+            that.el.css(that._props)
+        })
+        
+        return this
+    }
 
     /**
     * Re-select element via `selector`, replacing
@@ -448,9 +440,9 @@ define(function(require, exports, module) {
 
     proto.move =
     proto.select = function (selector) {
-        this.el = Move.select(selector);
-        return this;
-    };
+        this.el = Move.select(selector)
+        return this
+    }
 
     /**
     * Defer the given `fn` until the animation
@@ -469,22 +461,22 @@ define(function(require, exports, module) {
         //invoke .end()
         if ( fn instanceof Move ) {
           this.on('end', function () {
-            fn.end();
-          });
+            fn.end()
+          })
         // callback
         } else if ('function' == typeof fn) {
-          this.on('end', fn);
+          this.on('end', fn)
         // chain
         } else {
-          var clone = new Move(this.el);
-          clone._transforms = this._transforms.slice(0);
-          this.then(clone);
-          clone.parent = this;
-          return clone;
+          var clone = new Move(this.el)
+          clone._transforms = this._transforms.slice(0)
+          this.then(clone)
+          clone.parent = this
+          return clone
         }
 
-        return this;
-    };
+        return this
+    }
 
     /**
     * Pop the move context.
@@ -494,8 +486,8 @@ define(function(require, exports, module) {
     */
 
     proto.pop = function () {
-        return this.parent;
-    };
+        return this.parent
+    }
 
     /**
     * Reset duration.
@@ -505,9 +497,10 @@ define(function(require, exports, module) {
     */
 
     proto.clear = function () {
-        this.el.style.set('transitionDuration', '');
-        return this;
-    };
+        this.el.style.set('transition-duration', '0ms')
+
+        return this
+    }
 
     /**
     * Start animation, optionally calling `fn` when complete.
@@ -518,30 +511,38 @@ define(function(require, exports, module) {
     */
 
     proto.end = function (fn) {
-        var self = this;
+        var that = this
+
+        // transition properties 检索或设置对象中的参与过渡的属性
+
+        this.setProperty('transition-properties', this._transitionProps.join(', '))
 
         // transforms
-        if ( this._transforms.length ) {
-            this.setProperty('transform', this._transforms.join(' '));
-        }
 
-        // transition properties
-        this.setProperty('transition-properties', this._transitionProps.join(', '));
+        this._applyTransform()
         
-        this.applyProperties();
+        // set properties
 
-        // callback given
-        // if (fn) this.then(fn);
+        this.applyProperties()
 
         // emit "end" when complete
-        after.once(this.el, function () {
-            self.clear();
 
-            if (fn) fn();
-        });
+        if ( this._duration == 0 ) {
+            rAF(function () {
+                that.clear()
 
-        return this;
-    };
+                if (fn) fn.call(that)
+            })
+        } else {
+            after.once(this.el, function () {
+                that.clear()
 
-    return Move;
-});
+                if (fn) fn.call(that)
+            })
+        }
+
+        return this
+    }
+
+    module.exports = Move
+})

@@ -1,4 +1,7 @@
-define(function (require, exports, module) {
+// 为无为，事无事，味无味。
+// 曲则全，枉则直，洼则盈，敝则新，少则多，多则惑。
+
+define('~/loader', [], function (require, module, exports) {
     /*
   * Copyright (c) 2011 Róbert Pataki
   * 
@@ -33,7 +36,7 @@ define(function (require, exports, module) {
   * It is important to note that CanvasLoader doesn't show up and starts rendering automatically on instantiation. To start rendering and display the loader use the <code>show()</code> method.
   * @module CanvasLoader
   **/
-  return (function (window) {
+  module.exports = (function (window) {
     "use strict";
     /**
     * CanvasLoader is a JavaScript UI library that draws and animates circular preloaders using the Canvas HTML object.<br/><br/>
@@ -141,8 +144,7 @@ define(function (require, exports, module) {
 
       this.mum = pId;
       // Creates the parent div of the loader instance
-      opt.id = typeof (opt.id) !== "undefined" ? opt.id : "canvasLoader";
-      this.cont = addEl("div", this.mum, {id: opt.id});
+      this.cont = addEl("loader", this.mum);
       if (canSup) {
       // For browsers with Canvas support...
         engine = engines[0];
@@ -455,8 +457,8 @@ define(function (require, exports, module) {
             break;
           case shapes[3]:
           case shapes[4]:
-            w = di * 0.3;
-            h = w * 0.27;
+            w = di * 0.24;
+            h = w * 0.36;
             x = Math.cos(rads) * (h + (di - h) * 0.13) + di * 0.5;
             y = Math.sin(rads) * (h + (di - h) * 0.13) + di * 0.5;
             transCon(c, x, y, rads);

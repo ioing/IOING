@@ -1,0 +1,34 @@
+{
+  "name": "babel-with-gulp",
+  "version": "1.0.0",
+  "description": "Starter code for using Babel with Gulp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carlos Souza <carloshrsouza@gmail.com> (http://csouza.me/)",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/codeschool/babel-with-gulp.git"
+  },
+  "keywords": [
+    "babel",
+    "gulp",
+    "es2015"
+  ],
+  "bugs": {
+    "url": "https://github.com/codeschool/babel-with-gulp/issues"
+  },
+  "homepage": "https://github.com/codeschool/babel-with-gulp#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "gulp": "^3.9.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "babel-core": "^6.1.21"
+  }
+}

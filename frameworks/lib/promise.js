@@ -1,178 +1,391 @@
-define(function (require, exports, module) {
-    "use strict";
+// 民不畏威，则大威至。
 
-    function Promise() {
-        this._callbacks = [];
+define('~/promise', ['~/sandbox'], function (require, module, exports) {
+    
+    "use strict"
+
+    function Promise () {
+        this._callbacks = []
     }
 
-    Promise.prototype.then = function(func, context) {
-        var p;
+    Promise.prototype.then = function (func, context) {
+        var p
+
         if (this._isdone) {
-            p = func.apply(context, this.result);
+            p = func.apply(context, this.result)
         } else {
-            p = new Promise();
+            p = new Promise()
             this._callbacks.push(function () {
-                var res = func.apply(context, arguments);
+                var res = func.apply(context, arguments)
                 if (res && typeof res.then === 'function')
-                    res.then(p.done, p);
-            });
+                    res.then(p.done, p)
+            })
         }
-        return p;
-    };
+        return p
+    }
 
-    Promise.prototype.done = function() {
-        this.result = arguments;
-        this._isdone = true;
+    Promise.prototype.done = function () {
+        this.result = arguments
+        this._isdone = true
         for (var i = 0; i < this._callbacks.length; i++) {
-            this._callbacks[i].apply(null, arguments);
+            this._callbacks[i].apply(null, arguments)
         }
-        this._callbacks = [];
-    };
+        this._callbacks = []
+    }
 
-    function join(promises) {
-        var p = new Promise();
-        var results = [];
+    function join (promises) {
+        var p = new Promise()
+        var results = []
 
         if (!promises || !promises.length) {
-            p.done(results);
-            return p;
+            p.done(results)
+            return p
         }
 
-        var numdone = 0;
-        var total = promises.length;
+        var numdone = 0
+        var total = promises.length
 
-        function notifier(i) {
-            return function() {
-                numdone += 1;
-                results[i] = Array.prototype.slice.call(arguments);
+        function notifier (i) {
+            return function () {
+                numdone += 1
+                results[i] = Array.prototype.slice.call(arguments)
                 if (numdone === total) {
-                    p.done(results);
+                    p.done(results)
                 }
-            };
+            }
         }
 
         for (var i = 0; i < total; i++) {
-            promises[i].then(notifier(i));
+            promises[i].then(notifier(i))
         }
 
-        return p;
+        return p
     }
 
-    function chain(funcs, args) {
-        var p = new Promise();
+    function chain (funcs, args) {
+        var p = new Promise()
         if (funcs.length === 0) {
-            p.done.apply(p, args);
+            p.done.apply(p, args)
         } else {
-            funcs[0].apply(null, args).then(function() {
-                funcs.splice(0, 1);
-                chain(funcs, arguments).then(function() {
-                    p.done.apply(p, arguments);
-                });
-            });
+            funcs[0].apply(null, args).then(function () {
+                funcs.splice(0, 1)
+                chain(funcs, arguments).then(function () {
+                    p.done.apply(p, arguments)
+                })
+            })
         }
-        return p;
+        return p
     }
 
     /*
      * AJAX requests
      */
 
-    function _encode(data) {
-        var payload = "";
-        if (typeof data === "string") {
-            payload = data;
-        } else {
-            var e = encodeURIComponent;
-            var params = [];
+    function new_xhr () {
+        var xhr = new XMLHttpRequest()
 
-            for (var k in data) {
-                if (data.hasOwnProperty(k)) {
-                    params.push(e(k) + '=' + e(data[k]));
-                }
-            }
-            payload = params.join('&')
-        }
-        return payload;
-    }
+        // CORS 跨域支持 后端输出：header(“Access-Control-Allow-Origin：*“)
 
-    function new_xhr() {
-        var xhr;
-        if (window.XMLHttpRequest) {
-            xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            try {
-                xhr = new ActiveXObject("Msxml2.XMLHTTP");
-            } catch (e) {
-                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        if ( !("withCredentials" in xhr) ) {
+
+            if ( typeof XDomainRequest != "undefined" ) {
+                xhr = new XDomainRequest()
+            } else {
+                xhr = null
             }
+
         }
-        return xhr;
+
+        return xhr
     }
 
 
-    function ajax(method, url, data, headers) {
-        var p = new Promise();
-        var xhr, payload;
-        data = data || {};
-        headers = headers || {};
+    function ajax (method, url, data, headers, settings, type) {
+        if ( method.toUpperCase === 'JSONP' || /=\~/.test(url) ) {
+            return origin(url, data, settings.caller, type)
+        }
+
+        var p = new Promise()
+        var xhr
+
+        settings = settings || {}
+        headers = headers || {}
+        data = data || {}
+
+        var payload = Object.objectToParams(data)
+        var withCredentials = true
+
+        if ( method === 'GET' && payload ) {
+            url += (url.indexOf('?') != -1 ? '&' : '?') + payload
+            payload = null
+        }
 
         try {
-            xhr = new_xhr();
+            xhr = new_xhr(method, url)
         } catch (e) {
-            p.done(promise.ENOXHR, "");
-            return p;
+            p.done(promise.ENOXHR, "")
+            return p
         }
 
-        payload = _encode(data);
-        if (method === 'GET' && payload) {
-            url += '?' + payload;
-            payload = null;
-        }
+        function open () {
+            xhr.open(method, url, true)
 
-        xhr.open(method, url);
+            // 是否同域 withCredentials 解决跨域
 
-        var content_type = 'application/x-www-form-urlencoded';
-        for (var h in headers) {
-            if (headers.hasOwnProperty(h)) {
-                if (h.toLowerCase() === 'content-type')
-                    content_type = headers[h];
-                else
-                    xhr.setRequestHeader(h, headers[h]);
+            if ( url.indexOf('//') == 0 || url.indexOf('://') > 0 ) {
+
+                [window.location.host].concat(App.config.origin || []).each(function (i, host) {
+                    i = url.indexOf(host)
+                    if ( i !== -1 && i <= 16 ) {
+                        withCredentials = false
+                    }
+                })
+
+                if ( withCredentials && settings.origin !== 'true' ) xhr.withCredentials = true
             }
-        }
-        xhr.setRequestHeader('Content-type', content_type);
 
+            if ( settings.contentType ) headers['Content-Type'] = settings.contentType
 
-        function onTimeout() {
-            xhr.abort();
-            p.done(promise.ETIMEOUT, "", xhr);
-        }
-
-        var timeout = promise.ajaxTimeout;
-        if (timeout) {
-            var tid = setTimeout(onTimeout, timeout);
-        }
-
-        xhr.onreadystatechange = function() {
-            if (timeout) {
-                clearTimeout(tid);
+            var content_type = 'application/x-www-form-urlencoded'
+            for (var h in headers) {
+                if (headers.hasOwnProperty(h)) {
+                    if (h.toLowerCase() === 'content-type')
+                        content_type = headers[h]
+                    else
+                        xhr.setRequestHeader(h, headers[h])
+                }
             }
-            if (xhr.readyState === 4) {
+            xhr.setRequestHeader('Content-type', content_type)
+        }
+
+        // abort
+
+        function abort () {
+            if ( timeout ) {
+                clearTimeout(tid)
+            }
+
+            xhr.abort()
+        }
+
+        // send
+
+        function send () {
+            open()
+            xhr.send(payload)
+        }
+
+        // tryAgain
+
+        function over () {
+
+            abort()
+            
+            tryAgain(url, abort, send)
+        }
+
+        // timeout
+
+        var timeout = promise.ajaxTimeout
+        if ( timeout ) {
+            var tid = setTimeout(over, timeout)
+        }
+
+        xhr.onerror = over 
+
+        xhr.onload = function () {
+            if ( timeout ) {
+                clearTimeout(tid)
+            }
+            if ( xhr.readyState === 4 ) {
                 var err = (!xhr.status ||
                            (xhr.status < 200 || xhr.status >= 300) &&
-                           xhr.status !== 304);
-                p.done(err, xhr.responseText, xhr);
-            }
-        };
+                           xhr.status !== 304)
 
-        xhr.send(payload);
-        return p;
+                delete _tryAgain[url]
+
+                var data = xhr.responseText
+
+                if ( ['{', '['].consistOf(data.charAt(0)) ) {
+                    try {
+                        data = JSON.parse(data)
+                    } catch (e) {
+                        try {
+                            data = application.sandbox.window.eval('(' + data + ')')
+                        } catch (e) {}
+                    }
+                }
+
+                p.done(err, data, xhr)
+            }
+        }
+
+        // open
+        
+        send()
+
+        return p
     }
 
-    function _ajaxer(method) {
-        return function(url, data, headers) {
-            return ajax(method, url, data, headers);
-        };
+    function _ajaxer (method) {
+        return function (url, data, headers, settings, type) {
+            return ajax(method, url, data, headers, settings, type)
+        }
+    }
+
+    function origin (url, data, caller, type) {
+        var p = new Promise()
+        var callbackName = !caller ? '__' + type + '__' + caller : '__call__' + (++_jsonPID)
+        var script = sandboxDocument.createElement("script")
+
+        var data = data || {}
+
+        // JsonP data
+        
+        if ( caller ) {
+            data[caller] = callbackName
+        }
+
+        var payload = Object.objectToParams(data)
+
+        if ( payload ) {
+            url += (url.indexOf('?') != -1 ? '&' : '?') + payload
+            payload = null
+        }
+
+        // JsonP URL
+
+        url = url.replace(/=\~/, '=' + callbackName)
+
+        // abort
+
+        function abort () {
+            if ( timeout ) {
+                clearTimeout(tid)
+            }
+
+            try {
+                sandboxDocumentHead.removeChild(script)
+            } catch (e) {}
+        }
+
+        // send
+
+        function send () {
+            script = sandboxDocument.createElement("script")
+            script.charset = 'utf-8'
+            script.src = url
+
+            // failed
+
+            script.onerror = over
+
+            sandboxDocumentHead.appendChild(script)
+        }
+
+        // 错误处理
+
+        function over () {
+
+            abort()
+
+            tryAgain(url, abort, send)
+        }
+
+        // DEBUG
+
+        sandboxWindow.onerror = function (e) {
+            over()
+            application.trigger('jsonerror', e)
+        }
+
+        // timeout
+        
+        var timeout = promise.ajaxTimeout
+        if ( timeout ) {
+            var tid = setTimeout(over, timeout)
+        }
+
+        // callback ! 超时被移除的script加载成功后仍会被执行
+        
+        sandboxWindow[callbackName] = function (data, type) {
+            abort()
+
+            if ( (type == 'data' || type == 'js') && typeof data !== 'object' ) return
+
+            delete sandboxWindow[callbackName]
+            delete _tryAgain[url]
+
+            p.done(null, data, {})
+        }
+
+        send()
+
+        return p
+    }
+
+    function tryAgain (url, abort, send) {
+        var again = _tryAgain[url]
+
+        if ( again && again >= promise.TRYAGAIN ) {
+            application.trigger('loadfaile', {
+                url : url,
+                again : again
+            })
+
+            return
+        }
+
+        // again times++
+
+        _tryAgain[url] = again ? again : 1
+        _tryAgain[url]++
+
+        function regain () {
+            abort()
+            
+            setTimeout(function () {
+                send()
+            }, 1000)
+
+            if ( !_tryAgain[url] ) {
+                window.removeEventListener("online", regain, false)
+            }
+        }
+
+        if ( navigator.onLine === false ) {
+            window.addEventListener("online", regain, false)
+        } else {
+            setTimeout(function () {
+                send()
+            }, 3000)
+        }
+    }
+
+    var Sandbox = require('~/sandbox').sandbox
+      , sandbox = new Sandbox(true)
+      , sandboxWindow = sandbox.window
+      , sandboxDocument = sandbox.document
+      , sandboxDocumentHead = sandboxDocument.head
+      , _jsonPID = 0
+      , _tryAgain = []
+
+    // JsonP define
+
+    sandboxWindow.define = function (type, name, context) {
+        sandboxWindow['__' + type + '__' + name](context, type)
+    }
+
+    sandboxWindow.style = function (name, context) {
+        sandboxWindow['__style__' + name](context, 'style')
+    }
+
+    sandboxWindow.source = function (name, context) {
+        sandboxWindow['__source__' + name](context, 'source')
+    }
+
+    sandboxWindow.data = function (name, context) {
+        sandboxWindow['__data__' + name](context, 'source')
     }
 
     var promise = {
@@ -180,6 +393,7 @@ define(function (require, exports, module) {
         join: join,
         chain: chain,
         ajax: ajax,
+        origin: origin,
         get: _ajaxer('GET'),
         post: _ajaxer('POST'),
         put: _ajaxer('PUT'),
@@ -188,6 +402,9 @@ define(function (require, exports, module) {
         /* Error codes */
         ENOXHR: 1,
         ETIMEOUT: 2,
+
+        /* Network error then try again */
+        TRYAGAIN: 3,
 
         /**
          * Configuration parameter: time in milliseconds after which a
@@ -198,10 +415,10 @@ define(function (require, exports, module) {
          * Aborted requests resolve the promise with a ETIMEOUT error
          * code.
          */
-        ajaxTimeout: 0
-    };
+        ajaxTimeout: 60000
+    }
 
 
-    return promise;
+    module.exports = promise
 
 })

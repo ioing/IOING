@@ -1,5 +1,7 @@
-define(function(require, exports, module) {
-    return function (window, document, undefined) {
+// “天地之间其犹橐龠呼？” 虚而不屈，动而愈出，多言数穷，不如守中
+
+define('~/touch', [], function (require, module, exports) {
+    module.exports = function (window, document, undefined) {
         'use strict';
 
         var scale = device.ui.scale || 1;
@@ -2276,6 +2278,9 @@ define(function(require, exports, module) {
                 data.type = event;
                 data.preventDefault = function() {
                     data.srcEvent.preventDefault();
+                };
+                data.stopPropagation = function() {
+                    data.srcEvent.stopPropagation();
                 };
 
                 var i = 0;
