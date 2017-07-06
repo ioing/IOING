@@ -1,4 +1,4 @@
-<p align="center"><a href="https://ioing.com" target="_blank"><img width="520"src="https://github.com/ioing/IOING/blob/master/frameworks/static/iopic.jpeg?raw=true"></a></p>
+<p align="center"><a href="https://ioing.com" target="_blank"><img width="572"src="https://github.com/ioing/IOING/blob/master/frameworks/static/iopic.jpeg?raw=true"></a></p>
 
 
 
