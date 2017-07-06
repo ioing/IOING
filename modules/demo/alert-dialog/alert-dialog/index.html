@@ -1,0 +1,113 @@
+<style>
+	.overlay {
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999999;
+		position: fixed;
+		background: rgba(0,0,0,.1);
+	}
+	.alert-box {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 70%;
+		max-width: 400dp;
+		min-height: 100dp;
+		background: #fff;
+		transform: translate(-50%, -50%);
+		border-radius: 6dp;
+	}
+	.title {
+		padding: 20dp 15dp;
+		text-align: center;
+	}
+	.title h3 {
+		font-size: 17dp;
+		padding-bottom: 10dp;
+	}
+	.title p {
+		font-size: 13dp;
+	}
+	.action {
+		display: flex;
+		border-top: 1px solid rgba(0,0,0,.15);
+	}
+	.action > div {
+		flex: 1;
+		padding: 8dp 12dp;
+		text-align: center;
+		color: #0077FF;
+		font-size: 17dp;
+		border-right: 1px solid rgba(0,0,0,.15);
+	}
+	.action > div:last-child {
+		border-right: 0;
+	}
+	.action.list {
+		display: block;
+	}
+	.action.list > div {
+		border: 0;
+		border-bottom: 1px solid rgba(0,0,0,.15);
+	}
+	.action.list > div:last-child {
+		border-bottom: 0;
+	}
+</style>
+
+<if styler>
+	<include name={styler}></include>
+</if>
+
+<div uuid=alert-box class="overlay" style="display:none">
+	<div class=alert-box>
+		<div class=title>
+			<if content>
+				<include name={content}></include>
+			</if><else>
+				<h3>{title}</h3>
+				<if desc><p>{desc}</p></if>
+			</else>
+		</div>
+		<div class="action {{action.length >= 3 ? 'list' : ''}}">
+			<if action>
+				<loop action as value key>
+					<div class="ok" on-tap="action({key})">{value}</div>
+				</loop>
+			</if><else>
+				<switch case="type">
+					<case value="1">
+						<div class="ok" on-tap="action(ok)">OK</div>
+					</case>
+					<case value="2">
+						<div class="cancel" on-tap="action(cancel)">{{cancel || 'Cancel'}}</div>
+						<div class="ok" on-tap="action(ok)">{{ok || 'OK'}}</div>
+					</case>
+				</switch>
+			</else>
+		</div>
+	</div>
+</div>
+
+<script>
+	var box = node('alert-box')
+
+	function open () {
+		box.style.display = "block"
+	}
+
+	function close () {
+		box.style.display = "none"
+	}
+
+	function action (en) {
+		console.log(en)
+		close()
+		components.trigger(en)
+	}
+
+	components.on('open', open).on('close', close)
+	App.on('transformstart', close)
+</script>

@@ -1,0 +1,431 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>App 加载流程图 <small>从资源加载到视图呈现过程的引擎工作流程图</small></h2>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <shadow>
+                            <style>
+                                .idevice {
+                                    position: relative;
+                                    display: inline-block;
+                                    margin: 0 0 15dp;
+                                    padding: 12dp;
+                                    width: 50%;
+                                    min-width: 300dp;
+                                    max-width: 400dp;
+                                    min-height: 550dp;
+                                    max-height: 650dp;
+                                    height: 30vw;
+                                    overflow: hidden;
+                                }
+                                .idevice::before {
+                                    @class: piexborderradius(60);
+                                    border: 1px solid rgba(0,0,0,.2);
+                                }
+
+                                .iscreen {
+                                    position: absolute;
+                                    top: 46dp;
+                                    left: 10dp;
+                                    right: 10dp;
+                                    bottom: 50dp;
+                                    background-color: #fff;
+                                }
+
+                                .iscreen::before {
+                                    @class: piexborderradius(0);
+                                }
+
+                                .itouch {
+                                    position: absolute;
+                                    bottom: 5dp;
+                                    left: 50%;
+                                    margin-left: -20dp;
+                                    width: 40dp;
+                                    height: 40dp;
+                                    border: 1px solid rgba(0,0,0,.2);
+                                    border-radius: 30dp;
+                                }
+
+                                .ieye {
+                                    position: absolute;
+                                    left: 50%;
+                                    top: 18dp;
+                                    margin-left: -50dp;
+                                    width: 12dp;
+                                    height: 12dp;
+                                    border-radius: 12dp;
+                                    border: 1px solid rgba(0,0,0,.1);
+                                }
+
+                                .ieye i {
+                                    display: block;
+                                    margin: 4dp auto 0;
+                                    width: 2dp;
+                                    height: 2dp;
+                                    background-color: #00acff;
+                                    border-radius: 2dp;
+                                }
+
+                                .iear {
+                                    position: absolute;
+                                    left: 50%;
+                                    top: 19dp;
+                                    margin-left: -30dp;
+                                    width: 60dp;
+                                    height: 10dp;
+                                    border: 1px solid rgba(0,0,0,.1);
+                                    border-radius: 12dp;
+                                }
+
+                                .iscreen .iheader, .iscreen .ifooter {
+                                    position: absolute;
+                                    z-index: 9;
+                                    width: 100%;
+                                    height: 40dp;
+                                    color: #fff;
+                                    text-align: center;
+                                    font-size: 18dp;
+                                    line-height: 40dp;
+                                    background-color: [active-color];
+                                }
+
+                                .iscreen .ifooter {
+                                    top: auto;
+                                    bottom: 0;
+                                    background-color: #444;
+                                }
+
+                                .iscreen .ibody {
+                                    position: absolute;
+                                    top: 40dp;
+                                    bottom: 40dp;
+                                    z-index: 11;
+                                    padding: 15dp;
+                                    width: 100%;
+                                    text-align: center;
+                                    background-color: rgba(255,255,255,1);
+                                }
+
+                                .iscreen .ibody::before {
+                                    @class: piexborderradius(0);
+                                }
+
+                                .iscreen .ibody p {
+                                    color: [active-color];
+                                    margin-bottom: 5dp;
+                                }
+
+                                .iscreen .ibody span {
+                                    display: block;
+                                    margin: 0 auto 12dp;
+                                    width: 100%;
+                                    height: 2dp;
+                                    background: [active-color];
+                                }
+
+                                .app-start {
+                                    position: relative;
+                                    height: 200dp;
+                                }
+
+                                .mind-box {
+                                    position: relative;
+                                    height: 720dp;
+                                }
+
+                                .map-store {
+                                    position: absolute;
+                                    z-index: 9;
+                                    display: inline-block;
+                                    padding: 10dp 25dp;
+                                    color: #fff;
+                                    font-size: 14dp;
+                                    font-weight: bold;
+                                    line-height: 18dp;
+                                    text-align: center;
+                                    background-color: [active-color];
+                                    border: 1px solid [active-color];
+                                    border-radius: 50dp;
+                                }
+
+                                .info-box {
+                                    position: absolute;
+                                    padding: 5dp;
+                                    background-color: #fff;
+                                }
+
+                                .info-box::before {
+                                    @class: piexborderradius(16);
+                                    border-color: [active-color];
+                                }
+
+                                .info-box ul {
+                                    padding-left: 20dp;
+                                    list-style-type: disc;
+                                }
+
+                                .info-box ul li {
+                                    color: [active-color];
+                                    text-indent: -5dp;
+                                }
+
+                                .core-store {
+                                    padding: 0;
+                                    border: 0;
+                                    width: 100dp;
+                                    height: 100dp;
+                                    border-radius: 100dp;
+                                    background: [active-color];
+                                    color: #fff;
+                                    font-size: 16dp;
+                                    font-weight: bold;
+                                    line-height: 100dp;
+                                }
+
+                                .line-x {
+                                    position: absolute;
+                                    width: 300dp;
+                                    height: 1px;
+                                    border-top: 1px solid [active-color];
+                                }
+
+                                .line-y {
+                                    position: absolute;
+                                    height: 300dp;
+                                    width: 1px;
+                                    border-left: 1px solid [active-color];
+                                }
+
+                            </style>
+                            <div class="app-start">
+                                <div class="map-store">首页<small>index.html</small></div>
+                                <div class="line-y" style="left:30dp;height:200dp"></div>
+                                <div class="map-store" style="top:100dp;">引擎<small>ioing.js</small></div>
+                                <div class="line-x" style="top:120dp;left:115dp;width:60dp"></div>
+                                <div class="map-store" style="top:100dp;left:165dp;">浏览器兼容修复</div>
+                            </div>
+                            <div class="mind-box">
+                                <div class="map-store">配置文件<small>config.js</small></div>
+                                <div class="line-x" style="top:20dp;left:150dp;width:60dp"></div>
+                                <div class="map-store" style="left:200dp;">加载资源</div>
+                                <div class="line-y" style="left:255dp;height:100dp"></div>
+                                <div class="line-x" style="top:100dp;left:140dp;width:246dp"></div>
+                                <div class="line-y" style="top:100dp;left:140dp;height:60dp"></div>
+                                <div class="line-y" style="top:100dp;left:385dp;height:60dp"></div>
+
+                                <div class="map-store" style="top:150dp;left:100dp;">模版</div>
+                                <div class="map-store" style="top:150dp;left:345dp;">数据</div>
+
+                                <div class="line-y" style="top:180dp;left:140dp;height:120dp;transform:rotate(-45deg);transform-origin:top;"></div>
+                                <div class="line-y" style="top:180dp;left:385dp;height:120dp;transform:rotate(45deg);transform-origin:top;"></div>
+
+                                <div class="map-store core-store" style="top:240dp;left:210dp;">CSS 引擎</div>
+                                <div class="line-x" style="top:290dp;left:290dp;width:100dp"></div>
+                                <div class="info-box" style="top:230dp;left:360dp;width:160dp;">
+                                    <ul class="circle">
+                                        <li>功能检测，兼容修复</li>
+                                        <li>单位计算</li>
+                                        <li>变量解析</li>
+                                        <li>逻辑运算</li>
+                                        <li>语法解释</li>
+                                    </ul>
+                                </div>
+                                <div class="line-y" style="top:320dp;left:240dp;height:120dp;transform:rotate(45deg);transform-origin:top;"></div>
+                                <div class="line-y" style="top:180dp;left:140dp;height:200dp"></div>
+
+                                <div class="map-store core-store" style="top:370dp;left:90dp;">DOM 引擎</div>
+                                <div class="line-x" style="top:420dp;left:190dp;width:100dp"></div>
+                                <div class="info-box" style="top:360dp;left:260dp;width:240dp;">
+                                    <ul class="circle">
+                                        <li>变量解析</li>
+                                        <li>事件处理</li>
+                                        <li>模版逻辑运算</li>
+                                        <li>量子数据分析与绑定</li>
+                                        <li>DOM Tree 语法解释</li>
+                                        <li>创建平行 DOM 节点</li>
+                                        <li>组件化处理和 shadow dom 处理</li>
+                                    </ul>
+                                </div>
+
+                                <div class="line-y" style="left:30dp;height:530dp"></div>
+                                <div class="line-y" style="top:450dp;left:120dp;height:120dp;transform:rotate(45deg);transform-origin:top;"></div>
+                                <div class="map-store" style="top:530dp;">沙盒处理</div>
+                                <div class="line-x" style="top:550dp;left:100dp;width:90dp"></div>
+                                <div class="map-store" style="top:530dp;left:180dp;">镜像处理</div>
+                                <div class="line-y" style="top:450dp;left:160dp;height:120dp;transform:rotate(-45deg);transform-origin:top;"></div>
+                                <div class="line-y" style="top:550dp;left:30dp;height:100dp"></div>
+                                <div class="map-store" style="top:620dp;">生成模块</div>
+                                <div class="line-y" style="top:640dp;left:30dp;height:80dp"></div>
+                            </div>
+
+
+                            <div class="idevice">
+                                <div class="ieye"><i></i></div>
+                                <div class="iear"></div>
+                                <div class="iscreen">
+                                    <div class="iheader">Header</div>
+                                    <div class="ibody">
+                                        <p>Module view</p>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <div class="ifooter">Footer</div>
+                                </div>
+                                <div class="itouch"></div>
+                            </div>
+                        </shadow>
+                    </scrolling>
+                </scroll>
+                <blockquote>
+                    IOING 控制了应用从载入到展示的整个过程，被载入的模块文件经过语法解释器生成准浏览器识别文件，而这一切都是在前端进行处理的。
+                </blockquote>
+            </section>
+
+            <!-- <section>
+                <h2>模块控制流程图</h2>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <shadow>
+                        </shadow>
+                    </scrolling>
+                </scroll>
+            </section> -->
+
+            <section uuid=folder>
+                <h2>开发目录</h2>
+                <p>默认开发目录中包含如下文件</p>
+                <def-folder src="folder"></def-folder>
+
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>文件</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>index.html</td>
+                                    <td>程序入口文件，在开发中该文件一般不需要修改</td>
+                                </tr>
+                                <tr>
+                                    <td>ioing.js</td>
+                                    <td>该文件为引擎核心文件</td>
+                                </tr>
+                                <tr>
+                                    <td>ioing</td>
+                                    <td>引擎开发目录，可删除</td>
+                                </tr>
+                                <tr>
+                                    <td>modules</td>
+                                    <td>模块目录，放置开发的模块</td>
+                                </tr>
+                                <tr>
+                                    <td>components</td>
+                                    <td>组件目录，放置开发的组件</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+
+                <p>目录<code>ioing</code>是引擎的源代码目录，目录包含以下文件</p>
+
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>文件</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>unify.js</td>
+                                    <td>环境统一脚本，主要对浏览器进行功能检测和兼容扩展</td>
+                                </tr>
+                                <tr>
+                                    <td>application.js</td>
+                                    <td>负责应用程序的初始化和启动</td>
+                                </tr>
+                                <tr>
+                                    <td>css.js</td>
+                                    <td>CSS 语法解释器</td>
+                                </tr>
+                                <tr>
+                                    <td>dom.js</td>
+                                    <td>DOM 语法解释器</td>
+                                </tr>
+                                <tr>
+                                    <td>fetch.js</td>
+                                    <td>模块资源异步加载器</td>
+                                </tr>
+                                <tr>
+                                    <td>loader.js</td>
+                                    <td>模块默认 loader</td>
+                                </tr>
+                                <tr>
+                                    <td>move.js</td>
+                                    <td>CSS3 操作方法</td>
+                                </tr>
+                                <tr>
+                                    <td>promise.js</td>
+                                    <td>异步处理库</td>
+                                </tr>
+                                <tr>
+                                    <td>proto.js</td>
+                                    <td>扩展库</td>
+                                </tr>
+                                <tr>
+                                    <td>query.js</td>
+                                    <td>DOM Query 库</td>
+                                </tr>
+                                <tr>
+                                    <td>sandbox.js</td>
+                                    <td>沙盒化处理器</td>
+                                </tr>
+                                <tr>
+                                    <td>scroll.js</td>
+                                    <td>Gpu 加速滚动库</td>
+                                </tr>
+                                <tr>
+                                    <td>touch.js</td>
+                                    <td>多手势操作库</td>
+                                </tr>
+                                <tr>
+                                    <td>transform.js</td>
+                                    <td>路由和模块转换管理</td>
+                                </tr>
+                                <tr>
+                                    <td>template.js</td>
+                                    <td>模块视图管理</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

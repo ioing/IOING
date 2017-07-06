@@ -1,0 +1,358 @@
+<!-- 经验模版 -->
+<template experience>
+	<div class="feed-item">
+		<div class="feed-title" transform="topic" param="topicId:{{data.topicId}}" data-event="title:热门推荐的经验卡片的话题标题,spm:suggest_list_detail.d_topic"><if is="data.status == 2"><div class="select-topic-icon">精选</div></if>{{data.topicTitle}}</div>
+		<div transform="detail" param="id:{{data.id}},topicId:{{data.topicId}}" data-event="title:热门推荐的经验卡片的经验正文,spm:suggest_list_detail.d_detail">
+			<div class="feed-desc">{{data.title}}</div>
+			<div class="feed-grid feed-grid-{{Math.min(data.pics.length, 3)}}">
+				<loop data="data.pics" as value key>
+					<if not="data.pics.length < 3 && key > 0"> 
+						<div class="grid-pic grid-pic-{{key}} {{data.pics.length < 3 ? util.getImgHorV(value) : ''}}" style="background-image: onload url({{value}}?w=400&h=400&cp=1)">
+							<if is="data.leftCount > 0 && key == 2">
+								<div class="grid-more-overlay"><div class="pic-num">+{{data.leftCount}}</div></div>
+							</if>
+						</div>
+					</if>
+				</loop>
+			</div>
+		</div>
+		<div class="feed-foot">
+			<div class="feed-avt" transform="space" param="uid:{{data.authorId}}" data-event="title:热门推荐的经验卡片的用户头像,spm:suggest_list_detail.d_user">
+				<div class="head-pic" style="background-image: onload url({{data.authorPic || '//img.geilicdn.com/u_default.jpg'}}?w=60&h=60&cp=1)"></div>
+				<div class="user-name">{{util.slice(data.authorNick || '未命名', 10)}}</div>
+			</div>
+			<if is="data.authorIsExpert"><span class="expert-icon" on-tap="event::expertshow(event)"></span></if>
+			<div class="count-wrapper">
+				<span class="comment-counts">{{data.popularCount}}</span>
+				<span class="like-counts {{data.inFavour ? 'active' : ''}}" myliked="{{data.inFavour ? 'true' : ''}}" stop-propagation on-tap="event::like(event, {{data.id}}, {{data.authorId}}, this)" data-event="title:热门推荐的经验卡片的点赞按钮,spm:suggest_list_detail.d_like">{{data.praiseCount}}</span>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template topic>
+	<div class="topic-item" transform="topic" param="topicId:{{data.id}}" data-event="title:最新话题列表的第{{#k+1}}个话题,data:{{#k}},spm:suggest_topic.d_{{#k+1}}">
+		<div class="topic-banner" style="background-image: onload url({{util.getTopicBg(data.pic)}}?w=600&h=600)">
+			<div class="topic-banner-overlay">
+				<div class="sub-title">— 话题 —</div>
+				<div class="topic-title">{{data.title}}</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- header-bar -->
+<template header>
+	<section class="user-info-bar">
+		<div class="avt-pic" style="background-image: onload url({{index.userInfo.userpic}}?w=60&h=60&cp=1)" transform="space" param="myspace:true" data-event="title:推荐页的用户头像,spm:suggest_top.d_user"></div>
+		<div class="name-text" transform="space" param="myspace:true" data-event="title:推荐页的用户头像,spm:index_user.0">{{index.userInfo.username}}</div>
+		<if is="index.user.notice && index._status.code !== 2 && index.applicationIsLogin">
+			<div class="note-icon" transform="message" data-event="title:推荐页的通知按钮,spm:suggest_top.d_notice">
+				<if is="index.user.notice">
+					<span class="note-num">{{index.user.notice > 99 ? 99 : index.user.notice}}</span>
+				</if>
+			</div>
+		</if>
+	</section>
+</template>
+
+<template navnav>
+	
+	<template name="{{value}}">
+		<div class="tab" data-event="{{key == 0 ? 'title:推荐频道的按钮,spm:suggest_channel.d_suggest' : 'title:第' + key + '个频道的按钮,spm:suggest_channel.d_' + key}}"><div><span>{{navTitle[key]}}</span></div></div>
+	</template>
+
+</template>
+
+<!-- tab-nav -->
+<loop data="index.tabConf.nav" as value key>
+	<include navnav></include>
+</loop>
+
+<template temp>
+	<if is='_index == 0'>
+		<include banner></include>
+		<div class="topic-card">
+			<div class="topic-bar">
+				<if is="key == 0">
+				— 精选话题 —
+				</if><else>
+				— 最新话题 —
+				</else>
+			</div>
+			<loop data="tabindex.topic" as val k>
+				<div class="topic-card-item">
+					<include topic data:data="val"></include>
+				</div>
+			</loop>
+			<div class="more-topic" transform="subside" param="circleId:{{index.tabConf.params[key].circleId}}" data-event="title:最新话题列表的全部话题按钮,spm:suggest_topic.d_all">发现更多话题<span class="entry-to-more"></span></div>
+		</div>
+		<div class="hot-bar">— 热门推荐 —</div>
+	</if><else>
+		<switch case="type">
+			<case value="0">
+				<include topic></include>
+			</case>
+			<case value="1">
+				<include experience></include>
+			</case>
+		</switch>
+	</else>
+</template>
+
+<include header></include>
+<tab-switch data="index.tabConf" slide="tab-content-scroll" height="44" inject="tab-switch-inject" tabswitch="{{module.param.tabswitch}}"></tab-switch>
+
+
+<!-- tab-content -->
+<scroll uuid="tab-content-scroll" class="tab-content-scroll" fullscreen x y=false snap mouse-wheel="false" speed-limit="0.1" scrollbars=false direction-lock-threshold-x="20">
+	<scrolling style="width:{{index.tabConf.content.length*100}}%">
+		<loop data="index.tabConf.content" as value key>
+			<div class="tab-content" uuid="{{value}}" name="tab-{{key}}" style="width:{{100/index.tabConf.content.length}}%; height: 100%; transform: translate({{key*100}}%, 0);">
+				<scroll class="tab-scroll" finite deferred template="temp" x=false stop-propagation="false" item-min-size="200" data-origin="tablist,tabindex" data="tablist" limit="12" uuid="{{index.tabConf.useScroller[key]}}" end-flag="tablist.length == 0">
+					<scrollcover class="tab-loading">
+						<div class="load6">
+							<div class="bounce1"></div>
+							<div class="bounce2"></div>
+							<div class="bounce3"></div>
+							<div class="bounce4"></div>
+						</div>
+					</scrollcover>
+				</scroll>
+				<pulldown threshold=50>
+					<pullstart>下拉刷新</pullstart>
+					<pulling>松手刷新</pulling>
+					<pullend>
+						<div class="load6">
+							<div class="bounce1"></div>
+							<div class="bounce2"></div>
+							<div class="bounce3"></div>
+							<div class="bounce4"></div>
+						</div>
+					</pullend>
+					<pullover>没有更多了</pullover>
+				</pulldown>
+				<pullup threshold=50 auto>
+					<pullstart>上拉加载更多</pullstart>
+					<pulling>松手加载更多</pulling>
+					<pullend>
+						<div class="load6">
+							<div class="bounce1"></div>
+							<div class="bounce2"></div>
+							<div class="bounce3"></div>
+							<div class="bounce4"></div>
+						</div>
+					</pullend>
+					<pullover>没有更多了</pullover>
+				</pullup>
+			</div>
+		</loop>
+	</scrolling>
+</scroll>
+
+<expert-layer uuid="expertLayer"></expert-layer>
+
+<script>
+	var tabScroll = node('tab-content-scroll')
+	module.on('refresh', function () {
+		tabScroll.scroller.disable()
+	})
+</script>
+
+<template tab-switch-inject>
+	<style>
+		scroll {
+			border-bottom: 0;
+		}
+
+		nav ul {
+			padding-left: 26dp;
+		}
+
+		nav ul li {
+			padding-right: 30dp;
+		}
+
+		.tab span {
+			font-size: 13dp;
+			color: #4E4E44;
+		}
+
+		.active .tab span {
+			color: #F85F4C;
+		}
+
+		.light-line {
+			height: 2dp;
+			bottom: 9.5dp;
+			background-color: #F85F4C;
+		}
+	</style>
+</template>
+
+
+<template banner>
+	<if is="tabindex.banner.length">
+		<scroll uuid="banner-scroll-{{key}}" class="banner-card" x y=false snap stop-propagation="x" cover-propagation="false" indicator="false" scrollbars="false" fade-scrollbars="false" speed-limit="1" deceleration="1">
+			<scrolling class="banner-scroll" style="width:{{#tabindex.banner.length * 100}}%;">
+				<loop data="tabindex.banner" as value i>
+					<div class="slide" style="width:{{#100 / tabindex.banner.length}}%;transform:translate({{i * 100}}%, 0px) translateZ(0px)" hrefer="{{value.bannerUrl}}" data-event="title:第{{#i+1}}个banner,spm:suggest_banner.d_{{#i+1}}">
+						<div class="painting" style="background-image: onload url('{{#value.bannerImg}}?w=600&h=600')">
+						</div>
+					</div>
+				</loop>
+			</scrolling>
+			<if is="tabindex.banner.length > 1">
+				<scrollbar>
+					<div uuid="dotty-{{key}}" class="dotty" style="width:{{#100 / tabindex.banner.length}}%;"></div>
+					<ul class="dotty-li">
+						<loop data="tabindex.banner" as value i>
+							<li class="dot"></li><if not="i == tabindex.banner.length-1"><li class="pipe"></li></if>
+						</loop>
+					</ul>
+				</scrollbar>
+				<script>
+					var bannerScroll = node('banner-scroll-' + scope.key)
+					var bannerScroller = bannerScroll.scroller
+					var fragment = bannerScroll.parentFragment
+					var tabswitch = node(scope.index.tabConf.content[scope.key])
+					var dotty = node('dotty-' + scope.key)
+
+					bannerScroll.on('touchstart', function () {
+						clearInterval(bannerScroller.bannerTimeId)
+					}).on('touchend', function () {
+						showbanner()
+					})
+
+					bannerScroller.on('scrollend', function () {
+						dotty.css('transform', 'translate(' + this.currentPage.pageX * 2 * DP(7) + 'px, 0px)')
+					})
+
+					function showbanner () {
+
+						bannerScroller.bannerTimeId = setInterval(function () {
+
+							if ( bannerScroller.wrapper.offsetHeight == 0 || bannerScroller.finger >= 0 ) return
+
+							if ( bannerScroller.maxScrollX == bannerScroller._x ) {
+								bannerScroller.scrollTo(0,0, 1000)
+								bannerScroller.currentPage.pageX = 0
+							} else {
+								bannerScroller.next()
+							}
+							
+						}, 4000)
+					}
+
+					showbanner()
+
+					if ( fragment ) {
+						fragment.on('show', function () {
+							clearInterval(bannerScroller.bannerTimeId)
+							showbanner()
+						})
+
+						fragment.on('hidden', function () {
+							clearInterval(bannerScroller.bannerTimeId)
+						})
+					}
+
+					if ( tabswitch ) {
+						tabswitch.on('show', function () {
+							clearInterval(bannerScroller.bannerTimeId)
+							showbanner()
+						})
+
+						tabswitch.on('hidden', function () {
+							clearInterval(bannerScroller.bannerTimeId)
+						})
+					}
+				</script>
+			</if>
+		</scroll>
+	</if>
+</template>
+
+
+
+<div class="scroll-guide" uuid="scroller-guider-content">
+</div>
+
+<script name="event">
+var wait = false
+
+function expertshow() {
+	node('expertLayer').trigger('show')
+}
+
+function like (event, id, uid, element) {
+	if ( !top.applicationIsLogin ) {
+        var currentUrl = encodeURIComponent(top.location.href)
+        top.location.href = top.loginApi() + "?redirect=" + currentUrl
+        return false
+    }
+
+	if ( wait == true ) return
+
+	wait = true
+
+	if (id && !element.attr('myliked')) {
+		promise.post(scope.api.like, {
+			"userSource":0,
+			"targetType":0,
+			"targetId": id,
+			"targetAuthor": uid,
+			"targetAuthorSource":0,
+			"bizGroup": 5,
+			"bizType": 0
+		}).then(function (err, data) {
+
+			if ( data.status.code == 2 ) {
+                top.location.href = top.loginApi() + "?redirect=" + encodeURIComponent(top.location.href)
+                return false
+            }
+
+			if ( data.status.code == 0 ) {
+				element.addClass('active')
+
+				element.innerText = Number(element.innerText) + 1
+				element.attr('myliked', 'true')
+			}
+
+			wait = false
+		})
+
+        top.piwik_spm_extension.track_keys = {
+          spm_cnt: "wrlc7t.0g9v2tn6.0.0",
+          spm_btn: "wrlc7t.0g9v2tn6.jingyan_buttom.1"
+        }
+		top._paq.push(['trackEvent', "点赞",'click',''])
+	} else {
+		promise.post(scope.api.unlike, {
+			"userSource":0,
+			"targetType":0,
+			"targetId": id,
+			"targetAuthor": uid,
+			"targetAuthorSource":0,
+			"bizGroup": 5,
+			"bizType": 0
+		}).then(function (err, data) {
+
+			if ( data.status.code == 2 ) {
+	            top.location.href = top.loginApi() + "?redirect=" + encodeURIComponent(top.location.href)
+	            return false
+	        }
+
+			if ( data.status.code == 0 ) {
+				element.removeClass('active')
+
+				element.innerText = Number(element.innerText) - 1
+				element.attr('myliked', '')
+			}
+
+			wait = false
+		})
+	}
+}
+</script>
+

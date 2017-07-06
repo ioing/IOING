@@ -1,0 +1,241 @@
+<style>
+    /*开闭导航块*/
+    @section (.accordion-nav) {
+        this {
+            position: relative;
+            transition: margin .2s ease-in-out;
+        }
+
+        this.hover-item {
+            background-color: #f9f9f9;
+        }
+
+        this.hover-item:hover, this.hover-item:hover nav li {
+            background-color: #fff;
+        }
+
+        this.sub, this.sup {
+            border-color: #rgba(0,0,0,.1);
+        }
+
+        this.sup.o {
+            margin-bottom: 10dp;
+        }
+
+        this.sup.o, this.sup.o h3 {
+            border-bottom-left-radius: 5dp;
+            border-bottom-right-radius: 5dp;
+        }
+
+        this.sub.o, this.sub.o h3 {
+            border-top-left-radius: 5dp;
+            border-top-right-radius: 5dp;
+        }
+
+        this.sub:not(.o) {
+            border-top: 0;
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        this.sup {
+            margin-bottom: 0;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        this.sup:not(.o)::after {
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            bottom: -1px;
+            z-index: -1;
+            background: #fff;
+        }
+
+        this.sub ul, this.sup ul {
+            display: none;
+        }
+
+        this.sub h3, this.sup h3 {
+            color: [active-color];
+            font-weight: normal;
+            font-size: 14dp;
+            border-bottom: 0;
+        }
+
+        this.sub h3 {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 5dp;
+            border-bottom-right-radius: 5dp;
+        }
+
+        this.sub.sup h3 {
+            border-radius: 0;
+        }
+
+        this.sup h3 i, this.sub h3 i {
+            transform: rotate(0deg);
+        }
+
+        this.sup .link-box small, this.sub .link-box small {
+            opacity: 0;
+        }
+
+        @media screen and (max-width: [max-width]) {
+            this, this.sub, this.sup, this.sub.o, this.sup.o {
+                margin: 0;
+            }
+            this.sub ul, this.sup ul {
+                display: block;
+            }
+        }
+    }
+</style>
+<loop nav as group key>
+    <section uuid="nav-{key}" class="accordion-nav {key,nav|currentNavSection}">
+        <nav class="link-item">
+            <h3 on-tap="event::openStream({key})">
+                <div class="link-box">
+                    <span class="title">{group.title}</span>
+                    <small>{group.desc}</small>
+                    <i></i>
+                </div>
+            </h3>
+            <ul class="u">
+                <loop data="group.list" as value key>
+                    <li class="{setting.status.activeSubNav,value|activeSubNav}" tap-highlight="hover">
+                        <a transform="{value.href}" prefetch tap-highlight="active">
+                            <div class="link-box">
+                                <span class="title">{value.title}</span>
+                                <i></i>
+                            </div>
+                        </a>
+                    </li>
+                </loop>
+            </ul>
+        </nav>
+    </section>
+</loop>
+<script name=event>
+    function openStream (id, display) {
+        id = Number(id)
+        var pid = id - 1
+        var nid = id + 1
+        var el = node('nav-' + id)
+        var preEl = node('nav-' + pid)
+        var nextEl = node('nav-' + nid)
+        var hasOpen = false
+
+        var i = 0
+        var l = scope.nav.length - 1
+
+        while ( i <= l ) {
+            var n = node('nav-' + i)
+
+            if ( i == id ) {
+                hasOpen = el.hasClass('sup') || el.hasClass('sub')
+            }
+
+            n.removeClass('o')
+            n.addClass('sup sub')
+
+            if ( i !== id ) {
+                if ( i == 0 ) {
+                    n.removeClass('sub')
+                } else if ( i == l ) {
+                    n.removeClass('sup')
+                }
+            }
+
+            i++
+        }
+
+        if ( hasOpen || display ) {
+            el.removeClass('sup sub')
+
+            if ( nextEl ) {
+                if ( nid == l ) {
+                    nextEl.addClass('o')
+                } else {
+                    nextEl.removeClass('sub')
+                }
+            }
+
+            if ( preEl ) {
+                if ( pid == 0 ) {
+                    preEl.addClass('o')
+                } else {
+                    preEl.removeClass('sup')
+                }
+            }
+        } else {
+            el.addClass('sup sub')
+
+            if ( id == 0 ) {
+                el.removeClass('sub')
+            } else if ( id == l ) {
+                el.removeClass('sup')
+            }
+
+            if ( preEl ) {
+                if ( pid == 0 ) {
+                    preEl.removeClass('o')
+                }
+            }
+        }
+
+        var activeNav = el.find('.active')[0]
+
+        if ( activeNav ) {
+            setTimeout(function () {
+                el.previousScroller.Scroll().scrollToElement(activeNav, 600)
+            }, 600)
+        }
+    }
+
+    function changeStream (display) {
+        if ( App.id ) {
+            var id = App.id.split('-')[1]
+
+            for (var i = 0, l = scope.nav.length; i < l; i++) {
+                if ( scope.nav[i].id == id ) {
+                    return openStream(i, display)
+                }
+            }
+        }
+    }
+
+    setTimeout(function () {
+        changeStream(true)
+    }, 1200)
+
+    function changeNav (id) {
+        var parentid = id.split('-')[0]
+        scope.setting.status.activeSubNav = id
+        scope.setting.status.activeMainNav = parentid
+        scope.setting.status.showAside = parentid === "docs" ? true : false
+        scope.setting.status.showMenuBtn = false
+        scope.setting.status.showMoreNav = false
+        scope.setting.status.showDocsNav = false
+    }
+
+    App.on('transformstart', function (event) {
+        if ( event.modules[0].config.absolute == true ) {
+            App.one('transformend', function (event) {
+                changeStream(true)
+                changeNav.call(null, event.ids[0])
+            })
+
+            return
+        }
+
+        changeStream(true)
+        changeNav.call(null, event.ids[0])
+    })
+    App.id && changeNav(App.id)
+</script>

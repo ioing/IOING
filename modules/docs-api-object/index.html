@@ -1,0 +1,200 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>getInstanceType</h2>
+                <p>该<code>getInstanceType()</code>方法返回该实例对象的类型。</p>
+                <code-light type=js>
+                    [1,2,3].getInstanceType();      // "Array"
+                    {a:1,b:2}.getInstanceType();    // "Object"
+                    "abcdefg".getInstanceType();    // "String"
+                    var count = 12;
+                    count.getInstanceType();        // "Number"
+                </code-light>
+            </section>
+
+            <section>
+                <h2>assign<small><a>Polyfill</a></small></h2>
+                <p>该<code>Object.assign()</code>方法用于将所有可枚举的属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。</p>
+                <code-light type=js>
+                    Object.assign（target，... sources）
+                </code-light>
+                <h4>例子</h4>
+                <code-light type=js>
+                    var o1 = { a: 1, b: 1, c: 1 };
+                    var o2 = { b: 2, c: 2 };
+                    var o3 = { c: 3 };
+                    var obj = Object.assign({}, o1, o2, o3);
+                    console.log(obj); // { a: 1, b: 2, c: 3 }
+                </code-light>
+            </section>
+
+            <section>
+                <h2>extend</h2>
+                <p>该<code>extend()</code>方法用于将所有可枚举的属性的值从一个或多个源对象复制到目标对象。</p>
+                <code-light type=js>
+                    var o1 = { a: 1, b: 1, c: 1 };
+                    var o2 = { b: 2, c: 2 };
+                    var o3 = { c: 3 };
+                    var obj = {}.extend(o1, o2, o3);
+                    console.log(obj); 
+                    // { a: 1, b: 2, c: 3 }
+                </code-light>
+            </section>
+
+            <section>
+                <h2>objectToParams</h2>
+                <p>该<code>objectToParams()</code>方法用于将对象转为格式化的参数字符串。</p>
+                <code-light type=js>
+                    var obj = {
+                        id: 100,
+                        page: 15,
+                        limit: 20
+                    }
+                    var param = obj.objectToParams()
+                    console.log(param)        
+                    // "id=100&page=15&limit=20"
+                </code-light>
+            </section>
+
+            <section>
+                <h2>countProperties</h2>
+                <p>该<code>countProperties()</code>方法用于获取对象属性总数。</p>
+                <code-light type=js>
+                    var obj = {
+                        a:1,
+                        b:2,
+                        c:3,
+                        d:4
+                    }
+                    var count = obj.countProperties()
+                    console.log(count)        // 4
+                </code-light>
+            </section>
+
+            <section>
+                <h2>each</h2>
+                <p>该<code>each()</code>方法以 for.../for...in 循环遍历 Object 对象/Array 数组/类数组的可枚举属性，并以 callback 方式返回。</p>
+                <code-light type=js>
+                    var obj = {
+                        a:1,
+                        b:2,
+                        c:3
+                    }
+                    obj.each(function (value, key) {
+                        console.log(value, key) 
+                    })
+                    // a 1
+                    // b 2
+                    // c 3
+                    var arr = ["a","b","c"]
+                    arr.each(function (index, value) {
+                        console.log(index, value) 
+                    })
+                    // 0 "a"
+                    // 1 "b"
+                    // 2 "c"
+                </code-light>
+            </section>
+
+            <section>
+                <h2>equals</h2>
+                <p>该<code>equals()</code>方法用于循环比对两个目标对象的可枚举属性，以判断两个对象是否相等。</p>
+                <code-light type=js>
+                    var obj1 = {
+                        a:1,
+                        b:2,
+                        c:3
+                    }
+                    var obj2 = {
+                        c:3,
+                        b:2,
+                        a:1
+                    }
+                    console.log(obj1.equals(obj2))           // true
+                    console.log(Object.equals(obj1, obj2))   // true
+                </code-light>
+            </section>
+
+            <section>
+                <h2>watch</h2>
+                <p>该<code>watch()</code>方法用于监视对象属性的重新赋值。</p>
+                <code-light type=js>
+                    var obj = { a: 5, b: 4}
+                    obj.watch("b", function (prop, oldValue, newValue) {
+                        console.log(prop, oldValue, newValue)
+                    })
+                    obj.b = 7
+                    // b 4 7
+                </code-light>
+            </section>
+
+            <section>
+                <h2>unwatch</h2>
+                <p>该<code>unwatch()</code>方法用于解除对象的 watch 事件。</p>
+                <code-light type=js>
+                    var obj = { a: 5, b: 4}
+                    obj.watch("b", function (prop, oldValue, newValue) {
+                        console.log(prop, oldValue, newValue)
+                    })
+                    obj.unwatch("b")    // 解除watch
+                    obj.b = 7
+                </code-light>
+            </section>
+
+            <section>
+                <h2>initial</h2>
+                <p>该<code>initial()</code>方法用于初始化没有给定对象的默认值。</p>
+                <code-light type=js>
+                    var obj = {}
+                    obj.initial('list', []).push([1,2,3])
+                    console.log(obj)
+                    // {list:[1,2,3]}
+                </code-light>
+            </section>
+
+            <section>
+                <h2>setValueOfHref</h2>
+                <p>该<code>setValueOfHref()</code>方法用于以解析字符 href 的方式给该对象赋值。</p>
+                <code-light type=js>
+                    var obj = {
+                        item: {
+                            a : 5,
+                            b : 8,
+                            i : "b"
+                        }
+                    }
+                    obj.setValueOfHref('item.b', 3)
+                    console.log(obj.item.b)
+                    // 3
+                    obj.setValueOfHref('item[item.i]', 7)
+                    console.log(obj.item.b)
+                    // 7
+                </code-light>
+            </section>
+
+            <section>
+                <h2>getValueByLink</h2>
+                <p>该<code>getValueByLink()</code>方法用于以该对象为 context SCOPE 作为解析字符 link 的方式获取该对象字符表达式的计算值。</p>
+                <code-light type=js>
+                    var obj = {
+                        item: {
+                            a : 5,
+                            b : 8,
+                            i : "b"
+                        },
+                        limit: 100
+                    }
+                    obj.getValueByRoute('item.b')
+                    // 8
+                    obj.getValueByRoute('item[item.i]')
+                    // 8
+                    obj.getValueByRoute('item[item.i] + item.a + limit')
+                    // 113
+                </code-light>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

@@ -1,0 +1,267 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>尺寸单位</h2>
+                <p>支持至少15种尺寸单位，用以帮助开发者能够灵活的完成更多的场景需求</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>单位</th>
+                                    <th>描述</th>
+                                    <th>支持</th>
+                                    <th>计算</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>%</td>
+                                    <td>百分比</td>
+                                    <th><code g>是</code></th>
+                                    <th><code>否</code></th>
+                                </tr>
+                                <tr>
+                                    <td>in</td>
+                                    <td>英寸</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>cm</td>
+                                    <td>厘米</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>mm</td>
+                                    <td>毫米</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>em</td>
+                                    <td>当前的字体尺寸倍数</td>
+                                    <th><code g>是</code></th>
+                                    <th><code>否</code></th>
+                                </tr>
+                                <tr>
+                                    <td>rem</td>
+                                    <td>根字体尺寸倍数</td>
+                                    <th><code g>是</code></th>
+                                    <th><code>否</code></th>
+                                </tr>
+                                <tr>
+                                    <td>ex</td>
+                                    <td>1/2字体尺寸</td>
+                                    <th><code g>是</code></th>
+                                    <th><code>否</code></th>
+                                </tr>
+                                <tr>
+                                    <td>pt</td>
+                                    <td>1/72英寸</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>pc</td>
+                                    <td>12点活字（1pc 等于12点）</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>px</td>
+                                    <td>像素（屏幕上的一个点）</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>dp</td>
+                                    <td>设备显示密度（dpi 倍数）</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>vw</td>
+                                    <td>100vw = 屏幕宽度</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>vh</td>
+                                    <td>100vh = 屏幕高度</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>fr</td>
+                                    <td>在一系列长度值中分配剩余空间</td>
+                                    <th><code g>默认</code></th>
+                                    <th><code>否</code></th>
+                                </tr>
+                                <tr>
+                                    <td>vmin</td>
+                                    <td>100vmin = Math.min(屏幕宽, 屏幕高)</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                                <tr>
+                                    <td>vmax</td>
+                                    <td>100vmax = Math.max(屏幕宽, 屏幕高)</td>
+                                    <th><code g>是</code></th>
+                                    <th><code g>是</code></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <blockquote>注意：计算项为<code>否</code>的表示该单位不能作为可计算单位参与<code>@逻辑运算</code>中的计算，但是依然支持在 calc 里的计算（如果你的设备支持 calc 运算）</blockquote>
+            </section>
+
+            <section uuid=pixel>
+                <h2>
+                    适配单位 dp
+                    <small>还原设备物理分辨率，消除 viewport 逻辑分辨率的影响</small>
+                </h2>
+                <p>viewport 影响被消除后，浏览器逻辑分辨率变为设备物理分辨率，前后缩放比值等于 1/devicePixelRatio（设备像素比），此时使用单位<code>dp</code>来适配缩放比</p>
+                <blockquote>
+                    <h5>物理分辨率</h5>
+                    <p>显示屏的最佳分辨率，即屏幕实际存在的像素行数乘以列数的数学表达方式，是显示屏固有的参数，不能调节，其含义是指显示屏最高可显示的像素数</p>
+                </blockquote>
+                <blockquote>
+                    <h5>逻辑分辨率</h5>
+                    <p>大家都知道移动端设备屏幕尺寸非常多，碎片化严重。尤其是 Android，你会听到很多种分辨率：480×800, 480×854, 540×960, 720×1280, 1080×1920 等。而我们听到的这些分辨率指的都是物理分辨率，假设你 iPhone 的物理分辨率为 640×960，而你的浏览器分辨率则可能为 320×480，此时浏览器呈现的分辨率即是逻辑分辨率。通俗点讲物理分辨率是硬件所支持的，逻辑分辨率是软件可以达到的</p>
+                </blockquote>
+                <p>使用单位<code>dp</code>代替<code>px</code>描述元素尺寸</p>
+                <code-light type=css>
+                    div {
+                        width: 100dp;
+                        height: 100dp;
+                        font-size: 14dp;
+                    }
+                </code-light>
+                <p>如果你的设备的<code>devicePixelRatio</code>值为2，则 1dp=2px，这段代码的实际结果为</p>
+                <code-light type=css>
+                    div {
+                        width: 200px;
+                        height: 200px;
+                        font-size: 28px;
+                    }
+                </code-light>
+                <p>只有当你真正需要表示物理像素大小的时候才使用<code>px</code>，如下有两条 1px 的线，一条是在 vieport 中逻辑像素中呈现的一像素线，另一条是物理像素下呈现的一像素线</p>
+                <code-light type=html>
+                    <style>
+                        /*模拟兼容横向1物理像素*/
+                        @class pixeborder () {
+                            background-position: left bottom;
+                            background-image: gradient(linear,left top,left bottom,color-stop(0.5,transparent),color-stop(0.5,#e0e0e0),to(#e0e0e0));
+                            background-repeat: repeat-x;
+                            background-size: 100% 1px;
+                        }
+                        /*正常1px*/
+                        .viewpixeline {
+                            width: 100%;
+                            height: 20dp;
+                            border-bottom: 1px solid rgba(0,0,0,.15);
+                        }
+                        /*实际设备物理像素1px*/
+                        .realpixeline {
+                            margin: 0 0 20dp;
+                            width: 100%;
+                            height: 40dp;
+                            @class: pixeborder();
+                        }
+                    </style>
+                    <div class="viewpixeline"></div>
+                    <div class="realpixeline"></div>
+                </code-light>
+                <shadow>
+                    <style>
+                        .viewpixeline {
+                            width: 100%;
+                            height: 20dp;
+                            border-bottom: 1px solid rgba(0,0,0,.15);
+                        }
+                        .realpixeline {
+                            margin: 0 0 20dp;
+                            width: 100%;
+                            height: 40dp;
+                            @class: pixeborder();
+                        }
+                    </style>
+                    <div class="viewpixeline"></div>
+                    <div class="realpixeline"></div>
+                </shadow>
+                <p>如果你当前正在使用电脑或不支持物理像素还原的设备访问该页面，那么你看到的两条 1px 线的粗细应该是不一样的，第二条要比第一条更细，如果你当前看到的两条线是一样粗细的，那证明你正在使用的设备能够支持物理像素的还原显示</p>
+                <blockquote>
+                    <h5>一物理像素 px 和适配单位 dp</h5>
+                    <p>移动端适配不得不提的一个概念是<code>viewport</code>，它最初的目的是帮助 pc 端的网页能够适配在移动端设备，但同时这里有产生一个问题：1px 值不再代表1物理像素而变为一个虚拟值，在高分辨率设备中由于 viewport 起了缩放作用，因此 1px 实际变为(1*dpi)px，当你想要画一条很细的 1px 线的时候（即发髻线效果）你会发现这条线看起来很粗</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>calc 计算 <small>对于不支持该特性的浏览器，引擎可进行自动降级兼容</small></h2>
+                <p>使用 calc 做不同单位间的运算</p>
+                <code-light type=css>
+                    body {
+                        height: calc(100vh + 3dp - 1px)
+                    }
+                </code-light>
+                <p>calc 为 W3c 标准 API，当浏览器不支持时引擎会代为浏览器支持运算</p>
+                <blockquote>注意：在做四则运算时，运算符与值之间需要保持空格，这符合 W3C 制定的规范，当浏览器不支持运算属性 calc 时，引擎将会把<code>calc</code>转为<code>@ 逻辑运算</code>，如果你需要在不支持 calc 的设备上进行响应运算，请结合使用<code>@media</code>辅助完成</blockquote>
+            </section>
+
+            <section>
+                <h2>@ 逻辑运算</h2>
+                <p>该特性能够让你在 CSS 中执行简单的 JS 逻辑运算</p>
+                <code-light type=css>
+                    body {
+                        height: @(h ? h + 30 : 100)px
+                    }
+                </code-light>
+                <p>进行逻辑运算时，运算上下文中可以直接引用模版变量和 CSS 中的定义变量，函数运算能够完成比 calc 更复杂的计算，但逻辑运算不支持响应式计算，而 calc 能够支持响应运算，比如当运算中涉及<code>vw/vh/vm等</code>响应单位时，当窗口宽度或高度发生改变时该单位大小将发生改变，此时应该对该数学式进行重新计算</p>
+                <blockquote>注意：在 CSS中 大批量的使用逻辑运算时，可能会引起由于 JS 逻辑表达式不合理而产生性能问题</blockquote>
+            </section>
+
+            <section>
+                <h2>变量输出 <small>把变量输出是动态 CSS 的核心部分</small></h2>
+                <p>通过<code>[key]</code>获取<code>@var</code>/<code>@global</code>定义的变量或<code>系统基础变量</code>。（<a transform=docs-css-scope>#了解基础变量</a>）</p>
+                <code-light type=css>
+                    @var {
+                        max-width: 1000dp;
+                        header-height: 60dp;
+                        common-color: #333;
+                        path: /static/image;
+                    }
+                    header {
+                        height: [header-height];
+                        max-width: [max-width];
+                        background: url([path]/logo.jpg);
+                    }
+                    nav {
+                        color: [common-color]
+                        height: [header-height];
+                        font-size: 14dp;
+                    }
+                </code-light>
+                <p>上例中在浏览器中的实际输出结果为</p>
+                <code-light type=css>
+                    header {
+                        height: 60dp;
+                        max-width: 1000px;
+                        background: url(/static/image/logo.jpg);
+                    }
+                    nav {
+                        color: #333;
+                        height: 60px;
+                        font-size: 14px;
+                    }
+                </code-light>
+                <p>通过<code>[key]</code>输出变量只能输出直接变量，在本例中 a 和 b 为直接变量。当然通过@逻辑运算也可以完成输出变量，但在使用上如果不需要做逻辑运算而只是为了输出变量的话显而易见的使用<code>[key]</code>的书写方式上更方便</p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

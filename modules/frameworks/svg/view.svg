@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41 (35326) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M15,26 C23.859504,26 29.2420735,17.3868362 29.2420735,17.3868362 C30.2358975,16.068623 30.2606434,13.9050627 29.2420735,12.6131638 C29.2420735,12.6131638 23.859504,4 15,4 C6.14049599,4 0.757926475,12.6131638 0.757926475,12.6131638 C-0.235897518,13.931377 -0.260643383,16.0949373 0.757926475,17.3868362 C0.757926475,17.3868362 6.14049599,26 15,26 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="30" height="22" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <use id="Oval-16" stroke="#ffffff" mask="url(#mask-2)" stroke-width="4" xlink:href="#path-1"></use>
+        <ellipse id="Oval-17" stroke="#ffffff" stroke-width="2" cx="15" cy="15" rx="5" ry="5"></ellipse>
+    </g>
+</svg>

@@ -1,0 +1,74 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>path <small>智能路径</small></h2>
+                <p>相对路径的前缀解析规则</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>前缀</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>./ 或 无前缀</td>
+                                    <td>相对当前模块目录</td>
+                                </tr>
+                                <tr>
+                                    <td>/</td>
+                                    <td>相对 modules 目录</td>
+                                </tr>
+                                <tr>
+                                    <td>~/</td>
+                                    <td>相对被引用模块目录</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>符合规则的属性：</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:959dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>src</th>
+                                    <th>url</th>
+                                    <th>uri</th>
+                                    <th>link</th>
+                                    <th>href</th>
+                                    <th>path</th>
+                                    <th>src:[name]</th>
+                                    <th>url:[name]</th>
+                                    <th>uri:[name]</th>
+                                    <th>link:[name]</th>
+                                    <th>href:[name]</th>
+                                    <th>path:[name]</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=html>
+                    <!-- 实际路径为 modules/home/www/index.html -->
+                    <a link=/home/www/index.html>button</a>
+                    <!-- 实际路径为 modules/home/www/index.html -->
+                    <a link:photo=./pic/flower.jpg>button</a>
+                    <!-- 上面的模版实际输出结果为下（设模块为 home） -->
+                    <a link:photo=/modules/home/pic/flower.jpg>button</a>
+                    <!-- 设被引用模版的模块为 home，则世界结果为 modules/home/pic/flower.jpg -->
+                    <a path=~/pic/flower.jpg>button</a>
+                </code-light>
+                <blockquote>
+                    <p>所有属性 URL 链接的默认相对路径为模块目录（普通 HTML 页面则是相对网站根目录的）</p>
+                </blockquote>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

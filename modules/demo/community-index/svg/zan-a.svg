@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="30px" height="34px" viewBox="0 0 30 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M7,10.4373143 C5.44900373,10.7405674 2.97358531,10.3265083 2.97358531,10.3265083 C1.33797961,10.1667592 0,11.3462119 0,13.0068483 L0,29.9931517 C0,31.6640085 1.34315432,33 3.00001915,33 L7,33 L7,10.4373143 Z M9,9.06012479 C9.5055798,8.38026989 10,7.19736299 10,5 C10,1 10,8.37983478e-08 13,0 C18,-1.39663913e-07 18.6888763,8.03625333 18.6888763,8.03625333 C18.8607052,9.12080067 19.9001762,10 20.992017,10 L24.9989013,10 C27.7609319,10 30,12.2472141 30,14.9906574 L30,29.9931517 C30,31.6537881 28.6526814,33 26.9999809,33 L9,33 L9,9.54545455 L9,9.06012479 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="30" height="33" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="9-7" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-Copy" transform="translate(-486.000000, -31.657329)" stroke="#F85F4B" stroke-width="4" fill="#F85F4B">
+            <g id="Group-9-Copy" transform="translate(486.000000, 26.000000)">
+                <g id="Group-5" transform="translate(0.000000, 6.000000)">
+                    <use id="Combined-Shape" mask="url(#mask-2)" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

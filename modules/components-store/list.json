@@ -1,0 +1,182 @@
+{
+    "banner": [
+        "demo/photo-tilt",
+        "demo/date-picker",
+        "demo/banner-slider",
+        "demo/code-light",
+        "demo/scroll-to-top"
+    ],
+    "imitate" : [
+        {
+            "id" : "1",
+            "name" : "Facebook 首页 feed 流",
+            "avtr" : "upload/1.jpg",
+            "type" : "演示",
+            "href" : "/demo/facebook-feed"
+        },
+        {
+            "id" : "2",
+            "name" : "twitter 动态列表",
+            "avtr" : "upload/1.jpg",
+            "type" : "演示",
+            "href" : "/demo/facebook-feed"
+        },
+        {
+            "id" : "3",
+            "name" : "美团外卖首页",
+            "avtr" : "upload/1.jpg",
+            "type" : "演示",
+            "href" : "/demo/facebook-feed"
+        },
+        {
+            "id" : "4",
+            "name" : "微信消息列表页",
+            "avtr" : "upload/1.jpg",
+            "type" : "演示",
+            "href" : "/demo/facebook-feed"
+        },
+        {
+            "id" : "5",
+            "name" : "instagram",
+            "avtr" : "upload/1.jpg",
+            "type" : "演示",
+            "href" : "/demo/facebook-feed"
+        }
+    ],
+    "components" : [
+        {
+            "id" : "4",
+            "name" : "数值滑动条-通过滑动数值取值输入",
+            "avtr" : "upload/1.jpg",
+            "free" : "range-slider",
+            "href" : "/demo/range-slider"
+        },
+        {
+            "id" : "5",
+            "name" : "日期选择控件",
+            "avtr" : "upload/1.jpg",
+            "free" : "date-picker",
+            "href" : "/demo/date-picker"
+        },
+        {
+            "id" : "3",
+            "name" : "代码高亮-支持多种编程语言的代码高亮",
+            "avtr" : "upload/1.jpg",
+            "free" : "code-light",
+            "href" : "/demo/code-light"
+        },
+        {
+            "id" : "1",
+            "name" : "陀螺仪全景照片-使用陀螺仪控制照片的滑动",
+            "free" : "photo-til",
+            "href" : "/demo/photo-tilt"
+        },
+        {
+            "id" : "2",
+            "name" : "switch 滑块开关-通过手势操作控制开关",
+            "free" : "switch-slider",
+            "href" : "/demo/switch-slider"
+        },
+        {
+            "id" : "3",
+            "name" : "滚动到顶部",
+            "avtr" : "upload/1.jpg",
+            "free" : "scroll-to-top",
+            "href" : "/demo/scroll-to-top"
+        },
+        {
+            "id" : "6",
+            "name" : "照片滑动 banner-通过滑动卡片的形式展示",
+            "avtr" : "upload/1.jpg",
+            "free" : "banner-slider",
+            "href" : "/demo/banner-slider"
+        }
+    ],
+    "module" : [
+        {
+            "id" : "1",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/taobao"
+        },
+        {
+            "id" : "2",
+            "name" : "天气预报-带动画的天气预报模块",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/localtion-weather"
+        },
+        {
+            "id" : "3",
+            "name" : "照片展示",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/grid-photo"
+        },
+        {
+            "id" : "4",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/taobao"
+        },
+        {
+            "id" : "5",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/taobao"
+        },
+        {
+            "id" : "1",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/taobao"
+        }
+    ],
+    "developer": [
+        {
+            "id" : "1",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "2",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "3",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "4",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "5",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "1",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "1",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "1",
+            "name" : "准备中",
+            "avtr" : "upload/1.jpg"
+        }
+
+    ]
+}

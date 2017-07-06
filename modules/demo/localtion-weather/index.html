@@ -1,0 +1,400 @@
+<style>
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+@font-face {
+    font-family: 'weathericons';
+    src: url("//cdnjs.cloudflare.com/ajax/libs/weather-icons/1.2/fonts/weathericons-regular-webfont.eot");
+    src: url("//cdnjs.cloudflare.com/ajax/libs/weather-icons/1.2/fonts/weathericons-regular-webfont.eot?#iefix") format("embedded-opentype"), url("//cdnjs.cloudflare.com/ajax/libs/weather-icons/1.2/fonts/weathericons-regular-webfont.woff") format("woff"), url("//cdnjs.cloudflare.com/ajax/libs/weather-icons/1.2/fonts/weathericons-regular-webfont.ttf") format("truetype"), url("//cdnjs.cloudflare.com/ajax/libs/weather-icons/1.2/fonts/weathericons-regular-webfont.svg") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+* {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+}
+html,
+body {
+    background-color: #5f7462;
+    width: 100%;
+    height: 100%;
+    font-size: 18dp;
+}
+.device {
+    position: relative;
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    max-width: 600dp;
+}
+.device section {
+    height: calc(100% - 50dp);
+    width: 100%;
+    overflow: hidden;
+    background-color: #644749;
+}
+.device header,
+.device footer {
+    height: 40dp;
+    background-color: #8ba892;
+}
+.weather {
+    height: 16.66667%;
+    overflow: hidden;
+}
+.weather:hover,
+.device section:not(:hover) .weather:first-child {
+    height: 50%;
+}
+.weather:hover .icon,
+.device section:not(:hover) .weather:first-child .icon {
+    transform: translateY(0);
+    z-index: 1;
+}
+.weather:hover + .weather .icon,
+.device section:not(:hover) .weather:first-child + .weather .icon {
+    transform: translateY(-408dp);
+}
+.weather:hover ~ .weather .icon,
+.device section:not(:hover) .weather:first-child ~ .weather .icon {
+    z-index: -1;
+}
+.weather:hover:not(:first-child) .data,
+.device section:not(:hover) .weather:first-child:not(:first-child) .data {
+    animation-name: slide-up;
+    animation-delay: 0.6s;
+    animation-duration: 0.5s;
+    animation-fill-mode: backwards;
+    animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+    transform: translateY(0);
+}
+.weather .content {
+    right: 0;
+    width: 40%;
+    position: absolute;
+    color: white;
+}
+.weather.active .content .data  {
+	transform: translateY(0);
+}
+.weather .content .data {
+	transform: translateY(500%);
+}
+.meta,
+.weather .content {
+    font-family: 'Lato', sans-serif;
+}
+.weather h3 {
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 0;
+    font-weight: 700;
+}
+.weather h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+.weather .degrees {
+    font-size: 2.7rem;
+    font-weight: 300;
+    color: white;
+    line-height: 1;
+}
+.weather .degrees:after {
+    content: '\00b0';
+}
+.icon {
+    z-index: -1;
+    font-family: 'weathericons';
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 50%;
+    height: 50dp;
+    transform: translateY(136dp);
+}
+.icon i {
+    font-style: normal;
+    position: absolute;
+}
+.cloud {
+    right: 0;
+    top: 70dp;
+    width: 75%;
+    height: 60dp;
+    background: black;
+    border-radius: 50dp;
+}
+.cloud:before,
+.cloud:after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+}
+.cloud:before {
+    width: 80dp;
+    height: 80dp;
+    background: black;
+    bottom: 20dp;
+    right: 20dp;
+}
+.cloud:after {
+    width: 50dp;
+    height: 50dp;
+    background: black;
+    bottom: 30dp;
+    left: 30dp;
+}
+.sun {
+    animation-name: rotate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+.moon,
+.sun {
+    left: 5dp;
+    font-size: 6rem;
+}
+.sun:before {
+    content: "\f00d";
+}
+.moon:before {
+    content: "\f07b";
+}
+.sprinkles {
+    transform: skewX(-20deg);
+    right: 30dp;
+    top: 100dp;
+    z-index: -1;
+    animation-name: sprinkle;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    color: #e3bb88;
+}
+.sprinkles + .sprinkles {
+    animation-delay: 0.25s;
+}
+.sprinkles + .sprinkles + .sprinkles {
+    animation-delay: 0.5s;
+}
+.sprinkles + .sprinkles + .sprinkles + .sprinkles {
+    animation-delay: 0.75s;
+}
+.sprinkles:before {
+    font-size: 3rem;
+    content: "\f04e \f04e \f04e \f04e \f04e";
+}
+.snowflakes {
+    position: absolute;
+    top: 70dp;
+    width: 70%;
+    right: 0;
+    animation: snowflakes 3s linear infinite;
+}
+.snowflakes .snowflake {
+    position: relative;
+}
+.snowflake {
+    color: #d89864;
+}
+.snowflake:nth-child(1) {
+    animation: snowflake 3.1s ease-in-out infinite;
+}
+.snowflake:nth-child(2) {
+    animation: snowflake 3.1s 0.2s ease-in-out infinite reverse;
+    top: -20dp;
+}
+.snowflake:nth-child(3) {
+    animation: snowflake 3.1s 0.2s ease-in-out infinite;
+    top: 10dp;
+}
+.snowflake:nth-child(4) {
+    animation: snowflake 3.1s 0.4s ease-in-out infinite reverse;
+    top: -30dp;
+}
+.snowflake:before {
+    font-size: 3rem;
+    content: "\f076";
+}
+.time-morning {
+    background-color: #e3bb88;
+}
+.time-morning .sun {
+    color: #d89864;
+}
+.time-day {
+    background-color: #d89864;
+}
+.time-day .sun {
+    color: #b1695a;
+}
+.time-day .cloud,
+.time-day .cloud:before,
+.time-day .cloud:after {
+    background-color: #644749;
+}
+.time-evening {
+    background-color: #b1695a;
+}
+.time-evening .sun {
+    color: #644749;
+}
+.time-evening .cloud,
+.time-evening .cloud:before,
+.time-evening .cloud:after {
+    background-color: #e3bb88;
+}
+.time-night {
+    background-color: #644749;
+}
+.time-night .moon {
+    color: #e3bb88;
+}
+.time-night .cloud,
+.time-night .cloud:before,
+.time-night .cloud:after {
+    background-color: #d89864;
+}
+.weather,
+.icon {
+    transition: all 0.7s ease-in-out;
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(150%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sprinkle {
+    from {
+        transform: translateX(0) translateY(0) skewX(-10deg);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-70dp) translateY(150dp) skewX(-10deg);
+        opacity: 0;
+    }
+}
+
+@keyframes snowflakes {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    to {
+        transform: translateY(200dp);
+        opacity: 0;
+    }
+}
+
+@keyframes snowflake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(50dp);
+    }
+    50% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    75% {
+        transform: translateX(30dp);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+</style>
+<div class="device">
+    <header></header>
+    <section>
+        <div class="weather time-morning active">
+            <div class="icon">
+                <i class="sun"></i>
+            </div>
+            <div class="content">
+                <h3>Morning</h3>
+                <div class="degrees">- 1</div>
+                <div class="data">
+                    <h2>Sunny</h2>
+                    <div>Wind: E 7 mph</div>
+                    <div>Humidity: 91%</div>
+                </div>
+            </div>
+        </div>
+        <div class="weather time-day">
+            <div class="icon">
+                <i class="sun"></i>
+                <i class="cloud windy"></i>
+            </div>
+            <div class="content">
+                <h3>Day</h3>
+                <div class="degrees">+ 3</div>
+                <div class="data">
+                    <h2>Mostly Sunny</h2>
+                    <div>Wind: N 5 mph</div>
+                    <div>Humidity: 45%</div>
+                </div>
+            </div>
+        </div>
+        <div class="weather time-evening">
+            <div class="icon">
+                <i class="sun"></i>
+                <i class="cloud"></i>
+                <i class="sprinkles"></i>
+                <i class="sprinkles"></i>
+                <i class="sprinkles"></i>
+                <i class="sprinkles"></i>
+            </div>
+            <div class="content">
+                <h3>Evening</h3>
+                <div class="degrees">0</div>
+                <div class="data">
+                    <h2>Rainy</h2>
+                    <div>Wind: W 12 mph</div>
+                    <div>Humidity: 91%</div>
+                </div>
+            </div>
+        </div>
+        <div class="weather time-night">
+            <div class="icon">
+                <i class="moon"></i>
+                <i class="cloud"></i>
+                <div class="snowflakes">
+                    <i class="snowflake"></i>
+                    <i class="snowflake"></i>
+                    <i class="snowflake"></i>
+                    <i class="snowflake"></i>
+                </div>
+            </div>
+            <div class="content">
+                <h3>Night</h3>
+                <div class="degrees">- 2</div>
+                <div class="data">
+                    <h2>Cloudy</h2>
+                    <div>Wind: N 2 mph</div>
+                    <div>Humidity: 47%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

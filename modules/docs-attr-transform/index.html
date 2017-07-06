@@ -1,0 +1,118 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>transform <small>模块转场指令</small></h2>
+                <p>该指令能让你通过点按（或其他手势事件）来跳转至其它模块</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>transform</td>
+                                    <td>module/module|event</td>
+                                    <td>点按跳转模块或设定自定义事件跳转模块</td>
+                                </tr>
+                                <tr>
+                                    <td>param</td>
+                                    <td>[param]</td>
+                                    <td>跳转到模块时带参</td>
+                                </tr>
+                                <tr>
+                                    <td>prefetch</td>
+                                    <td>true/false</td>
+                                    <td>预载入设定</td>
+                                </tr>
+                                <tr>
+                                    <td>data-event</td>
+                                    <td>[param]</td>
+                                    <td>传递事件，一般用于统计</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>通过 tap 事件触发模块跳转</p>
+                <code-light type=html>
+                    <nav>
+                        <ul>
+                            <li transform=home>home</li>
+                            <li transform=docs>docs</li>
+                            <li transform=dev>dev</li>
+                        </ul>
+                    </nav>
+                </code-light>
+                <p>swiperight 右划操作时跳转模块</p>
+                <code-light type=html>
+                    <a transform=home|swiperight>home</a>
+                </code-light>
+                <p>使用 param 进行转场带参</p>
+                <code-light type=html>
+                    <a transform=docs param=id/css/section/extend>home</a>
+                </code-light>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>id/css/section/extend 等同 id=css{{'&'}}section=extend 等同 id:css,section:extend，因此下面的写法同样正确</p>
+                    <code-light type=html>
+                        <a transform=docs param=id=css&section=extend>home</a>
+                        <a transform=docs param=id:css,section:extend>home</a>
+                    </code-light>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>prefetch</h2>
+                <p>设定该指令的节点会在转场前预先取得模块视图构建资源</p>
+                <code-light type=html>
+                    <a transform=docs prefetch>home</a>
+                </code-light>
+                <p>该节点在被点击前将预加载模块 home 的视图构建资源（HTML 模版、CSS、Data）</p>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>当你进入一个模块时希望某些存在当前模块的链接模块能够进行速展示时，则可以在元素的转场指令后加上 prefetch 指令。同个模块重复的预载指令只会被执行一次，但是对于同个模块不同带参的情况下依然会执行新的预载入</p>
+                    <code-light type=html>
+                        <a transform=docs prefetch>home</a>
+                        <!-- 下面内容会开启新的预载入 -->
+                        <a transform=docs param=id/css prefetch>home</a>
+                    </code-light>
+                </blockquote>
+                <p>当你正在浏览一个模块时，该模块中被设定 prefetch 的模块转场链接则会异步进行该模块的资源预载入，若你并没有立刻访问这个模块而是等待了许久才点入该模块，此时模块预载入可能已经失效（或模块中某条数据源发生了超时）<a transform=docs-module-config param=section/cache>#了解缓存超时</a></p>
+                <blockquote>
+                    <h5>Infinite 中的预载入规则</h5>
+                    <p>如果模块跳转链接存在于 fragment（<a transform=docs-dom-scroll param=section/infnite>Infinite 无限滚动</a>）中，则预载入是从当前模块加载完毕后的第 2s 开始，若在 2s 内 Infinite 滚动超过一个周期循环时该预载入操作将被停止，而新进入 Infinite 循环周期的 fragment 则将依然遵循该规则</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>data-event</h2>
+                <p>事件传递数据，当模块跳转时可通过监听 'transform' 事件捕捉该数据</p>
+                <code-light type=html>
+                    <nav>
+                        <ul>
+                            <loop nav as val key>
+                                <li transform={val.id} data-event=name:第{key}个按钮>{val.title}</li>
+                            </loop>
+                        </ul>
+                    </nav>
+                    <script>
+                        App.on('transform', function (e) {
+                            console.log(e)
+                            console.log(e.data) // {name: '第n个按钮'}
+                            // 发送统计数据
+                        })
+                    </script>
+                </code-light>
+                <p>通过 data-event 定义的统计数据在事件捕捉时会被转换为对象</p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

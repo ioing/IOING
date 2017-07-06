@@ -1,0 +1,84 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>href</h2>
+                <p>href 除了跳转链接外还能够跳转到模块</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>href</td>
+                                    <td>[url]</td>
+                                    <td>页面跳转</td>
+                                </tr>
+                                <tr>
+                                    <td>href</td>
+                                    <td>#[module]/[param]</td>
+                                    <td>模块转场</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>使用 href 进行页面跳转，其属性值为 URL</p>
+                <code-light type=html>
+                    <!-- 跳转到网站 -->
+                    <a href=http://www.ioing.com>button</a>
+                    <!-- 跳转到网站相对路径 -->
+                    <a href=/images/test.jpg>button</a>
+                </code-light>
+                <p>使用 href 进行模块跳转</p>
+                <code-light type=html>
+                    <!-- 跳转到模块 -->
+                    <a href=#home/id/css>button</a>
+                </code-light>
+                <p>使用 href 时还可以定义触发的手势事件，使用符号<code>|</code>分隔<a transform=docs-attr-on>#了解手势事件</a></p>
+                <code-light type=html>
+                    <!-- 右划手势时跳转到网站 -->
+                    <a href=#home/id/css|swiperight>button</a>
+                </code-light>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>当符合模块跳转链接规则时，href 指令将被自动转换为<a transform=docs-attr-transform>transform</a>指令，因此</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>data-event</h2>
+                <p>事件传递数据，当链接跳转时可通过监听 'href' 事件捕捉该数据</p>
+                <code-light type=html>
+                    <nav>
+                        <ul>
+                            <loop nav as val key>
+                                <li transform={val.id} data-event=name:第{key}个按钮>{val.title}</li>
+                            </loop>
+                        </ul>
+                    </nav>
+                    <script>
+                        App.on('href', function (e) {
+                            console.log(e)
+                            console.log(e.data) // {name: '第n个按钮'}
+                            // 发送统计数据
+                        })
+                    </script>
+                </code-light>
+                <p>通过 data-event 定义的统计数据在事件捕捉时会被转换为对象</p>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>需要注意的是捕捉模块跳转和链接跳转的事件是不同的，链接跳转时应监听 'href' 事件捕捉，而模块跳转则依循<a transform=docs-attr-transform>transform</a>指令，监听 'transform' 事件捕捉</p>
+                </blockquote>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

@@ -1,0 +1,162 @@
+<style>
+    .ifinder {
+        margin-bottom: 18dp;
+    }
+
+    .ico-idocs {
+        position: relative;
+        background: [active-color];
+        border-radius: 8dp 30dp 8dp 8dp;
+        width: 88dp;
+        height: 108dp;
+    }
+    .ico-idocs::before {
+        content: "";
+        border-bottom: 13dp solid rgba(255,255,255,.7);
+        border-top: 13dp solid #fff;
+        border-left: 13dp solid rgba(255,255,255,.7);
+        border-right: 13dp solid #fff;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .ico-idocs::after {
+        content: "";
+        border-bottom: 13dp solid transparent;
+        border-top: 13dp solid rgba(0, 0, 0, .3);
+        border-left: 13dp solid transparent;
+        border-right: 13dp solid rgba(0, 0, 0, .3);
+        position: absolute;
+        top: 26dp;
+        right: 0;
+    }
+    .ico-idocs .line {
+        background: rgba(255,255,255,.9);
+        display: block;
+        width: 60dp;
+        height: 6dp;
+        margin: 0 14dp;
+        position: absolute;
+        left: 0;
+    }
+
+    .ico-idocs .line1 { top: 35dp; }
+    .ico-idocs .line2 { top: 49dp; }
+    .ico-idocs .line3 { top: 63dp; }
+    .ico-idocs .line4 { top: 77dp; }
+
+    .ico-ifolder, .ico-ifolder .body {
+        position: relative;
+        z-index: 9;
+        background: [active-color];
+        border-radius: 8dp;
+        margin-top: 30dp;
+        width: 108dp;
+        height: 78dp;
+    }
+    .ico-ifolder .body {
+        position: absolute;
+        z-index: 10;
+        margin-top: 0;
+    }
+    .ico-ifolder .bar, .ico-ifolder .bar-bg {
+        position: absolute;
+        z-index: -1;
+        top: -12dp;
+        background: [active-color];
+        border-radius: 8dp 20dp 0 0;
+        width: 48dp;
+        height: 24dp;
+        opacity: .8;
+    }
+    .ico-ifolder .bar-bg {
+        background: #fff;
+        z-index: -2;
+        opacity: 1;
+    }
+    .ico-ifolder .line, .ico-ifolder .line-bg {
+        position: absolute;
+        top: -5dp;
+        z-index: -3;
+        width: 108dp;
+        height: 15dp;
+        background: [active-color];
+        border-radius: 0 8dp 0 0;
+        opacity: .8;
+    }
+    .ico-ifolder .line-bg {
+        background: #fff;
+        z-index: -4;
+        opacity: 1;
+    }
+
+    .f-icon {
+        display: inline-block;
+        padding: 0 10dp 0 0;
+    }
+    .f-icon:last-child {
+        padding-right: 0;
+    }
+    .file-name {
+        padding-top: 5dp;
+        display: block;
+        width: 100%;
+        font-size: 14dp;
+        text-align: center;
+    }
+</style>
+
+<div class="ifinder">
+    <div class="f-icon" style="">
+        <div class="ico ico-idocs">
+          <span class="line line1"></span>
+          <span class="line line2"></span>
+          <span class="line line3"></span>
+          <span class="line line4"></span>
+        </div>
+        <span class="file-name">index.html</span>
+    </div>
+
+    <div class="f-icon" style="">
+        <div class="ico ico-idocs">
+          <span class="line line1"></span>
+          <span class="line line2"></span>
+          <span class="line line3"></span>
+          <span class="line line4"></span>
+        </div>
+        <span class="file-name">ioing.js</span>
+    </div>
+
+    <div class="f-icon" style="">
+        <div class="ico ico-ifolder">
+            <span class="bar"></span>
+            <span class="bar-bg"></span>
+            <span class="line"></span>
+            <span class="line-bg"></span>
+            <span class="body"></span>
+        </div>
+        <span class="file-name">ioing</span>
+    </div>
+
+    <div class="f-icon" style="">
+        <div class="ico ico-ifolder">
+            <span class="bar"></span>
+            <span class="bar-bg"></span>
+            <span class="line"></span>
+            <span class="line-bg"></span>
+            <span class="body"></span>
+        </div>
+        <span class="file-name">modules</span>
+    </div>
+
+    <div class="f-icon" style="">
+        <div class="ico ico-ifolder">
+            <span class="bar"></span>
+            <span class="bar-bg"></span>
+            <span class="line"></span>
+            <span class="line-bg"></span>
+            <span class="body"></span>
+        </div>
+        <span class="file-name">components</span>
+    </div>
+</div>

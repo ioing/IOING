@@ -1,0 +1,104 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>循环标签</h2>
+                <p>遍历指定数据源，循环生产模版片段。</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:624dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data/origin</td>
+                                    <td>[origin]</td>
+                                    <td>指定循环数据源</td>
+                                </tr>
+                                <tr>
+                                    <td>as</td>
+                                    <td>无</td>
+                                    <td>关键词，需与value、key 联合使用</td>
+                                </tr>
+                                <tr>
+                                    <td>value</td>
+                                    <td>无</td>
+                                    <td>声明结果值的变量名称</td>
+                                </tr>
+                                <tr>
+                                    <td>key</td>
+                                    <td>无</td>
+                                    <td>声明键值的变量名称</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <blockquote>缺省 'as value key' 时，value 与 key 默认取名为 <code>$value</code>、<code>$index</code></blockquote>
+                <p>循环数据源对象 <code>list</code>， 并以 <code>value</code> 为结果值名称，以 <code>key</code> 为键值名称。</p>
+                <code-light type=html>
+                    <loop list as value key>
+                        <li> {key} : {value} </li>
+                    </loop>
+                </code-light>
+                <p>若此事例循环数据源对象 <code>list</code> 下的子对象 <code>list.names</code>，且没有使用 <code>as</code> 关键词</p>
+                <code-light type=html>
+                    <loop data=list.names>
+                        <li> {$key} : {$value} </li>
+                    </loop>
+                </code-light>
+                <p>下面是个完整示例，在 <a transform=docs-module-route param=section:config>#模块配置</a> 中配置据源为</p>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: {
+                                data: {
+                                    list: [
+                                        {"firstname": "Hall", "lastname": "James"},
+                                        {"firstname": "Smith", "lastname": "John"},
+                                        {"firstname": "Baker", "lastname": "David"},
+                                        {"firstname": "Cook", "lastname": "Daniel"},
+                                        {"firstname": "Miller", "lastname": "Michael"}
+                                    ]
+                                    ...
+                                }
+                            },
+                            config: { 
+                                data: ['list']
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>输出索引及完整姓名</p>
+                <code-light type=html>
+                    <loop data=list as val i>
+                        <li> {i}. my name is {val.firstname} {val.lastname} </li>
+                    </loop>
+                </code-light>
+                <p>运行结果如下</p>
+                <var testlist>
+                    [
+                        {"firstname": "Hall", "lastname": "James"},
+                        {"firstname": "Smith", "lastname": "John"},
+                        {"firstname": "Baker", "lastname": "David"},
+                        {"firstname": "Cook", "lastname": "Daniel"},
+                        {"firstname": "Miller", "lastname": "Michael"}
+                    ]
+                </var>
+                <ul>
+                    <loop testlist as val i>
+                        <li> {i}. my name is {val.firstname} {val.lastname} </li>
+                    </loop>
+                </ul>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

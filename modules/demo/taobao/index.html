@@ -1,0 +1,144 @@
+<header>
+	<div class="header-wrap">
+		<button transform="-1" class="back_button"></button>
+		<div id="search-placeholder"></div>
+	</div>
+</header>
+
+<scroll id="viewport" finite template="listitem" data="infinite">
+	<pulldown threshold=50>
+        <pullstart>下拉刷新</pullstart>
+        <pulling>松手刷新</pulling>
+        <pullend animation=rotateplane>
+            <div class="load6">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+                <div class="bounce4"></div>
+            </div>
+        </pullend>
+    </pulldown>
+    <pullup threshold=50 auto>
+        <pullstart>上拉加载更多</pullstart>
+        <pulling>松手加载更多</pulling>
+        <pullend>
+            <div class="load6">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+                <div class="bounce4"></div>
+            </div>
+        </pullend>
+        <pullover>没有更多了</pullover>
+    </pullup>
+</scroll>
+
+<template banner>
+	<scroll id="banner-wrapper" x snap scrollbars=false fade-scrollbars=false indicator y="false">
+		<scrolling id="scroller-banner">
+			<loop data="taobao.banner" as value i>
+				<div class="slide">
+					<div class="painting" style="background-image: url('./banner/{{value.id}}.jpg')" transform="alitrip"></div>
+				</div>
+			</loop>
+		</scrolling>
+		<scrollbar style="bottom:7dp;left:50%;height:7dp;transform:translate(-50%, 0);line-height:0;font-size:0;overflow:visible">
+            <indicator style="position:absolute;z-index:9;width:4dp;height:4dp;background:#fff;border-radius:4dp"></indicator>
+            <if is="taobao.banner.length>1">
+                <loop data="taobao.banner" as value i>
+                    <div style="display:inline-block;margin: 0 {{i==taobao.banner.length-1 ? '0' : '4dp'}} 0 {{i==0 ? '0' : '4dp'}};width:4dp;height:4dp;background:rgba(255,255,255,.5);border-radius:4dp"></div>
+                </loop>
+            </if>
+        </scrollbar>
+	</scroll>
+</template>
+
+<template tentrance>
+	<div class="tentrance">
+		<loop data="taobao.nav" as value index>
+			<ul>
+				<loop value as val i>
+					<li transform="alitrip"><i style="background-image: url('./icon/{{val.id}}.png')"></i><span>{{val.title}}</span></li>
+				</loop>
+			</ul>
+		</loop>
+	</div>
+</template>
+
+<template toutiao>
+	<div class="toutiao cl">
+		<div class="logo"></div>
+		<div class="icon">最新</div>
+		<div class="title">1分钱试用万件进口美妆</div>
+	</div>
+
+	<hr>
+
+	<div class="rushbuy cl">
+		<div class="h1" transform="alitrip"></div>
+		<div class="h2" transform="alitrip">
+			<div class="v1"></div>
+			<div class="v2"></div>
+			<div class="v3"></div>
+		</div>
+	</div>
+
+	<hr>
+</template>
+
+<template specialGuide>
+	<div class="specialGuide">
+		<div class="title">特色市场</div>
+		<div class="content" transform="alitrip">
+			<div class="h1"></div>
+			<div class="h2">
+				<div class="v1"></div>
+				<div class="v2"></div>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="ad ad0" transform="alitrip"></div>
+
+	<hr>
+</template>
+
+<template goodslist>
+
+	<loop list as value i>
+				<div class="item-wrap">
+					<div class="item" transform="alitrip">
+						<div class="pic" style="background-image:url('./list/{{value.pic}}.jpg')"></div>
+						<div class="title">{{value.title}}</div>
+						<div class="price">{{value.price}}</div>
+					</div>
+				</div>
+			</loop>
+
+</template>	
+
+<template listitem>
+
+	<if is="index>=0">
+		<include goodslist></include>
+	</if>
+
+	<if is="index==-1">
+		<include banner></include>
+	</if>
+
+	<if is="index==-2">
+		<include tentrance></include>
+	</if>
+
+	<if is="index==-3">
+		<include toutiao></include>
+	</if>
+
+	<if is="index==-4">
+		<include specialGuide></include>
+	</if>
+</template>
+

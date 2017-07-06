@@ -1,0 +1,49 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>toggle-class</h2>
+                <p>通过点按事件（或其他手势事件）对设置类和移除类的方法进行交叉切换</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>toggle-class</td>
+                                    <td>class|event</td>
+                                    <td>根据自定义事件切换（设置和移除）类</td>
+                                </tr>
+                                <tr>
+                                    <td>toggle-class</td>
+                                    <td>class|add-event remove-event</td>
+                                    <td>根据自定义事件设置和移除类</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>通过点击事件切换 active 类</p>
+                <code-light type=html>
+                    <div class="switch" toggle-class="active | tap"></div>
+                </code-light>
+                <p>通过双事件，右划添加类，左划删除累</p>
+                <code-light type=html>
+                    <div class="switch" toggle-class="active | panright panleft"></div>
+                </code-light>
+                <blockquote>
+                    <h5>说明</h5>
+                    <p>该指令在事件触发时检查每个元素中指定的类，若不存在则添加类，否则删除之。而当设定了两个事件时，则第一个事件为添加类，第二个事件为删除类</p>
+                </blockquote>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

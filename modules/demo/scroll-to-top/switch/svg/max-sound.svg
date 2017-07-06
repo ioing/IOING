@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="31px" height="28px" viewBox="0 0 31 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.5.2 (25235) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <path d="M14,24 L7,19.625 L7,8.375 L14,4 L14,24 L14,24 Z M5,17 C5,17.553 4.552,18 4,18 L3,18 C2.448,18 2,17.553 2,17 L2,11 C2,10.448 2.448,10 3,10 L4,10 C4.552,10 5,10.448 5,11 L5,17 L5,17 Z M14,2 L5,8 L2,8 C0.896,8 0,8.896 0,10 L0,18 C0,19.104 0.896,20 2,20 L5,20 L14,26 C15.104,26 16,25.104 16,24 L16,4 C16,2.896 15.104,2 14,2 L14,2 Z M25,14 C25,10.477 22.388,7.59 19,7.101 L19,9.101 C21.282,9.564 23,11.581 23,14 C23,16.419 21.282,18.436 19,18.899 L19,20.899 C22.388,20.41 25,17.523 25,14 L25,14 Z M19,0.015 L19,2.068 C24.872,3.199 29,7.988 29,14 C29,19.978 25,24.609 19,25.932 L19,27.986 C25.776,26.994 31,21.143 31,14 C31,6.857 25.776,1.006 19,0.015 L19,0.015 Z" id="Fill-129" fill="#444" sketch:type="MSShapeGroup"></path>
+    </g>
+</svg>

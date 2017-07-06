@@ -1,0 +1,91 @@
+<template title>
+	陀螺仪照片预览
+</template>
+
+<template desc>
+    photo Tilt
+</template>
+
+<template content>
+	<var banner>
+		[
+	        "../picture/1.jpeg", 
+	        "../picture/2.jpeg", 
+	        "../picture/3.jpeg", 
+	        "../picture/4.jpeg", 
+	        "../picture/5.jpeg", 
+	        "../picture/6.jpeg",
+	        "../picture/7.jpeg"
+	    ]
+    </var>
+
+	<section>
+        <h2>使用</h2>
+        <scroll class=exp stop-propagation="auto" x=auto y=false>
+            <scrolling style="min-width:{setting.articleWidth}dp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>指令</th>
+                            <th>值</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>url:preview</td>
+                            <td>预览小图 url</td>
+                            <td>优先展示模糊小图</td>
+                        </tr>
+                        <tr>
+                            <td>url:image</td>
+                            <td>高清图片 url</td>
+                            <td>实际查看的清晰图片</td>
+                        </tr>
+                        <tr>
+                            <td>path</td>
+                            <td>uri</td>
+                            <td>指定组件路径</td>
+                        </tr>
+                        <tr>
+                            <td>styler</td>
+                            <td>template name</td>
+                            <td>指定注入模版</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </scrolling>
+        </scroll>
+        <code-light type=html>
+        	<photo-tilt path=/demo/photo-tilt url:image=./picture/b.jpg url:preview=../picture/m.jpg></photo-tilt>
+        </code-light>
+        <template styler>
+            <style>
+                .container {
+                    position: relative;
+                    width: 100%;
+                    height: 700dp;
+                }
+                .tilt-bar {
+                    position: absolute;
+                }
+            </style>
+        </template>
+        <p>通过组件提供的 styler 配置，能通过增加样式改变组件视图</p>
+        <code-light type=html>
+            <style>
+                .container {
+                    position: relative;
+                    width: 100%;
+                    height: 700dp;
+                }
+                .tilt-bar {
+                    position: absolute;
+                }
+            </style>
+            <photo-tilt path=/demo/photo-tilt url:image=/demo/photo-tilt/picture/b.jpg url:preview=/demo/photo-tilt/picture/m.jpg styler=styler></photo-tilt>
+        </code-light>
+        <photo-tilt path=/demo/photo-tilt url:image=/demo/photo-tilt/picture/b.jpg url:preview=/demo/photo-tilt/picture/m.jpg styler=styler></photo-tilt>
+        <p>该组件默认为全屏展示，通过注入样式后变为区块展示。(需要在支持陀螺仪的设备上浏览效果)</p>
+    </section>
+</template>

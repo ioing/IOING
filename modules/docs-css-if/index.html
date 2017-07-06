@@ -1,0 +1,73 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>@if</h2>
+                <p>若假设条件成立则继续编译条件内 CSS，表达式内支持基本的 javascript 运算</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:624dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@if</td>
+                                    <td>(表达式)</td>
+                                    <td>表达式成立时则执行包含内容，不成立则忽略包含内容</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <blockquote>
+                    @if 中的逻辑表达式符合<a transform=docs-css-common>#标准-逻辑运算</a>中的定义
+                </blockquote>
+                <p>根据满足条件渲染 CSS，以自定义 CSS 变量为例</p>
+                <code-light type=css>
+                    @var {
+                        max-width: 25dp;
+                        common-color: blue;
+                    }
+                    @if ( max-width ) {
+                        div {
+                            height: 20dp;
+                            background: [common-color];
+                            border-top: solid [max-width] red;
+                        }
+                    }
+                </code-light>
+                <p>根据不同设备操作系统实现不同样式输出</p>
+                <code-light type=css>
+                    @if ( device.os.ios ) {
+                        header {
+                            position: fixed;
+                            top: 0;
+                            width: 100%;
+                            z-index: 10000;
+                            height: [header-height];
+                            background: rgba(255,255,255,.8);
+                            background-clip: content-box;
+                            border-bottom: 1px solid rgba(0,0,0,.1);
+                            backdrop-filter: blur(20dp);
+                        }
+                    }
+                </code-light>
+                <p>根据模版数据源做逻辑判断</p>
+                <code-light type=css>
+                    @if ( result.length ) {
+                        .gird {
+                            width: [result.length]%;
+                        }
+                    }
+                </code-light>
+            </section>
+            
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

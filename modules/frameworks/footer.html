@@ -1,0 +1,28 @@
+<section class=footer>
+	<div class=logo></div>
+</section>
+<script>
+	var section,
+		scroll
+
+	function scrollToSection () {
+		if ( section && scroll ) {
+			scroll.Scroll().enable()
+			scroll.Scroll().scrollToElement(section, 800, 0, -59)
+		}
+	}
+	module.on('show', scrollToSection)
+
+	window.on('moduleloadall', function () {
+		if ( module.param.section ) {
+			section = node(module.param.section)
+			scroll = $$("scroll[fullscreen]")[0]
+
+			scroll.Scroll().disable()
+		}
+
+		setTimeout(function () {
+			scrollToSection()
+		}, 600)
+	})
+</script>

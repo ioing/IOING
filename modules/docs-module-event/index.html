@@ -1,0 +1,215 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>transformstart <small>转场开始事件</small></h2>
+                <p>进入该模块时发生转场动画之前</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>transformstart</td>
+                                    <td>Function</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: { ...config },
+                            events: {
+                                transformstart: function () {
+                                    ...
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>
+                    <p>在转场开始时该事件函数将被执行，若该函数<code>return false</code>则转场将被即刻终止</p>
+                </blockquote>
+            </section>
+            
+            <section>
+                <h2>transformsend <small>转场结束事件</small></h2>
+                <p>进入该模块时发生转场动画之后</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>transformend</td>
+                                    <td>Function</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: { ...config },
+                            events: {
+                                transformsend: function () {
+                                    ...
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>
+                    <p>当模块被设置动画时，动画执行结束后将执行该配置项的函数，若无动画则即刻执行该配置项的函数</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>preload <small>模块加载数据源之前事件</small></h2>
+                <p>进入该模块时发生数据源加载之前执行此事件</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>preload</td>
+                                    <td>Function</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: { ...config },
+                            events: {
+                                preload: function () {
+                                    ...
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>
+                    <p>该配置项的执行时机与 transformsend 相近</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>load <small>模块加载完毕后事件</small></h2>
+                <p>进入该模块直到该模块完整加载完毕后执行此事件</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>load</td>
+                                    <td>Function</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: { ...config },
+                            events: {
+                                load: function () {
+                                    ...
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>
+                    <p>该事件在模块载入完毕（不包含异步组件部分）时执行</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>loading <small>模块动画事件</small></h2>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>loading</td>
+                                    <td>Function</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>此事件被设定后，引擎默认加载的 loading 将失效，使用该设定可以自定义模块的加载动画</p>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: { ...config },
+                            events: {
+                                loading: function (id, display) {
+                                    ...
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>该事件函数可接收两个入参<code>模块id</code>和<code>可见性display</code>，如果该选项未被设定同时也未被设定为<code>false</code>那么该选项将跟随主模块的该项设定，如果主模块设定了 loading 事件，那么该模块的 loading 也将执行该设定</p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

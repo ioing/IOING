@@ -1,0 +1,234 @@
+<var features>
+	circle.result.data.features
+</var>
+
+<template experience>
+	<li class="experience-card">
+		<if is="status == 2">
+		<div class="select-logo"><span class="select-text">精选<span></div>
+		</if>
+		<div class="card-container">
+			<header class="topic-title" transform="topic" param="topicId:{{#topicId}}" data-event="title:首页经验卡片话题,data:{{#_index}},spm:index_list.0" tap-highlight="active">{{#topicTitle}}</header>
+			<div class="experience-content" transform="detail" param="id:{{#id}},topicId:{{#topicId}}" data-event="title:首页经验卡片,data:{{#_index}},spm:index_list.1" tap-highlight="active">
+				<!-- TODO -->
+				<div class="main-content">
+				<if is="!!pic">
+					<div class="main-img-box"><div class="main-img" style="background-image: onload url({{#pic+'?w=140&h=auto&cp=1'}})"></div></div>
+				</if>
+					<div class="text">{{#title}}</div>
+				</div>
+			</div>
+			<div class="row-line"></div>
+			<div class="content-footer">
+				<div class="head-img" style="background-image: onload url({{#(authorPic || '//img.geilicdn.com/u_default.jpg?w=60&h=auto&cp=1') +'?w=60&h=auto&cp=1'}})" transform="space" param="uid:{{authorId}}" data-event="title:首页-经验卡片-个人信息,spm:index_list.2"></div>
+				<span class="author" transform="space" param="uid:{{#authorId}}" data-event="title:首页-经验卡片-个人信息,spm:index_list.2">{{authorNick}}</span>
+				<div class="count-wrapper">
+					<span class="comment-counts">{{#util.clipCounts(popularCount)}}</span><span class="like-counts">{{#util.clipCounts(praiseCount)}}</span>
+				</div>
+			</div>
+		</div>
+	</li>
+</template>
+
+<template topic>
+	<section class="user-info-bar">
+		<div class="avt-pic" style="background-image: onload url({{#(space.status.code == 2 || !top.applicationIsLogin) ? '//wd.geilicdn.com/611e6e1d618cafa08562e6cae2a7e654.png' : space.result && space.result.headUrl ? space.result.headUrl : '//img.geilicdn.com/u_default.jpg'}})" transform="space" param="myspace:true" data-event="title:首页-我的,spm:index_user.0"></div>
+		<div class="name-text" transform="space" param="myspace:true" data-event="title:首页-我的,spm:index_user.0">{{#util.slice((space.status.code == 2 || !top.applicationIsLogin) ? '未登录' : space.result && space.result.nick ? space.result.nick : '未命名', 10)}}</div>
+		<if is="space.result.notice && space.status.code !== 2 && top.applicationIsLogin">
+			<div class="note-icon" transform="message" data-event="title:首页-通知,spm:index_notice.0">
+				<if is="space.result.notice">
+					<span class="note-num">{{#space.result.notice > 99 ? 99 : space.result.notice}}</span>
+				</if>
+			</div>
+		</if>
+	</section>
+
+
+	<section uuid='banner-box' class='banner-box'></section>
+
+
+	<if not="features.closeAddContent == true">
+	<section class="select-topic" uuid="select-topic">
+		<if is="topicList.result.data.length > 0">		
+		<header class="select-topic-header">- 精选话题 -</header>
+		<div class="topic-list">
+			<loop data="topicList.result.data" as value key>
+				<if is="key < 3">
+					<div class='topic-content-bowser {{#key == 0? "first" : ""}}' transform="topic" param="topicId:{{#value.id}}" data-event="title:首页话题卡片-{{#key+1}},spm:index_huati.{{#key}}" tap-highlight="active">
+					<if is="value.contentCount > 0">
+						<if is="value.contentCount > 99">
+							<div class="experience-counts">99<sup class='more'>+</sup>经验</div>
+						</if><else>
+							<div class="experience-counts">{{#value.contentCount}}经验</div>
+						</else>
+					</if><else>
+						<div class="experience-counts">新话题</div>
+					</else>
+					<div class='topiclist-title'>{{#value.title}}</div>
+					</div>
+				</if>	
+			</loop>
+			<div class="more-topic" transform="subside" data-event="title:首页精选话题查看更多,spm:index_huati.d_all" tap-highlight="active">发现更多话题<span class="entry-to-more"></span></div>
+		</div>
+		</if>
+	</section>
+	</if>
+
+	<if is="expList.result.data.length > 1">
+	<header class="experience-card-header">- 推荐经验 -</header>
+	</if>
+
+</template>
+
+<template banner>
+	<if is="result.data.length">
+		<scroll uuid="banner-scroll" class="banner-card" x y snap scrollbars="false" speed-limit="1" deceleration="1">
+			<scrolling class="banner-scroll" style="width:{{#result.data.length * 100}}%;">
+				<loop data="result.data" as value i>
+					<if is="util.getIoingLink(value.bannerUrl)">
+						<div class="slide" style="width:{{#100 / result.data.length}}%;transform:translate({{i * 100}}%, 0px) translateZ(0px)" transform="{{#util.getIoingLink(value.bannerUrl)[0]}}" param="{{#util.getIoingLink(value.bannerUrl)[1] || ''}}" data-event="title:首页banner-{{#i+1}},spm:index_banner.{{#i}}">
+							<div class="painting" style="background-image: url('{{#value.bannerImg}}')">
+							</div>
+						</div>
+					</if><else>
+						<div class="slide" style="width:{{#100 / result.data.length}}%;transform:translate({{#i * 100}}%, 0px) translateZ(0px)" on-tap='event::jump(event, {{#value.bannerUrl}},首页banner-{{#i+1}},index_banner.{{#i}})'>
+							<div class="painting" style="background-image: url('{{#value.bannerImg}}')">
+							</div>
+						</div>
+					</else>
+				</loop>
+			</scrolling>
+			<scrollbar>
+				<div class="dotty" style="width:{{#100 / result.data.length}}%;"></div>
+				<ul class="dotty-li">
+					<loop data="result.data" as value i>
+						<if is="result.data.length>1">
+							<li></li><if not="i == result.data.length-1">&nbsp;&nbsp;&nbsp;</if>
+						</if>
+					</loop>
+				</ul>
+			</scrollbar>
+		</scroll>
+
+		<script>
+			var bannerTimeId
+			var bannerScroll = node('banner-scroll').scroller
+			var fragment = node('banner-box').parentFragment
+
+			node('banner-scroll').on('touchstart', function () {
+				clearInterval(bannerTimeId)
+			})
+			node('banner-scroll').on('touchend', function () {
+				showbanner()
+			})
+
+			function showbanner () {
+
+				bannerTimeId = setInterval(function () {
+
+					if ( bannerScroll.wrapper.offsetHeight == 0 || bannerScroll.finger >= 0 ) return
+
+					if ( bannerScroll.maxScrollX == bannerScroll._x ) {
+						bannerScroll.scrollTo(0,0, 1000)
+						bannerScroll.currentPage.pageX = 0
+					} else {
+						bannerScroll.next()
+					}
+					
+				}, 4000)
+			}
+
+			showbanner()
+
+			fragment.on('show', function () {
+				clearInterval(bannerTimeId)
+				showbanner()
+			})
+
+			fragment.on('hidden', function () {
+				clearInterval(bannerTimeId)
+			})
+		</script>
+	</if>
+</template>
+
+<template temp>
+	<if is='_index == 0'>
+		<include topic></include>
+	</if><else>
+		<include experience></include>
+	</else>
+</template>
+
+
+<pull-refresh for="main"></pull-refresh>
+<scroll fullscreen infinite template="temp" item-min-size="200" data="expList.result.data" limit="20" end-flag="result.totalCount == -1" uuid='main'></scroll>
+<scroll-to-top></scroll-to-top>
+
+<script name='event'>
+	function jump(e, url, e_c, spm){
+	    top.piwik_spm_extension.track_keys = {
+          spm_cnt: "wrlc7t.dvi6yq59.0.0",
+          spm_btn: "wrlc7t.dvi6yq59." + spm
+        };
+        top._paq.push(['trackEvent', e_c,'click', ""]);
+        setTimeout(function(){
+			top.location.href = url;
+        },50)
+	}
+</script>
+
+<script>
+function shr () {
+	if ( !TOP || !TOP.shareV2 ) return
+	
+	return new TOP.shareV2({
+	    option:{
+	        title: '微店 | 最热门的话题&经验，都在这里',//微信好友分享标题
+	        pyq: '微店 | 最热门的话题&经验，都在这里',//朋友圈分享title
+	        content: '微店 | 最热门的话题&经验，都在这里', //微信好友分享内容
+	        url: top.location.href,//分享link
+	        img: 'http://wd.geilicdn.com/611e6e1d618cafa08562e6cae2a7e654.png',//微信分享图片
+	        wfr:''//分享来源
+	    },
+	    config:{
+	        isApp: false,//是否在app中
+	        appName: 'vbuyer',//业务app名称
+	        shareType: ["chats", "discover", "qq", 'qzone'],//分享途径
+	        showTips: false,//是否在非App、非微信下显示提示('建议使用微信打开页面,再进行分享')
+	    }
+	})
+}
+
+var share = shr()
+
+module.on("show", function () {
+	setTimeout(function () {
+		share = shr()
+	}, 600)
+})
+
+setTimeout(function () {
+	share = shr()
+}, 1200)
+
+var bannerbox = node('banner-box');
+
+top.document.title = scope.features.channel_title;
+if ( scope.features.bannerCode != '' ) {
+	promise.post('//vap.gw' + top.HOST + '.weidian.com/h5/vgate/getSimpleThemeData/1.0',{
+		request:{
+			"themeCode": scope.features.bannerCode
+		}
+	}).then(function(err, data){
+		if(data.result.data.length > 0){
+			render(bannerbox, "banner", {
+				result: data.result,
+				util: scope.util
+			});
+			return;
+		}
+		bannerbox.hide();
+	});
+}
+</script>

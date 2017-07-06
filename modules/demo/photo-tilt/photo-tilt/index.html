@@ -1,0 +1,92 @@
+<style>
+.container {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 99;
+	background-color: #252525;
+}
+.mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+}
+
+.mask img {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.tilt-bar {
+	position: fixed;
+	bottom: 30px;
+	left: 10px;
+	right: 10px;
+	height: 1px;
+	z-index: 1;
+	background-color: rgba(255,255,255,0.3);
+}
+
+.tilt-indicator {
+	background-color: rgba(255,255,255,0.8);
+	height: 1px;
+	position: absolute;
+}
+
+.mask img,
+.tilt-indicator {
+	transition: transform 0.2s linear;
+	backface-visibility: hidden;
+	perspective: 1000;
+	transform: translatez(0);
+}
+
+.disable-transitions .mask img,
+.disable-transitions .tilt-indicator {
+	transition: none;
+}
+
+.is-resizing {
+	visibility: hidden;
+}
+</style>
+
+<if styler>
+	<include styler></include>
+</if>
+
+
+<script global>
+	
+    var PhotoTilt = @import('photoTilt')
+
+</script>
+
+<script>
+
+	var opt = {
+	        url : components.attr("url:image"),
+	        lowResUrl : components.attr("url:image"),
+	        maxTilt : scope.maxTilt || 12,
+	        container : node('container')
+	    }
+
+	global.call(function (opt) {
+		console.log(opt)
+		new PhotoTilt(opt)
+	}, opt)
+
+</script>
+
+
+<div uuid="container" class="container"></div>

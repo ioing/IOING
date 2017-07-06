@@ -1,0 +1,67 @@
+@import "compass/css3";
+
+html, body {
+  background: #f3efef;
+  text-align: center;
+  font-family: 'fontello';
+  border: 6px solid #f3efef; 
+  height: 100%;
+}
+
+.blinking {
+ border-color: #00d07f;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+}
+
+.button {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: scale(1.25);
+  margin: 110px 30px;
+  width: 60px;
+  height: 60px; 
+  line-height: 2.6;
+  font-size: 24px;
+  color: #e1dada;
+  text-shadow: 0px -1px 1px rgba(0,0,0,0.2);
+  border-radius: 100px;
+  text-decoration: none;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#e3e3e3));
+  background-image: -moz-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#e3e3e3));
+  
+  box-shadow:       0px 0px 2px rgba(0,0,0,0.25),
+                    10px 10px 15px #e3e3e3,
+                    -10px 10px 15px #e3e3e3,
+                    -15px -15px 15px rgba(255,255,255,0.4),
+                    15px -15px 15px rgba(255,255,255,0.4),
+              inset 0px 2px 0px #fff;
+  
+  -webkit-transition: box-shadow 0.3s ease-in-out, 
+                      background-image 0.3s ease-in-out,
+                      text-shadow 0.5s linear,
+                      color 0.5s linear;
+     -moz-transition: box-shadow 0.3s ease-in-out, 
+                      background-image 0.3s ease-in-out,
+                      text-shadow 0.5s linear,
+                      color 0.5s linear;
+  
+  &.active {
+    color: #00d0b0;
+    text-shadow: 0px 0px 7px lighten(#00d07f, 20%);
+    
+     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e3e3e3), color-stop(100%,#f4f4f4));
+    background-image: -moz-gradient(linear, left top, left bottom, color-stop(0%,#e3e3e3), color-stop(100%,#f4f4f4));
+    
+     box-shadow:     0px 0px 3px rgba(0,0,0,0.15),
+                    10px 10px 15px rgba(255,255,255,0.4),
+                   -10px 10px 15px rgba(255,255,255,0.4),
+                   -10px -10px 15px #e3e3e3,
+                    10px -10px 15px #e3e3e3,
+               inset 0px -3px 0px rgba(255,255,255,0.4),
+               inset 0px 3px 3px rgba(0,0,0,0.04);
+  }
+}

@@ -1,0 +1,40 @@
+{
+    "status": {
+    "code": "0",
+    "message": "OK",
+    },
+    "result": {
+        "data": [
+            {
+                "currentTime": "1466664131683",
+                "bannerUrl": "http://baidu.com",
+                "bannerTitle": "第一屏",
+                "themeDataId": "7863",
+                "bannerImg": "http://10.1.4.104:18000/csfxDAZVVPN0hgqXIk_500_282.jpg?w=480&h=auto&cp=1"
+            },
+            {
+                "currentTime": "1466664131683",
+                "bannerUrl": "http://baidu.com",
+                "bannerTitle": "第一屏",
+                "themeDataId": "7863",
+                "bannerImg": "http://10.1.4.104:18000/1606231437161.jpg"
+            },
+            {
+                "currentTime": "1466664131683",
+                "bannerUrl": "http://baidu.com",
+                "bannerTitle": "第一屏",
+                "themeDataId": "7863",
+                "bannerImg": "http://10.1.4.104:18000/1606231437161.jpg"
+            },
+            {
+                "currentTime": "1466664131683",
+                "bannerUrl": "http://baidu.com",
+                "bannerTitle": "第一屏",
+                "themeDataId": "7863",
+                "bannerImg": "http://10.1.4.104:18000/1606231437161.jpg"
+            }
+        ],
+        "errorCode": "0",
+        "success": "true"
+    }
+}

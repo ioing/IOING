@@ -1,0 +1,50 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>id, uuid <small>使用快速选择器</small></h2>
+                <p>使用 id 或 uuid 的 Element 能够通过 <code>node(id/uuid)</code>方法快速选择</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uuid/id</td>
+                                    <td>[id]</td>
+                                    <td>注册 id/uuid，以 node() 方法获取</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=html>
+                    <ul>
+                        <loop list as val i>
+                            <li uuid=index-{i}>{val.text}</li>
+                        </loop>
+                    </ul>
+                    <script>
+                        scope.list.each(function (val, i) {
+                            console.log(node('index-' + i))
+                        })
+                    </script>
+                </code-light>
+                <blockquote>
+                    在不支持 shadowroot 特性的设备上 IOING 依然能够进行降级处理，但我们建议更多的使用 uuid 代替使用 id
+                </blockquote>
+                <p>
+                    <a transform=docs-dom-script param=section/node>#了解 node() 方法</a>
+                </p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

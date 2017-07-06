@@ -1,0 +1,139 @@
+{
+    "banner": [
+        "demo/photo-tilt",
+        // "demo/html5-canvas-fullscreen-background",
+        "demo/alert-dialog",
+        "demo/switch-slider",
+        // "demo/html5-svg-text-animation",
+        "demo/banner-slider",
+        "demo/code-light",
+        "demo/css-javascript-waterfalls-flow"
+        // "demo/jquery-html5-record-player",
+        // "demo/circle-music-player",
+        // "switch-slider",
+        // "demo/css-face",
+        // "demo-skin-nav-label",
+        // "demo-components-full-drag-slide",
+        // "demo-components-accordion-card",
+        // "demo-components-gallery"
+    ],
+    "imitate" : [
+        {
+            "id" : "1",
+            "name" : "Facebook 精仿feed页面",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "2",
+            "name" : "twitter 动态列表首页",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "3",
+            "name" : "美团外卖推荐首页",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "4",
+            "name" : "微信消息列表页",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "5",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "1",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        }
+    ],
+    "module" : [
+        {
+            "id" : "1",
+            "name" : "Facebook 精仿feed页面",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "2",
+            "name" : "twitter 动态列表首页",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "3",
+            "name" : "美团外卖推荐首页",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "4",
+            "name" : "微信消息列表页",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "5",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        },
+        {
+            "id" : "1",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块"
+        }
+    ],
+    "developer": [
+        {
+            "id" : "1",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "2",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "3",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "4",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "5",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "1",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "1",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        },
+        {
+            "id" : "1",
+            "name" : "温暖的手",
+            "avtr" : "upload/1.jpg"
+        }
+
+    ]
+}

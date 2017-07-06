@@ -1,0 +1,93 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>资源配置</h2>
+                <p>一个模块是由模版、CSS 样式、JS 脚本等基本元素来构建的，而配置文件的作用就是把这些元素注册到模块中</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>style</td>
+                                    <td>Array</td>
+                                    <td>style:['common', 'main']</td>
+                                </tr>
+                                <tr>
+                                    <td>script</td>
+                                    <td>Array</td>
+                                    <td>script:['main']</td>
+                                </tr>
+                                <tr>
+                                    <td>source</td>
+                                    <td>Array</td>
+                                    <td>source:['index', 'footer']</td>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td>Array</td>
+                                    <td>style:['list', 'user']</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>前面章节中我们讲了如何配置资源库，现在我们就可以把配置好的资源库按照需要配置到模块中来</p>
+                <code-light type=js>
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            // 模块的资源库（对内／对外）
+                            resources: {
+                                // js 资源
+                                script: {
+                                    main: "main.js"
+                                },
+                                // 模版资源
+                                source: {
+                                    index: "index.html",
+                                    footer: "frameworks::footer"
+                                },
+                                // css 资源
+                                style: {
+                                    common: "frameworks::common",
+                                    main: "frameworks::docs",
+                                    style: "css/main.css"
+                                },
+                                // 数据资源
+                                data: { 
+                                    list: "./list.json",
+                                    // 远程数据地址，并且配置参数，参数从模块参数配置中解析
+                                    user: "http://api.ioing.com/getUser|@param(id:id)"
+                                }
+                            },
+                            // 关于模块特性的配置
+                            config : {
+                                // 模块需要加载的样式
+                                style: ["common", "main", "style"],
+                                // 模块需要加载的脚本
+                                script: ["main"],
+                                // 模块需要加载的模版
+                                source: ["index", "footer"],
+                                // 模块需要加载的数据源
+                                data: ["list", "user"],
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>
+                    <p>注意：source 配置项中数组中第一个定义的模版为主模版，其他模版资源都应该是在主模版中进行引用的</p>
+                </blockquote>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

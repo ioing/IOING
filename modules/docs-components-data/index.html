@@ -1,0 +1,72 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>数据</h2>
+                <p>为组件定义内部数据源</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:559dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data:[name]</td>
+                                    <td>[data-name]</td>
+                                    <td>定义组件数据源（命名且指向外层数据源）</td>
+                                </tr>
+                                <tr>
+                                    <td>[attr=value]</td>
+                                    <td>[String]</td>
+                                    <td>通过设置元素属性也可以在数据源种体现该值</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <h3>组建内获取组件数据源值</h3>
+                <p>假设模块有数据源对象 setting，而此时组件需要接入该对象</p>
+                <code-light type=html>
+                    <range-slider data:config=setting.config></range-slider>
+                </code-light>
+                <p>在该组件中的脚本通过下面的方式读取该值</p>
+                <code-light type=js>
+                    var setting
+                    setting = scope.config    // 定义在组件的数据源通过 scope 对象获取
+                    setting = scope.setting    // 该 scope 中的 setting 为模块数据源
+                </code-light>
+                <p>在该组件中的模版可以通过下面的方式读取该值</p>
+                <code-light type=html>
+                    <span>{config.name}</span>
+                </code-light>
+
+                <h3>组建内获取组件 Attr 属性值</h3>
+                <p>为下面的组件设置一个 value 属性且给值 40</p>
+                <code-light type=html>
+                    <range-slider val=40></range-slider>
+                </code-light>
+                <p>在该组件中的脚本通过下面的方式读取该值</p>
+                <code-light type=js>
+                    var val
+                    val = scope.val    // 定义在组件的数据源通过 scope 对象获取
+                    val = components.attr('val')    // 也可以通过传统方式获取，components 为组件自身元素
+                </code-light>
+                <p>在该组件中的模版可以通过下面的方式读取该值</p>
+                <code-light type=html>
+                    <span>{val}</span>
+                </code-light>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>使用 Attr 设定组件数据源值时，如果有设定了重名数据源则后者优先</p>
+                </blockquote>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

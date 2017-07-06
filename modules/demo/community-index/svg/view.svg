@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="32px" height="28px" viewBox="0 0 32 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39 (31667) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 3 Copy 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M0,14 C0,14 4.70588235,0 16,0 C27.2941176,0 32,14 32,14 C32,14 27.2941176,28 16,28 C4.70588235,28 0,14 0,14 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="32" height="28" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <ellipse id="path-3" cx="16" cy="14" rx="6.58823529" ry="6.53333333"></ellipse>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="13.1764706" height="13.0666667" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="9-7" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="话题-单图" transform="translate(-30.000000, -857.000000)" stroke="#BBBBBB" stroke-width="4">
+            <g id="Group-3-Copy-3" transform="translate(30.000000, 857.000000)">
+                <use id="Rectangle-182" mask="url(#mask-2)" xlink:href="#path-1"></use>
+                <use id="Oval-54" mask="url(#mask-4)" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>

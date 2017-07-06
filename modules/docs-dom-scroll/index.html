@@ -1,0 +1,493 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>基本滚动视图 <small>这是 DOM 视图构建中非常重要的一个章节</small></h2>
+                <p>基本滚动视图由两个必要标签<code>scroll</code>和<code>scrolling</code>组成</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:760dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th width=100>默认值</th>
+                                    <th width=150>其他可选值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td><span>false</span></td>
+                                    <td>auto</td>
+                                    <td>允许横向滚动</td>
+                                </tr>
+                                <tr>
+                                    <td>y</td>
+                                    <td><span g>true</span></td>
+                                    <td>auto</td>
+                                    <td>允许竖向滚动</td>
+                                </tr>
+                                <tr>
+                                    <td>start-x</td>
+                                    <td><span g>0</span></td>
+                                    <td>[Number]</td>
+                                    <td>横向开始位置</td>
+                                </tr>
+                                <tr>
+                                    <td>start-y</td>
+                                    <td><span g>0</span></td>
+                                    <td>[Number]</td>
+                                    <td>纵向开始位置</td>
+                                </tr>
+                                <tr>
+                                    <td>free</td>
+                                    <td><span>false</span></td>
+                                    <td>true</td>
+                                    <td>X轴与Y轴平面滚动</td>
+                                </tr>
+                                <tr>
+                                    <td>scrollbars</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>是否显示默认滚动条</td>
+                                </tr>
+                                <tr>
+                                    <td>fade-scrollbars</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>滚动条或指示器呈现渐变隐现</td>
+                                </tr>
+                                <tr>
+                                    <td>interactive</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>使滚动条可操控</td>
+                                </tr>
+                                <tr>
+                                    <td>mouse-wheel</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>开启鼠标滚轮操控</td>
+                                </tr>
+                                <tr>
+                                    <td>mouse-wheel-speed</td>
+                                    <td><span g>20</span></td>
+                                    <td>[Number]</td>
+                                    <td>鼠标滚轮操控速度</td>
+                                </tr>
+                                <tr>
+                                    <td>invert-wheel-direction</td>
+                                    <td><span>false</span></td>
+                                    <td>true</td>
+                                    <td>反方向响应鼠标滚轮</td>
+                                </tr>
+                                <tr>
+                                    <td>bounce</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>是否启用边缘弹性</td>
+                                </tr>
+                                <tr>
+                                    <td>momentum</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>是否启用滑动惯性</td>
+                                </tr>
+                                <tr>
+                                    <td>use-transition</td>
+                                    <td><span g>true</span></td>
+                                    <td>false</td>
+                                    <td>是否使用CSS3动画作为过渡</td>
+                                </tr>
+                                <tr>
+                                    <td>deceleration</td>
+                                    <td><span g>0.003</span></td>
+                                    <td>[Number]</td>
+                                    <td>滑动惯性阻尼率，数值越大阻力越大，最小值为0.0006</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>该标签能够创建一个可滚动区域，且提供<code>滚动特性</code>，例：重力加速度、tabview、snap、minmap、惯性、边缘弹性、下拉刷新、自动翻页、滚动状态事件等</p>
+                <p>我们来创建一个基本滚动的例子</p>
+                <code-light type=html>
+                    <var colorful>[...color]</var>
+                    <scroll>
+                        <scrolling>
+                            <loop colorful as value key>
+                                <div style="color:{value}">{value}</div>
+                            </loop>
+                        </scrolling>
+                    </scroll>
+                </code-light>
+                <div class="demo">
+                    <scroll stop-propagation="auto">
+                        <scrolling>
+                            <loop colorful as value key>
+                                <div style="margin-bottom:4dp;height:60dp;line-height:60dp;background:{value};color:#fff;text-indent:20dp">{value}</div>
+                            </loop>
+                        </scrolling>
+                    </scroll>
+                </div>
+                <p>标签 scrolling 为包裹滚动内容的容器，忽略 scrolling 标签时则 scroll 中的第一个子元素将被视为滚动容器，不建议这样做，因为这样有可能会有损性能或不能正常响应滚动</p>
+                <blockquote>
+                    滚动标签补充了浏览器对滚动事件支持不足的历史空白，而现在我们通过配置选项能够对滚动特性进行丰富的拓展和个性化定制
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>Snap 滚动视图</h2>
+                <p>设定<code>snap</code>属性并开启<code>x</code>轴向滚动且关闭<code>y</code>轴向滚动时，滚动组件会被设为一个强阻尼效果的滑块（旋转木马效果）</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:739dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>默认值</th>
+                                    <th>其他可选值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>snap</td>
+                                    <td><span>false</span></td>
+                                    <td>true</td>
+                                    <td>旋转木马效果</td>
+                                </tr>
+                                <tr>
+                                    <td>snap-easing</td>
+                                    <td><span g>circular</span></td>
+                                    <td>linear quadratic back bounce</td>
+                                    <td>动画曲线类型</td>
+                                </tr>
+                                <tr>
+                                    <td>snap-duration</td>
+                                    <td><span g>400</span></td>
+                                    <td>[Number]</td>
+                                    <td>切换动画时长</td>
+                                </tr>
+                                <tr>
+                                    <td>snap-threshold</td>
+                                    <td><span g>0.15</span></td>
+                                    <td>[Number] (0 - 1)</td>
+                                    <td>切换门槛比值，即移动长度超过卡片宽度乘以该比值</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=html>
+                    <var colorful>[...color]</var>
+                    <scroll x snap y="false">
+                        <scrolling style="height:200dp;width:{{colorful.length*100}}%">
+                            <loop colorful as value key>
+                                <div style="color:{value};width:{{1/colorful.length}}%">{value}</div>
+                            </loop>
+                        </scrolling>
+                    </scroll>
+                </code-light>
+
+                <div class="demo">
+                    <scroll stop-propagation="auto" x snap y="false" style="height:200dp;width:100%">
+                        <scrolling style="height:200dp;width:{{colorful.length*100}}%">
+                            <loop colorful as value key>
+                                <div style="float:left;height:200dp;width:{{100/colorful.length}}%;line-height:200dp;background:{value};color:#fff;text-align:center">{value}</div>
+                            </loop>
+                        </scrolling>
+                    </scroll>
+                </div>
+                <p>如果使用<code>snap-easing</code>设定动画曲线无法满足需求时，可以选择使用自定义曲线函数，详细请查看 <a>#API之设定snap动画曲线</a></p>
+
+                <blockquote>
+                    如果你只是想实现一个简单的 Snap 效果，还可以尝试使用<code>CSS Scroll Snap</code>来创建，但它不能完成更多的交互，而且目前并不是所有浏览器都支持这个特性
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>自定义 scrollbar</h2>
+                <p>通过添加一个<code>scrollbar</code>节点实现自定义滚动条或指示器效果，scrollbar 标签中的第一个子元素会被指派为指示器动画元素。新增自定义 scrollbar 后将产生两个 scrollbar，需要通过<code>scrollbar="false"</code>来关闭系统默认 scrollbar</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:559dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>描述</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>indicator</td>
+                                    <td>使用定制化指示器</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>比如在前面做过的 Snap 效果中定制一个个性化的指示器</p>
+                <code-light type=html>
+                    <var colorful>[...color]</var>
+                    <scroll x snap y="false">
+                        <scrolling style="height:200dp;width:{{colorful.length*100}}%">
+                            <loop colorful as value key>
+                                <div style="background:{value};width:{{1/colorful.length}}%">{value}</div>
+                            </loop>
+                        </scrolling>
+                        <scrollbar>
+                            <indicator></indicator>
+                            <if is="colorful.length>1">
+                                <loop colorful as value i>
+                                    <div style="margin: 0 {{i==colorful.length-1 ? '0' : '4dp'}} 0 {{i==0 ? '0' : '4dp'}}"></div>
+                                </loop>
+                            </if>
+                        </scrollbar>
+                    </scroll>
+                </code-light>
+                <div class="demo">
+                    <scroll stop-propagation="auto" x snap indicator y="false" scrollbars="false" fade-scrollbars="false" style="height:200dp;width:100%">
+                        <scrolling style="height:200dp;width:{{colorful.length*100}}%">
+                            <loop colorful as value key>
+                                <div style="float:left;height:200dp;width:{{100/colorful.length}}%;line-height:200dp;background:{value};color:#fff;text-align:center">{value}</div>
+                            </loop>
+                        </scrolling>
+                        <scrollbar style="bottom:7dp;left:50%;height:7dp;transform:translate(-50%, 0);line-height:0;font-size:0;overflow:visible">
+                            <indicator style="position:absolute;z-index:9;width:4dp;height:4dp;background:#fff;border-radius:4dp"></indicator>
+                            <if is="colorful.length>1">
+                                <loop colorful as value i>
+                                    <div style="display:inline-block;margin: 0 {{i==colorful.length-1 ? '0' : '4dp'}} 0 {{i==0 ? '0' : '4dp'}};width:4dp;height:4dp;background:rgba(255,255,255,.5);border-radius:4dp"></div>
+                                </loop>
+                            </if>
+                        </scrollbar>
+                    </scroll>
+                </div>
+                <p>我们还可以使用这个特性来创建一个 Minimap 效果视图，通过设定<code>indicator</code>可定制一个性化的 scrollbar 指示器，此特性被设定后不会自动生成 scrollbar，而需要开发者在 scroll 标签中手动书写 scrollbar 和 indicator 标签</p>
+                <code-light type=html>
+                    <style>...style</style>
+                    <scroll x y free start-x={setting.x} start-y="{setting.y}" scrollbars="false" fade-scrollbars="false" indicator interactive>
+                        <scrolling></scrolling>
+                    </scroll>
+
+                    <scrollbar>
+                        <indicator></indicator>
+                    </scrollbar>
+                </code-light>
+                <p>这是一个类似放大镜效果的演示，它分为两部分，第一个部分为一个 scroll 滚动区块，第二个区域则是他的指示器（滚动条也是指示器的一种），了解结构后我们开始创建它，首先我们需要把基本 CSS 样式准备好，之后创建一个<code>scroll</code>标签，我们看一下上面代码的设定： </p>
+                <p><code>x</code> 和 <code>y</code> 分别表示横向和竖向的两个轴向上都可滚动</p>
+                <p><code>free</code>表示横向和竖向可以同时滚动，不设定此值时只能同时单个滚动方向生效</p>
+                <p><code>start-x</code>和<code>start-y</code>分别为放大镜的起始位置</p>
+                <p></p>
+                <div class="media">
+                    <mini-map uuid="minimap" width="235" height="321" image="~/img/minimap.jpg" scale="3" on-ready="minimap::ready()"></mini-map>
+                </div>
+
+                <p>点击聚焦到 <a on-tap="minimap::scrollTo(event, -300, -85, 400)">Face</a>，点击聚焦到 <a on-tap="minimap::scrollTo(event, -386, -438, 400)">Hand</a>，点击聚焦到 <a on-tap="minimap::scrollTo(event, -383, -270, 400)">Necklace</a></p>
+
+                <script name="minimap">
+                    var minimap
+
+                    function ready () {
+                        minimap = node('minimap').scroller
+                    }
+
+                    function scrollTo (event, x, y, t) {
+                        if ( !minimap ) return
+                        
+                        minimap.scrollTo(parseInt(x), parseInt(y), parseInt(t), Scroll.EASEING.back)
+                    }
+                </script>
+
+            </section>
+
+            <section uuid=infnite>
+                <h2>Infinite 无限滚动视图 <small>finite 和 infinite 特性对于解决大 list 滚动的性能问题是非常好的选择</small></h2>
+                <p>高性能大 List 列表滑动，通过数据源循环渲染模版片段，根据滑动可视范围按需输出节点视图，其 GPU 复合层纠正机制能够对不规范 CSS 产生的多余复合层进行纠正，以保障硬件加速的平滑流畅</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:559dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>描述</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>finite</td>
+                                    <td>启用按序装卸dom模式</td>
+                                    <td><span>false</span></td>
+                                </tr>
+                                <tr>
+                                    <td>template</td>
+                                    <td>被 finite 循环装卸的模版名称</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td>指定模版的渲染据源引用对象</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>origin</td>
+                                    <td>异步的模版渲染数据在资源库中的名称</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>通过设定<code>infinite</code>属性来创建Infinite滚动，当然这还不够，还需要<code>template</code>和<code>data</code>来进行配合，这三者都是必须的，template 为你需要循环渲染的模版而data则为你渲染模版所需的数据源，这是一个数组类型的数据源，Infinite 将根据数组的每一个字对象来渲染 template 模版</p>
+                <blockquote>
+                    <h5>解决的问题</h5>
+                    <p>当页面载入的DOM越来越庞大时，庞大的DOM节点和复杂的DOM结构会让每一次 dom 计算都将会变的耗时，甚至会严重阻塞js操作，从而导致页面越来越慢</p>
+                </blockquote>
+                <p>Infinite 是如何工作的？</p>
+                <div class="media">
+                    <img src="img/scroll-infinite.png">
+                </div>
+                <p>这张图为 Infinite 的基本工作原理，左边一排浅色的节点为 virtual dom，渲染好的模版队列都是最先存放在这里的，当文档中可视区域的滚动内容不足时，Infinite 将调度 virtual dom 中的队列进入补充，而过期不可见的节点则又会重新回收到 virtual dom 中</p>
+                <p>创建 Infinite 滚动和一般滚动不同的是不需要在 scroll 标签中插入 scrolling 内容，而是将其置空</p>
+                <code-light type=html>
+                    <template photo>
+                        ...template
+                    </template>
+                    <scroll infinite data="gridList" template="photo"></scroll>
+                </code-light>
+                <div class="media">
+                    <grid-photo-3 data:list="testgridlist" origin="testgridlist" height="350" style="display:block;position:relative;width:100%;height:350dp"></grid-photo-3>
+                </div>
+                <p><a transform="demo-grid-photo">查看完整Demo</a></p>
+
+                <h3>自动加载更多机制</h3>
+                <p>在每次下拉活动时，Infinite 滚动类型会检测剩余缓存的条数是否少于<code>buffer</code>设定的数量，如果缓冲数据不足则会根据引用的数据源配置自动加载新的数据源，并渲染到页面中</p>
+                <p>数据源的设定引用<code>data="list"</code>，其中 "list" 即数据源名，如果希望 Infinite 能够自动完成加载更多，则需保持数据源名在模块配置中有对应的 resources 配置，这个配置可能是一个 url 地址，或是一个 Function，又或是直接返回的一个 Object 对象，但无论是什么类型的 Origin，Infinite 都将能够帮你自动更新数据<a>参考模块配置</a></p>
+                <p>有些情况是在组件中引用数据源，数据源已经过二次引用，其名称也发生了改变，这种情况时 Infinite 无法找到对应数据源名的 resources 配置，可以使用<code>origin-name="list"</code>来声明此数据源的真实名称，这项配置存在时 data 设定可选，可选时数据源会在模块载入完成后加载</p>
+                
+                <h3>Infinite show 事件</h3>
+                <p>Infinite box 中包裹着一个fragment节点，Infinite 在做视图补充和回收时都是在移动 fragment 节点，移动过程中 fragment 节点会接收两个事件<code>show</code>和<code>hidden</code>，分别为片段在补充到视图和从视图中回收到 virtual dom 时触发的两个事件</p>
+                <code-light type=html>
+                    <template photo>
+                        <div uuid="grid">
+                            ...template
+                        </div>
+                    </template>
+                    <scroll infinite data="list" template="photo"></scroll>
+                    <script>
+                        var grid = node('grid')
+                        var fragment = grid.parentFragment
+
+                        fragment.on('show', function () {
+                            // todo...
+                        }).on('hidden', function () {
+                            // todo...
+                        })
+                    </script>
+                </code-light>
+                <p>片段被回收时片段节点上的对应 js 事件并不会消失，所有状态都在被重新移入可视文档前得到保持，然而有时我们需要在片断被移回时给出一些特定的反应，另外还有一种情况是，某个 infinite 容器中的 fragment 被移除时，fragment 中的事件还处于保持状态</p>
+                <p>比如 touch 等 DOM 事件，而 DOM 事件在被移回 virtual dom 时会自动失效，所以我们没有必要担心事件保持带来性能影响，而另外一种事件：setInterval 循环定时器则可能会造成一些不必要的消耗，因此我们可以通过 hidden 事件在其被移到 virtual dom 时进行一个 clear 操作，以减少性能消耗</p>
+            </section>
+
+            <section uuid=finite>
+                <h2>Finite 有限滚动视图</h2>
+                <p>finite 类型和 infinite 类型极为相似，其区别在于 finite 没有 fragment 的片段利用机制，因此随着翻页数量的上升该滚动结构也会越来越大，但由于滚动过程中不需要更新片段因此滑动流畅度在低端设备上表现会更优</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:559dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>描述</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>finite</td>
+                                    <td>启用按序装卸dom模式</td>
+                                    <td><span>false</span></td>
+                                </tr>
+                                <tr>
+                                    <td>template</td>
+                                    <td>被 finite 循环装卸的模版名称</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td>指定模版的渲染据源引用对象</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>origin</td>
+                                    <td>异步的模版渲染数据在资源库中的名称</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>我们可以看到 finite 和 infinite 两者语法也基本相同，除了 finite 相比 infinite 没有片段机制外 finite 还不能够自动翻页，如果需要自动翻页和下拉刷新功能需要借助 pulldowning / pulldown 标签 <a transform=docs-dom-pulling>#了解更多 pull 拉特性</a></p>
+                <blockquote>如果你没有为 finite 指定 template 模版时则会把 scrolling 中的内容视为模版，这一点和 infinite 是不同的，infinite 不能预先设定 scrolling，因此必须为其指定 template</blockquote>
+            </section>
+
+            <section>
+                <h2>Zoom 滚动视图</h2>
+                <p>通过设定<code>zoom</code>创建一个缩放视图</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:559dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>描述</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>zoom</td>
+                                    <td>启用缩放视图的滚动</td>
+                                    <td><span>false</span></td>
+                                </tr>
+                                <tr>
+                                    <td>indicator</td>
+                                    <td>使用指示器</td>
+                                    <td>无</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=html>
+                    <scroll stop-propagation="true" zoom x y mouse-wheel-action="zoom">
+                        <scrolling>
+                            <img src='{url}'>
+                        </scrolling>
+                    </scroll>
+                </code-light>
+                <div class="demo">
+                    <scroll stop-propagation="true" zoom x y free zoom-min=".5" zoom-max="1" start-zoom=".2" mouse-wheel-action="zoom" style="min-height:300dp">
+                        <scrolling>
+                            <img src='zoom/test.jpg' style="width:2003dp">
+                        </scrolling>
+                    </scroll>
+                </div>
+                <p>缩放视图是一个多指操控区域，一般情况下我们不希望将该区域的操作冒泡到外面的元素上，因此<code>stop-propagation</code>会设置为<code>true</code></p>
+
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>
+
+<script>
+    function to (a,b) {
+        console.log(a,b)
+    }
+</script>

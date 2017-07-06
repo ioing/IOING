@@ -1,0 +1,144 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>使用 src 引用外部 CSS</h2>
+                <p>模块中 style 标签内样式书写符合 <a transform=docs-css-common>#CSS new 标准</a> 的，但需要注意的是：此标准在引用外部文件时是通过<code>src</code>属性引入的，而非是传统的<code>link</code>链接</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:750dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>attr [src = url]</td>
+                                    <td>url</td>
+                                    <td>设定外部 css 源文件</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <blockquote>注意：style 标签新增的<code>src</code>属性强调的是该文件是一个 CSS 模版，文件中的语法将被解析，而直接使用<code>link</code>属性来标记的外部样式表文件将不被引擎解释</blockquote>
+                <p>下面是一个内链样式表书写示例</p>
+                <code-light type=html>
+                    <style>
+                        @class wrapper () {
+                            position: relative;
+                            margin: 0 auto;
+                            max-width: [maxwidth];
+                        }
+                        @class model () {
+                            margin-bottom: 10dp;
+                            padding: 15dp 12dp 0;
+                            background: #fff;
+                            background-clip: padding-box;
+                            border: 1dp solid rgba(0,0,0,.1);
+                            border-radius: 6dp;
+                        }
+                        .wrapper {
+                            @class: wrapper();
+                            padding: 0 14dp;
+                        }
+                        @section (article) {
+                            this {
+                                position: relative;
+                                margin: 0 auto;
+                                padding: @([headerheight] + 10dp) 14dp 0;
+                                width: [maxwidth];
+                            }
+                            this:after {
+                                content: ".";
+                                display: block;
+                                height: 0;
+                                clear: both;
+                                visibility: hidden;
+                                overflow: hidden;
+                            }
+                            > section {
+                                float: right;
+                                width: 650dp;
+                                @class: model();
+                            }
+                        }
+                    </style>
+                </code-light>
+                <p>当我们要把这段样式表文件外链时，只需要使用<code>src</code>属性链接这个样式表文件即可</p>
+                <code-light type=html>
+                    <style src={src}></style>
+                </code-light>
+                <p>如果你的样式表文件不需要动态计算只是输出一些简单的修饰样式，你可以使用老套的<code>link</code>标签，但你不能在样式表中使用兼容特性，新增单位，扩展和继承等特性。我们依然建议你在开发中使用统一的<code>src</code>属性来声明 CSS 样式表文件的外链</p>
+                <blockquote>使用<code>src</code>来内链样式表文件的形式大多应用在组件开发中，在模块开发中我们建议你使用 <a transform=docs-module-source>#资源配置</a> 来完成样式表资源的引用</blockquote>
+            </section>
+
+            <section>
+                <h2>渐进式应用体验</h2>
+                <p>使用<code>src</code>外链样式表文件的另一个特性是该外链方法是异步的，CSS 加载不会阻塞模块加载</p>
+                <code-light type=html>
+                    <!-- 该样式表将异步加载，不会阻塞 HTML模版渲染 -->
+                    <style src={src}></style>
+                    <!-- 上面的样式表还在加载中，但是我已经开始渲染了 -->
+                    <article>
+                        <nav>
+                            <ul>
+                                <loop menu as val k>
+                                    <include nav></include>
+                                </loop>
+                            </ul>
+                        </nav>
+                        <video src="{video.src}"></video>
+                    </article>
+                </code-light>
+                <p>这个特性在组件中非常有用，比如你需要引用一个组件<code>{'<'}Google-map>{'<'}/Google-map></code>，这是一个地图组件，假设该组件引用了一个庞大 CSS 样式表文件，此时我们可以通过内链初始化样式表来表现组件的基本外观，当异步的 CSS 样式表加载完成时会对内链样式表进行更替，通过过渡的形式展现一个更人性化的渐进式应用体验</p>
+                <p>我们看一个简单的渐进式组件开发示例</p>
+                <code-light type=html>
+                    <!-- 在异步的外链文件还未加载完成，我先使用内链样式表现组件的基本外观 -->
+                    <style src={src}>
+                        .icon .banner {
+                            border: 4dp solid #000;
+                            background: #444;
+                        }
+                        .icon {
+                            width: 25vw;
+                            height: 15vw;
+                        }
+                        .banner {
+                            width: 50vw;
+                            height: 30vw;
+                        }
+                    </style>
+                    <scroll infinite data-origin="{origin}" item-min-size="100" limit="50" template="grid" data="list"></scroll>
+                    <template grid>
+                        <dl class="cl">
+                            <dd class="banner-content left">
+                                <div class="banner" style="background-image: onload url({1|getImage}.jpg)"></div>
+                            </dd>
+                            <dd class="icon-content right">
+                                <div class="icon" style="background-image: onload url({2|getImage}.jpg)"></div>
+                                <div class="icon" style="background-image: onload url({3|getImage}.jpg)"></div>
+                            </dd>
+                        </dl>
+
+                        <dl class="cl">
+                            <dd class="icon-content left">
+                                <div class="icon" style="background-image: onload url({4|getImage}.jpg)"></div>
+                                <div class="icon" style="background-image: onload url({5|getImage}.jpg)"></div>
+                            </dd>
+                            <dd class="banner-content right">
+                                <div class="banner" style="background-image: onload url({6|getImage}.jpg)"></div>
+                            </dd>
+                        </dl>
+                    </template>
+                </code-light>
+                <p>这是一个 grid 图片流组件，在组件的异步样式表还没加载完成时会暂用内链样式代为渲染，内链的样式描述了组件基本的轮廓或直接把细节部分设置为不可见，等待完整样式表文件载入后再更新或显示组件的细节展现</p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

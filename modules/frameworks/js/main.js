@@ -1,5 +1,23 @@
 (function () {
-    window.application.transform.on('transformStart', function (e) {
+    // menu
+
+    var menu_btn = $('#menu_btn'),
+        main_nav = $('#main_nav')
+    ;
+
+    menu_btn.on('click', function () {
+        
+        if (main_nav.hasClass('active')) {
+            main_nav.removeClass('active');
+            menu_btn.removeClass('active');
+        } else {
+            main_nav.addClass('active');
+            menu_btn.addClass('active');
+        }
+    })
+        
+    window.application.on('transformStart', function (e) {
+
 
         $("#blurlay").empty();
 

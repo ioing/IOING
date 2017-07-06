@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="16px" height="24px" viewBox="0 0 16 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.5.2 (25235) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <path d="M14,22 L7,17.625 L7,6.375 L14,2 L14,22 L14,22 Z M5,15 C5,15.553 4.552,16 4,16 L3,16 C2.448,16 2,15.553 2,15 L2,9 C2,8.448 2.448,8 3,8 L4,8 C4.552,8 5,8.448 5,9 L5,15 L5,15 Z M14,0 L5,6 L2,6 C0.896,6 0,6.896 0,8 L0,16 C0,17.104 0.896,18 2,18 L5,18 L14,24 C15.104,24 16,23.104 16,22 L16,2 C16,0.896 15.104,0 14,0 L14,0 Z" id="Fill-131" fill="#444" sketch:type="MSShapeGroup"></path>
+    </g>
+</svg>

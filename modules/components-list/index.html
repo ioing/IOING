@@ -1,0 +1,20 @@
+<scroll fullscreen class="flow-card">
+    <scrolling>
+        <article>
+            <section>
+                <h2>全部</h2>
+                <loop all.components as value i>
+                    <div class="card-info" transform="components-detail" param="id/{value.href}">
+                        <div class="card-icon" style="background-image: url({value.href}/preview.jpg)"></div>
+                        <div class="card-title">
+                            {value.name}
+                            <div class="card-type-text">{value.free}</div>
+                        </div>
+                    </div>
+                </loop>
+            </section>
+            
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

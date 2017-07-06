@@ -1,0 +1,45 @@
+<div id="viewport">
+	<scroll id="scroller-main">
+		<scrolling>
+			<div class="content-main">
+				<div class="searchBar">
+					<input type="search" placeholder="Find interesting people and games"/>
+				</div>
+				<scroll id="banner-wrapper" x snap scrollbars=false>
+					<div id="scroller-banner">
+						<loop data="discover.banner" as value i>
+							<div class="slide">
+								<div class="painting" style="background-image: url('./banner/{{value.gameId}}.jpg')"></div>
+							</div>
+						</loop>
+					</div>
+				</scroll>
+
+				<div class="thead">
+					Meet new friends
+				</div>
+				<div class="nav-link">
+					<div class="t-link">
+						People nearby
+					</div>
+					<div class="t-link">
+						Play and talk!
+					</div>
+				</div>
+				<div class="thead">
+					Find new games
+				</div>
+				<div class="catelog_list">
+					<button class="hot" transform="catelog" param="catelog:hot">Hot</button>
+					<button class="new" transform="catelog" param="catelog:new">New</button>
+					<button class="puzzle" transform="catelog" param="catelog:puzzle">Puzzle</button>
+					<button class="shooting" transform="catelog" param="catelog:shooting">Shooting</button>
+					<button class="funny" transform="catelog" param="catelog:funny">Funny</button>
+					<button class="action" transform="catelog" param="catelog:action">Action</button>
+					<button class="adventure" transform="catelog" param="catelog:adventure">Adventure</button>
+					<button class="casual"  transform="catelog" param="catelog:casual">Casual</button>
+				</div>
+			</div>
+		</scrolling>
+	</scroll>
+</div>

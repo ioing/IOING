@@ -1,0 +1,762 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>index <small><a>主模块</a> 特有配置项</small></h2>
+                <p>设定应用的默认入口模块</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>index</td>
+                                    <td>String</td>
+                                    <td>404</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // frameworks/config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                index: "home",  // 默认进入 home 模块
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>在 URL 无指定进入模块时默认进入的模块设置</p>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>若不对该配置项进行设置则会导致应用无法使用 singlelocking 配置项，且会进入 404 模块</p>
+                </blockquote>
+            </section>
+            <section>
+                <h2>nofind <small><a>主模块</a> 特有配置项</small></h2>
+                <p>设定 404 时的默认模块</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>nofind</td>
+                                    <td>String</td>
+                                    <td>404</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // frameworks/config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                nofind: "return-to-homepage",
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>未设定首页模块或者被访问模块不存在（或无法访问）时则会进入该配置项设定的（本例中为 return-to-homepage）模块</p>
+                <blockquote>
+                    <h5>关于 404 模块</h5>
+                    <p>当未设定改项配置时，在 404 的情况下将默认进入 404 模块，若 404 模块也不存在时则终止模块展示</p>
+                </blockquote>
+            </section>
+            <section>
+                <h2>singleflow <small><a>主模块</a> 特有配置项</small></h2>
+                <p>历史记录单向流控制</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>singleflow</td>
+                                    <td>Boolean</td>
+                                    <td>false</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // frameworks/config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                singleflow: true,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>当设置该配置项为 true 时，浏览器的历史返回将按照模块的 leve（leve --> 0）进行趋近于零的单向返回模式</p>
+                <blockquote>
+                    <h5>模拟场景</h5>
+                    <p>设购物车模块 level = 3，付款模块 level = 5，订单模块 level = 7，用户从购物车模块进入付款模块，付款成功后跳转至订单模块，若此时点击浏览器的返回键时模块应按进入路径倒序返回，而我们并不想再次返回付款模块，此时通过将付款模块的 level 设置大于 7，且开启 singleflow 配置即可在返回时直接忽略该模块</p>
+                </blockquote>
+            </section>
+            <section>
+                <h2>singlelocking <small><a>主模块</a> 特有配置项</small></h2>
+                <p>模块首页插入及单向流锁定，锁定后模块在 level == 0 的模块时将不再响应浏览器的历史回退事件</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>singlelocking</td>
+                                    <td>Boolean</td>
+                                    <td>false</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // frameworks/config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                singlelocking: true,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>设置该项后，通过 url 首次进入应用的任何模块都会默认在该模块前插入一条首页的历史记录，且预加载首页配置文件</p>
+                <blockquote>
+                    <h5>说明</h5>
+                    <p>若你创建了一个内容分发应用，比如一款新闻应用，当你分享出一篇文章时你希望打开这边文章的用户点击返回后直接进入应用的首页，而不是直接返回到来源页面，同时若你的首页 level == 0 时，用户点击返回按钮将无法返回至来源页面</p>
+                </blockquote>
+            </section>
+            <section>
+                <h2>limit <small><a>主模块</a> 特有配置项</small></h2>
+                <p>应用所承载的模块极限</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>limit</td>
+                                    <td>Number</td>
+                                    <td>50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // frameworks/config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                limit: 60,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>该配置项设定的最小值为 10，当该值小时 10 时将被设置为 10<p>
+                <blockquote>
+                    <h5>说明</h5>
+                    <p>浏览者访问的所有模块内容都将一直存在于应用中，直到打开的模块数量超过该设定值时，最先访问的模块内容则将被销毁</p>
+                </blockquote>
+            </section>
+            <section>
+                <h2>leve <small>模块的层级</small></h2>
+                <p>应按照模块展开的树形结构关系分配，根模块层级为 0，分支模块层级依次递增</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>level</td>
+                                    <td>Number</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                level: 15,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>层级可以在一些交互关系上起到作用，如根据层级来设定动画前后关系（相同级别的模块转换会忽略动画），以及限制历史回退路径</p>
+                <blockquote>
+                    <p>一般来说程序主 Tab 上的模块 level 都是 0 级，比如“微信”底部导航栏上的模块，而从“发现”进入到“朋友圈”则是 1 级模块</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>background <small>模块容器默认背景</small></h2>
+                <p>当从一个模块动画过渡到另一个模块时，如果模块还未加载完成则模块呈现为透明视图，此时可以通过该特性为模块设置一个默认背景色</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>background</td>
+                                    <td>String</td>
+                                    <td>transparent</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                background: "#fff",
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>未设置此项时，若模块执行动画期间未完成内容展示，则该模块以透明的形式进行动画，因此将会产生不完整的动画表现</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>absolute <small>模块视图类型</small></h2>
+                <p>模块类型分为独立模块和复合型模块，可以简单的理解为：全屏展示的模块即为独立模块，嵌合在主模块中显示的即复合型模块</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>absolute</td>
+                                    <td>Boolean</td>
+                                    <td>true</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                // 将模块定义为复合型
+                                absolute: false,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>默认所有模块都是独立型模块，如果你需要做嵌合式界面请设置此选项为 false</p>
+                <blockquote>
+                    <h5>到底复合型模块是怎样的模块？</h5>
+                    <p>比如我们有在使用的 App， 大多数 App 的主界面都包含了头部 header、中间内容以及底部 footer，其中 头部和底部 一般是通用的，中间的内容则是在不断变化的，头和底的通用部分即为主模块（frameworks）的部分，而中间的内容就是我们所说的复合型模块的内容了</p>
+                </blockquote>
+            </section>
+
+            <section uuid=sandbox>
+                <h2>sandbox <small>沙盒化</small></h2>
+                <p>设置模块使用沙盒模式执行</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>sandbox</td>
+                                    <td>Boolean</td>
+                                    <td>false</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>启用了沙盒化的模块类似于在浏览器中打开新窗口运行来模块内容，模块中的 javascript 变量、CSS Tree、DOM Tree 都被隔离在一个<code>独立的执行环境</code>下，因此沙盒模块能隔离外部的环境干扰，它的好处是不会污染全局变量，不会覆盖 CSS 样式，同时由于模块间 DOM Tree 的隔离不会造成 DOM Tree 提及越来越庞大的问题，从而在 DOM 操作及视图渲染时能有效控制<code>性能的提升</code></p>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                sandbox: true,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>被沙盒化的模块被卸载时能够非常<code>彻底的释放内存</code>，不会给整个 App 遗留干扰事件。比如没有沙箱机制的模块执行了一堆定时器后，通过简单的删除模块 DOM 结构只能从视图层面删除该模块，而该模块操作的各种痕迹还将在程序中产生后续影响，成为单页面应用最大的<code>安全隐患</code></p>
+                <blockquote>
+                    <h5>注意</h5>
+                    <p>该模块属性为子模块配置项，在主模块中不能生效，因为主模块是不可被沙盒化的</p>
+                </blockquote>
+            </section>
+
+            <section uuid=shadowbox>
+                <h2>shadowbox <small>影子盒子</small></h2>
+                <p>设置模块使用影子盒子模式被执行</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>shadowbox</td>
+                                    <td>Boolean</td>
+                                    <td>false</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                shadowbox: true,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>影子盒子即使用 shadowroot 特性建立的文档，它和沙盒非常类似，不过影子盒子和沙盒相比受到的限制更少。影子盒子中的 DOM Tree 同样是独立于主 DOM Tree 的，但是影子盒子中的视图不被限制在模块中，其能够更好的和主视图进行融合和产生交互</p>
+                <blockquote>
+                    <h5>关于降级</h5>
+                    <p>不支持 shadow dom 的浏览器将自动启用降级支持，引擎会自动替补浏览器这一功能，且特性基本保持一致</p>
+                </blockquote>
+            </section>
+
+            <section uuid=cache>
+                <h2>cache <small>模块缓存有效期</small></h2>
+                <p>设定模块的缓存有效期时间</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>cache</td>
+                                    <td>Number（单位秒）</td>
+                                    <td>360</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                cache: 0,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>当你打开模块A进行浏览了一段时间，然后有从模块 A 中打开了模块 B，此时当你浏览完模块 B 返回模块 A 时会检测这个模块 cache 的有效期是否失效，如果失效则重新载入该模块，如果还在有效期内则不做任何修改直接返回该模块</p>
+                <blockquote>
+                    <p>设置 cache 为 0 时，每次进入该模块都会更新该模块的数据</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>timeout <small>数据源超时设定</small></h2>
+                <p>设定模块的数据源缓存的有效期时间</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>cache</td>
+                                    <td>Number（单位秒）</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>  
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                timeout: 0,
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>如果你需要离线应用方案可以结合此项，比如结合 Appcache/Service Workers 开发离线应用，在 App 第二次启动的时候会优先读取之前的本地存储数据，如果距离上一次启动时间大于设定超时时间则会自动进行模块数据的更新操作，且刷新模块视图，如果前后进行刷新当前页面的时间小于当前设定超时时间则不会进行模块的数据更新操作也不会进行模块的更新</p>
+                <blockquote>
+                    <p>注意：如果你不需要一个离线访问应用请不要设置此选项</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>mirroring <small>生成镜像模块</small></h2>
+                <p>镜像就像是模块的一面镜子，产生一个和模块一摸一样的副本，镜像本身并不可被操控但镜像会跟随模块的改变而发生改变</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>mirroring</td>
+                                    <td>Object</td>
+                                    <td>filter: "blur(20px)"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>利用镜像模仿 ios 的毛玻璃透视效果</p>
+                <div class="media">
+                    <img src="img/mirroring.jpg">
+                </div>
+                <p>镜像是实现毛玻璃的一个基础，同样此项配置也作为毛玻璃的基本配置，镜像将被模糊处理，然后通过裁剪主视图可见区域，当主视图被裁剪后就可以直接透视到下方被模糊处理的镜像，这样就实现了毛玻璃效果</p>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                mirroring: {
+                                    // 裁剪镜像视图
+                                    clip: [60, 0, 60, 0],
+                                    // 裁剪部分增加滤镜
+                                    filter: "blur(20px)"
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>mirroring 的配置项有三个属性设置：target、clip、filter</code></p>
+
+                <h3>target:</h3>
+                <p>默认情况下镜像被放置在模块视图的正下方，target 设置后会将镜像插入到指定选择器的 DOM 结构中</p>
+
+                <h3>filter:</h3>
+                <p>为镜像添加一个滤镜效果，可选值为 CSS滤镜 标准书写值，当然需要浏览器支持滤镜效果才可以起到作用</p>
+
+                <h3>clip:</h3>
+                <p>在没有设定 target 的情况下，clip 参数能够设定对主视图进行裁剪，以便于透视到镜像，如上图中黄色线框为 clip 的裁剪线， clip 接收一个数组参数，依次按顺时针方向既是 top，right，bottom，left 四个方位的裁剪数值，裁剪量为边缘向内的边距值，数值不需要写单位</p>
+                <blockquote>
+                    <p>创建毛玻璃还可以使用 CSS3 的<code>backdrop-filter</code>特性，可以通过 API device.feat 来检测这个特性，如果不支持再启用此方法创建毛玻璃效果，但需要注意的是此方法在低版本android会存在性能问题</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>animation <small>转场动画</small></h2>
+                <p>设定模块的转场动画</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>默认值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>Function/Array/Boolean/String</td>
+                                    <td>false</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>每个模块都能够配置一个动画，也可以在主模块（frameworks）中进行统一配置，在该模块没有配置 animation 项或 animation 项配置为<code>true</code>且主模块中配置了 animation 时，则该模块动画实际使用了主模块的配置项，如果该项配置为 <code>false</code> 则进入该模块将不产生动画</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>false</td>
+                                    <td>模块不使用转场动画</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>true/'inherit'</td>
+                                    <td>模块继承主模块动画</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>fn()</td>
+                                    <td>使用动画函数定义动画</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>[fn, fn]</td>
+                                    <td>分别定义进入和移出的动画</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'flip'</td>
+                                    <td>使用内置动画：翻转</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'fade'</td>
+                                    <td>使用内置动画：渐变</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'slide'</td>
+                                    <td>使用内置动画：滑动</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>分别定义进入和移出的动画函数</p>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                animation : [function (event) {
+                                                reset(event)
+                                                viewin.duration(0).to(width, 0, 0).end(function () {
+                                                    viewout.duration(400).to(-width, 0, 0).end()
+                                                    viewin.duration(400).to(0, 0, 0).end(function () {
+                                                        event.callback(false)
+                                                    })
+                                                })
+                                            },
+                                            function (event) {
+                                                reset(event)
+                                                viewin.duration(0).to(-width, 0, 0).end(function () {
+                                                    viewin.duration(400).to(0, 0, 0).end()
+                                                    viewout.duration(400).to(width, 0, 0).end(function () {
+                                                        event.callback(false)
+                                                    })
+                                                })
+                                            }],
+                                ...
+                            }
+                        })
+                </code-light>
+                <p>使用函数的方式定义一个动画函数</p>
+                <code-light type=js>
+                    // config.js
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: { ...resources },
+                            config: {
+                                ...
+                                animation : function (event) {
+                                    var width = device.ui.width
+                                    var height = device.ui.height
+
+                                    // 当前两个模块的视图元素数组，[module-A-element, module-B-element]
+                                    var view = event.view
+                                    // 根据模块层级得到的模块转场的走向
+                                    var reverse = event.reverse
+                                    // 模块流向
+                                    var backset = event.backset
+
+                                    if ( backset == 0 ) return event.callback(false)             
+
+                                    if ( reverse ) {
+                                        view[0].Animate().duration(0).to(-width/3, 0, 0).end(function () {
+                                            view[1].Animate().duration(150).to(width, 0, 0).end()
+                                            this.duration(150).to(0, 0, 0).end(function () {
+                                                event.callback(false)
+                                            })
+                                        })
+                                    } else {
+                                        view[0].Animate().duration(0).to(width, 0, 0).end(function () {
+                                            view[1].Animate().duration(300).to(-width/3, 0, 0).end()
+                                            this.duration(300).to(0, 0, 0).end(function () {
+                                                event.callback(false)
+                                            })
+                                        })
+
+                                    }
+                                },
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>动画函数的入参为一个 Object 对象，该对象描述了一组与转场动画相关的信息</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:959dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>view</td>
+                                    <td>Array</td>
+                                    <td>两个动画模块的操作元素</td>
+                                </tr>
+                                <tr>
+                                    <td>backset</td>
+                                    <td>Number</td>
+                                    <td>模块 level 向大转变时为 1 反之为 -1，相等则为 0</td>
+                                </tr>
+                                <tr>
+                                    <td>reverse</td>
+                                    <td>Boolean</td>
+                                    <td>backset == 1 时为 false 反之为 true</td>
+                                </tr>
+                                <tr>
+                                    <td>callback</td>
+                                    <td>Function</td>
+                                    <td>动画执行完回调，回调参数 true 表示不需要自动设定视图归位，反之动画结束后无论视图被移动到哪个位置都会重新归位视图</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

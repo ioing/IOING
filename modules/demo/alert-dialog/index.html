@@ -1,0 +1,16 @@
+<style>
+	body {
+		background-color: [active-color];
+	}
+</style>
+
+<alert-dialog path='./' title="Title" desc="Notifications may include alerts,
+sounds and icon badges. These can be configured in Settings." type="2"></alert-dialog>
+
+<script>
+	$$('alert-dialog').one('ready', function (argument) {
+		this.trigger('open')
+	}).one('ok cancel', function () {
+		App.to(-1)
+	})
+</script>

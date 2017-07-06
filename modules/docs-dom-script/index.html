@@ -1,0 +1,344 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>特性作用域</h2>
+                <p>只有模块及组件中的嵌入式脚本才具备以下描述特性，使用 config 配置或使用 src 特性载入的 JS 文件都将以传统 JS 方式执行<span>不具备以下描述特性</span></p>
+                <p>这是模块中的一段代码</p>
+                <code-light type=html>
+                    <script src=ioing.com/io.js></script>
+                    <!-- 模块中的 src 引入文件不支持 global、import、内部变量等特性 -->
+                </code-light>
+                <code-light type=js>
+                    // 通过配置文件的方式载入的脚本同样以传统 JS 方式执行
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            // 模块的资源库（对内／对外）
+                            resources: {
+                                // js 资源
+                                script: {
+                                    main: "main.js"
+                                },
+                                ...
+                            },
+                            config : {
+                                ...
+                                // 模块需要加载的脚本
+                                script: ["main"],
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <blockquote>如果需要引入 JS 库，建议使用嵌入式脚本加 import 的方式载入，这样即可以在代码中方便的使用内置变量了</blockquote>
+            </section>
+
+            <section>
+                <h2>嵌入式作用域</h2>
+                <p>模块中的嵌入式脚本默认被设定在自己的作用域中<span>而非全局中</span></p>
+                <p>先让我们抛开对 script 的传统认识，看一下在模块中它是如何工作的</p>
+                <code-light type=html>
+                    <script>
+                        var a = 1
+                        console.log(a) // 1
+                    </script>
+                    <script>
+                        console.log(a) // undefined
+                    </script>
+                </code-light>
+                <p>我们可以看到不同的 script 的作用域是不同的，因此我们在第一个 script 中声明的变量在第二个 script 中是访问不到的</p>
+                <blockquote>
+                    <h5>为什么要隔离每段代码的作用域？</h5>
+                    <p>模块中常会出现一些琐碎的功能段，这些功能段中的变量可能有很多是暴露在全局的，这会导致你在日后维护需要增加新的功能段时需要考虑耦合问题</p>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>normal</h2>
+                <p>如果我们需要将某个 script 代码段放置到全局作用域中运行时该怎么做呢？这个时候我们需要使用<code>normal</code>属性。</p>
+                <code-light type=html>
+                    <script normal>
+                        var a = 1
+                        var b = 2
+                        console.log(a) // 1
+                        console.log(b) // 2
+                    </script>
+                    <script>
+                        var a = 3
+                        console.log(a) // 3
+                        console.log(b) // 2
+                    </script>
+                    <script>
+                        console.log(a) // 1
+                    </script>
+                </code-light>
+                <p>我们可以看到具有<code>normal</code>属性的 script 代码段的作用域被全局化了，这也是我们理解的传统 script 标签的表现结果，<span>通过 <a transform=docs-module-source>资源配置</a> 引用的脚本也为这个模式</span></p>
+            </section>
+
+            <section>
+                <h2>global</h2>
+                <p>该特性是一个<span>非常重要的特性</span>，同时也是组件化中简化与通信的解决方案</p>
+                <p>该特性<span>一般被应用于组件开发中</span>。被设定的代码段在多个组件副本中只执行一次，可通过 script 中内置的<code>global.call()</code>函数将入参函数置入到 global 代码段中执行，此时入参函数作用域切换到 global 中</p>
+                <p>我知道这不太好理解，我们先看个示例吧</p>
+                <code-light type=html>
+                    <!-- 我是一个状态显示组件 -->
+                    <h1 uuid=title>{title}</h1>
+                    <script global>
+                        // 该组件无论被任何模块载入任何次数，该代码段都只会被执行一次
+                        // 该代码段一般是一些公共函数，目的是让副本能够通过 global 实现交换数据及复用函数
+                        function update (data, callback) {
+                            fetch('/update', data).then(function (err, data) {
+                                if ( data.length ) {
+                                    callback(data)
+                                }
+                            })
+                        }
+                    </script>
+                    <script>
+                        // 数据更新的传参对象
+                        var data = { 
+                                id: 100,
+                                type: 1
+                            }
+                        var element = node('title')
+                        // 通过数据驱动修改 h1 中的 title 内容为更新后的内容
+                        function render (title) {
+                            scope.title = title
+                        }
+                        // 通过 global 代码段处理该请求
+                        global.call(function (data) {
+                            // 这里的 update 是对应了 global 代码段的上下文
+                            // 这里的 data 是函数外传递进来的
+                            update(data, function (data) {
+                                render(data.title)
+                            })
+                        }, data)
+                    </script>
+                </code-light>
+                <p>这是一个非常简单的用例，一个设想的信息状态框组件，该组件被引用在多个模块中，当该组件第一次运行时，global 中的代码段会被移至安全沙盒中进行初始化，之后再引用该组件时 global 代码段不会被重复初始化</p>
+                <p>使用 global 代码段中的函数，则可以在非 global 的嵌入式 script 中使用<code>global.call()</code>，该方法接受一个主函数及函数入参，即该入参函数会被切换到 global 代码段的上下文执行，此时函数内无法访问到原有函数外的变量，因为该函数当前作用域处于 global 代码段的上下文环境，因此我们需要把用到的变量一起传入 global 中才能在该函数中使用</p>
+                <blockquote>
+                    同一组件中<span>只能有一个 global 特性代码段</span>，该特性的设计初衷是为了解决组件化问题，因此我们建议你将该特性应用于复杂多副本类型的组件中
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>import</h2>
+                <p>标记该特性的代码段标示为需要引入依赖特性，其代码段中可通过使用<code>@import</code>来引入符合 AMD/CMD 规范的 js 模块</p>
+                <p>我们看一个简单的用例</p>
+                <code-light type=html>
+                    <script import>
+                        // 引入一个 AMD/CMD 规范的 js 模块
+                        var photo = @import('lib/photo')
+                        photo.show()
+                    </script>
+                </code-light>
+                <blockquote>注意：如果未设定 import 特性时使用<code>@import</code>引入 js 模块会引发报错导致程序中断</blockquote>
+            </section>
+
+            <section uuid=name>
+                <h2>name</h2>
+                <p>为该代码段建立命名空间，该特性在结合 <a>#on-event</a> 特性时使用</p>
+                <p>我们看一个简单的用例</p>
+                <code-light type=html>
+                    <button on-tap="event::showTip()"></button>
+                    <script name=event>
+                        function showTip () {
+                            ...
+                        }
+                    </script>
+                </code-light>
+                <p><span>关于该用法的详细使用讲解请查看 <a>#on-event</a> 章节的解释</span></p>
+            </section>
+
+            <section uuid=scope>
+                <h2>内置变量</h2>
+                <p>在嵌入式脚本中可访问内置的扩展变量</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>变量</th>
+                                    <th>支持域</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>root</td>
+                                    <td>组件内&&嵌入脚本</td>
+                                    <td>组件自身节点 DOM</td>
+                                </tr>
+                                <tr>
+                                    <td>shadow</td>
+                                    <td>组件内&&嵌入脚本</td>
+                                    <td>组件 shadow-dom 元素</td>
+                                </tr>
+                                <tr>
+                                    <td>scope</td>
+                                    <td>所有脚本</td>
+                                    <td>当前作用域中的数据源对象</td>
+                                </tr>
+                                <tr>
+                                    <td>node</td>
+                                    <td>所有脚本</td>
+                                    <td>通过 node(uuid) 方法可获取 uuid 属性节点</td>
+                                </tr>
+                                <tr>
+                                    <td>register</td>
+                                    <td>组件内&&嵌入脚本</td>
+                                    <td>为组件 DOM 注册方法</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+
+                <h3>root</h3>
+                <p>组件中使用嵌入脚本时能够调用该对象，该对象指向为该组建的自身元素，如下</p>
+                <code-light type=html>
+                    <google-map></google-map>
+                </code-light>
+                <p>该组件包含下面一段脚本</p>
+                <code-light type=html>
+                    <script>
+                        console.log(root)
+                        // 输出元素 <google-map></google-map>
+                        root.addClass('open')
+                    </script>
+                </code-light>
+                <p>结果</p>
+                <code-light type=html>
+                    <google-map class=open></google-map>
+                </code-light>
+
+                <h3>shadow</h3>
+                <p>当浏览器支持 shadow dom 特性时该变量为 shadow root 容器，若不支持 shadow dom 特性时该变量为 false</p>
+                <code-light type=html>
+                    <google-map></google-map>
+                </code-light>
+                <p>该组件包含下面一段脚本</p>
+                <code-light type=html>
+                    <script>
+                        console.log(shadow)
+                        // 输出元素 #shadow-root
+                        shadow.innerHTML = '<p>shadow dom</p>'
+                    </script>
+                </code-light>
+                <p>#shadow-root 内结果</p>
+                <code-light type=js>
+                    <p>shadow dom</p>
+                </code-light>
+
+                <h3>scope</h3>
+                <p>该对象是作用域内的数据源集合，如模块配置的数据源（<a transfrom=docs-module-route>了解模块配置</a>）</p>
+                <code-light type=js>
+                    // 模块配置
+                    define(function (require, module, exports) {
+                        module.exports = {
+                            resources: {
+                                // data 数据源
+                                data: {
+                                    list: "list.json",
+                                    note: "ioing.com/note/list",
+                                    config: {
+                                        id: 10001,
+                                        ...
+                                    }
+                                },
+                                ...
+                            },
+                            config : {
+                                ...
+                                // 模块依赖数据源
+                                data: ["list", "note", "config"],
+                                ...
+                            }
+                        }
+                    })
+                </code-light>
+                <p>下面为模块中的嵌入式脚本</p>
+                <code-light type=html>
+                    <script>
+                        console.log(scope)
+                        // 输出对象 {list: {...}, note: {...}, config: {...} }
+                        console.log(scope.config.id)
+                        // 输出 10001
+                    </script>
+                </code-light>
+
+                <h3 uuid=node>node</h3>
+                <p>该方法为闭包式（从内向外的）查找路径</p>
+                <code-light type=html>
+                    <div id=main>模块中的 id=main</div>
+                    <google-map>
+                        #shadow-root (open)
+                            <shadow-root>
+                                <div id=main>组件中的 id=main</div>
+                                <script>
+                                    // 输出组件中的 id=main
+                                    console.log(node('main'))
+                                </script>
+                            </shadow-root>
+                    </google-map>
+                </code-light>
+                <p>当组件（shadow-root 影子节点）中不存在符合的节点时，该方法会进入模块中查找</p>
+                <code-light type=html>
+                    <div id=main>模块中的 id=main</div>
+                    <google-map>
+                        #shadow-root (open)
+                            <shadow-root>
+                                <script>
+                                    // 输出模块中的 id=main
+                                    console.log(node('main'))
+                                </script>
+                            </shadow-root>
+                    </google-map>
+                </code-light>
+                <p>嵌套组件中如果不存在符合的节点时，不会向上级组件查找，而是会直接进入模块中查找</p>
+                <code-light type=html>
+                    <div id=main>模块中的 id=main</div>
+                    <google-map>
+                        #shadow-root (open)
+                            <shadow-root>
+                                <div id=main>组件中的 id=main</div>
+                                <!-- 组件中嵌套组件 -->
+                                <google-feed>
+                                    #shadow-root (open)
+                                        <shadow-root>
+                                            <script>
+                                                // 输出模块中的 id=main
+                                                console.log(node('main'))
+                                            </script>
+                                        </shadow-root>
+                                </google-feed>
+                            </shadow-root>
+                    </google-map>
+                </code-light>
+                <blockquote>
+                    由于组件和 shadow 标签使用了特殊的 shadowroot 特性，因此当组件和模块有相同 id/uuid 时不会产生覆盖影响，但你需要使用<code>node(id/uuid)</code>方法获取，而使用<code>getElementById(id)</code>来获取 id 节点则是错误的方法
+                </blockquote>
+
+                <h3>register</h3>
+                <p>组件内嵌脚本中可调用该函数，目的是为组件注册方法或值</p>
+                <code-light type=html>
+                    <google-map></google-map>
+                </code-light>
+                <p>该组件包含下面一段脚本</p>
+                <code-light type=html>
+                    <script>
+                        ...
+                        register('zoom', function (scale) {
+                            ...
+                            // 缩放功能代码
+                        })
+                    </script>
+                </code-light>
+                <p>通过为组件注册新的方法或值能够为组件使用者提供更多可用API</p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

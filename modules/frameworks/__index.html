@@ -1,0 +1,433 @@
+<header class="header">
+    <div class="wrapper">
+        <div class="menu-docs trans-all {{setting.status.showMenuBtn ? 'active' : ''}}" on-tap="event::showDocsNav(event, this)">
+            <div class="line line1"></div>
+            <div class="line line2"></div>
+            <div class="line line3"></div>
+        </div>
+
+        <div class="menu-more trans-all {{setting.status.showMenuBtn ? 'active' : ''}}" on-tap="event::showMoreNav(event, this)">
+            <div class="dot dot1"></div>
+            <div class="dot dot2"></div>
+            <div class="dot dot3"></div>
+        </div>
+
+        <div class="site-logo">
+            <div class="hexagon hexagon-with-border info">
+                <div class="hexagon-shape">
+                    <div class="hexagon-shape-inner">
+                        <div class="hexagon-shape-inner-2"></div>
+                    </div>
+                </div>
+                <div class="hexagon-shape content-panel">
+                    <div class="hexagon-shape-inner">
+                        <div class="hexagon-shape-inner-2"></div>
+                    </div>
+                </div>
+                <div class="hexagon-content"></div>
+            </div>
+            IOING
+        </div>
+        <div class="site-logo-text">
+            IOING
+        </div>
+
+        <nav class="site-nav {{setting.status.showMoreNav ? 'visible' : 'hidden'}}">
+            <ul>
+                <li><a class="{setting.status.activeMainNav,'home'|activeMainNav}" transform="home">首页</a></li>
+                <li><a class="{setting.status.activeMainNav,'components'|activeMainNav}" transform="components">组件</a></li>
+                <li><a class="{setting.status.activeMainNav,'docs'|activeMainNav}" transform="docs-started-ioing">文档</a></li>
+                <li><a class="{setting.status.activeMainNav,'dev'|activeMainNav}" transform="dev">开发者</a></li>
+                <!-- <li><a class="{setting.status.activeMainNav,'bbs'|activeMainNav}" transform="dev">技术社区</a></li> -->
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<aside uuid="site-aside" class="{setting.status.showDocsNav|showDocsNav}">
+    <scroll uuid="aside-scroll" class="sidebar">
+        <scrolling>
+            <div class="{setting.status.activeMainNav, 'components'|showAsideNav}">
+                <shadow style="display:none">
+                    <style>
+                        .start-hd {
+                            position: relative;
+                            margin-bottom: 10dp;
+                            color: #DDD;
+                            text-shadow: 0 -1px 0 #333;
+                            background: #485258;
+                            border-radius: 6dp;
+                            border: 1px solid rgba(0,0,0,.1);
+                        }
+                        .start-hd .header-half {
+                            padding: 12px;
+                            background: transparent;
+                            border-bottom: 1px solid #363743;
+                            border-radius: 5dp 5dp 0 0;
+                        }
+                        .bm_c {
+                            padding: 12px;
+                        }
+                        .brt_5 {
+                            border-radius: 5px 5px 0 0 !important;
+                        }
+                        h2 {
+                            color: white;
+                            line-height: 20dp;
+                            font-size: 18dp;
+                            font-weight: bold;
+                        }
+                        .progress-half td {
+                            vertical-align: bottom;
+                        }
+                        .subheading {
+                            min-height: 32dp;
+                            margin-top: 5dp;
+                            font-size: 12dp;
+                        }
+                        .progress-half {
+                            padding: 12dp;
+                            overflow: hidden;
+                            background: #363E42;
+                            border-top: 1px solid #454D51;
+                            border-radius: 0 0 6dp 6dp;
+                        }
+                        .progressbar-well {
+                            position: relative;
+                            margin: 0 8dp 0 0;
+                            background: #40494D;
+                            border-top: 1px solid #2E3539;
+                            border-bottom: 1px solid #485155;
+                            border-radius: 4dp;
+                        }
+                        .pn {
+                            position: relative;
+                            display: inline-block;
+                            overflow: visible;
+                            padding: 5dp 10dp;
+                            font-size: 13dp;
+                            font-weight: bold;
+                            line-height: 18dp;
+                            color: #333;
+                            text-shadow: 0 1px 0 rgba(255,255,255,.5);
+                            background-color: #ddd;
+                            background-repeat: repeat-x;
+                            background-image: linear-gradient(white,#ddd);
+                            border: 1px solid #2E3539;
+                            cursor: pointer;
+                            border-radius: 4px;
+                            box-shadow: 0 1px 0 rgba(255,255,255,.1);
+                        }
+                    </style>
+                    <section class="start-hd">
+                        <div class="header-half">
+                            <h2>创建新组件</h2>
+                            <div class="subheading">创建自己的地盘、精心打造小组空间、邀请好友加入我的小组。</div>
+                        </div>
+                        <div class="progress-half">
+                            <table cellspacing="0" cellpadding="0" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td width="99%">
+                                            <div class="progressbar-well">
+                                              <div class="ui-progressbar"><div class="ui-progressbar-value" style="width: 40%; "></div></div>
+                                              <div class="progress-label">你已有 12 个小组，还能创建 18 个。</div>
+                                            </div>
+                                        </td>
+                                        <td width="1%">
+                                            <a class="pn">创建组</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </shadow>
+            </div>
+            <div class="{setting.status.activeMainNav, 'docs'|showAsideNav}">
+                <section>
+                    <div class="search-box">
+                        <input type="text" placeholder="检索文档类目" on-input="search::searchDoc(this)">
+                        <div uuid=search-result-box class=search-result>
+                            <div class="dropdown-caret">
+                                <span class="caret-outer"></span>
+                                <span class="caret-inner"></span>
+                            </div>
+                            <div uuid=search-result>
+                                <template search-result>
+                                    <ul>
+                                        <loop list as value key>
+                                            <li transform="{value.href}" ><a>{value.title}</a></li>
+                                        </loop>
+                                    </ul>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <loop nav as group key>
+                    <section uuid="nav-{key}" class="{key,nav|currentNavSection}">
+                        <nav class="nav">
+                            <h3 class="link-box" on-tap="event::openStream({key})">
+                                <span class="title">{group.title}</span>
+                                <small>{group.desc}</small>
+                                <span class="icon-link"></span>
+                            </h3>
+                            <ul class="child-nav">
+                                <loop data="group.list" as value key>
+                                    <li class="nav-item {setting.status.activeSubNav,value|activeSubNav}">
+                                        <a class="nav-link" transform="{value.href}" prefetch tap-highlight="active">
+                                            <div class="link-box">
+                                                <span class="title">{value.title}</span>
+                                                <span class="icon-link"></span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </loop>
+                            </ul>
+                        </nav>
+                    </section>
+                </loop>
+            </div>
+            <div class="{setting.status.activeMainNav, 'docs,components'|showAsideNav}">
+                <section>
+                    <shadowroot>
+                        <style>
+                            .btn-group {
+                                padding-bottom: 12dp;
+                            }
+                            .btn-group a {
+                                margin-right: 11dp;
+                                color: [active-color];
+                            }
+                        </style>
+                        <div class=btn-group>
+                            <a class="btn download-btn" href="#">Download</a>
+                            <a class="btn github-btn" href="#">Github</a>
+                            <a class=become-backer-btn transform>赞助</a>
+                        </div>
+                    </shadowroot>
+                </section>
+            </div>
+        </scrolling>
+    </scroll>
+</aside>
+
+<footer id="footer">
+    <section>
+        <nav>
+            <ul>
+
+                <li>
+                    <a transform="activity" param="aa:cc,ee:ss" class="reScaleBounce active scaleBounce">
+                        <span class="icon nav-icon-activity"></span>
+                        <span class="title">Activity</span>
+                    </a>
+                    <div class="active">
+                        <span class="icon nav-icon-activity"></span>
+                    </div>
+                </li>
+
+                <li>
+                    <a transform="discover" param="aa:cc,ee:ss">
+                        <span class="icon nav-icon-discover"></span>
+                        <span class="title">Discover</span>
+                    </a>
+                    <div class="active">
+                        <span class="icon nav-icon-discover"></span>
+                    </div>
+                </li>
+
+                <li>
+                    <a transform="boutique" param="aa:cc,ee:ss">
+                        <span class="icon nav-icon-boutique"></span>
+                        <span class="title"></span>
+                    </a>
+                    <div class="active">
+                        <span class="icon nav-icon-boutique"></span>
+                    </div>
+                </li>
+
+                <li>
+                    <a transform="test1" param="aa:cc,ee:ss">
+                        <span class="icon nav-icon-test1"></span>
+                        <span class="title"></span>
+                    </a>
+                    <div class="active">
+                        <span class="icon nav-icon-test1"></span>
+                    </div>
+                </li>
+
+            </ul>
+        </nav>
+    </section>
+</footer>
+
+
+<script name=search>
+    function searchDoc (el) {
+        var val = el.value
+        var result = []
+        var searchResultBox = node('search-result-box')
+        var searchResult = node('search-result')
+
+        if ( val ) {
+            scope.nav.each(function (i, list) {
+                list.list.each(function (i, item) {
+                    if ( !item.keys ) return
+                    item.keys.each(function (i, v) {
+                        if ( v.match(new RegExp(val, "i")) ) {
+                            result.push({
+                                title: v,
+                                href: item.href
+                            })
+                        }
+                    })
+                })
+            })
+        }
+
+        if ( result.length ) {
+            searchResult.innerTemplate('search-result', {
+                list: result
+            })
+            searchResultBox.style.display = 'block'
+        } else {
+            searchResultBox.style.display = 'none'
+        }
+    }
+</script>
+
+<script name=event>
+    function showMoreNav (e, btn) {
+        scope.setting.status.showDocsNav = false
+        if ( scope.setting.status.showMoreNav ) {
+            scope.setting.status.showMenuBtn = false
+            scope.setting.status.showMoreNav = false
+        } else {
+            scope.setting.status.showMenuBtn = true
+            scope.setting.status.showMoreNav = true
+        }
+    }
+    function showDocsNav (e, btn) {
+        if ( scope.setting.status.showMoreNav ) {
+            scope.setting.status.showMoreNav = false
+            scope.setting.status.showMenuBtn = false
+            return
+        }
+
+        if ( scope.setting.status.showDocsNav ) {
+            scope.setting.status.showDocsNav = false
+            scope.setting.status.showMenuBtn = false
+        } else {
+            scope.setting.status.showDocsNav = true
+            scope.setting.status.showMenuBtn = true
+        }
+    }
+    function openStream (id, display) {
+        id = Number(id)
+        var pid = id - 1
+        var nid = id + 1
+        var el = node('nav-' + id)
+        var preEl = node('nav-' + pid)
+        var nextEl = node('nav-' + nid)
+        var hasOpen = false
+
+        var i = 0
+        var l = scope.nav.length - 1
+
+        while ( i <= l ) {
+            var n = node('nav-' + i)
+
+            if ( i == id ) {
+                hasOpen = el.hasClass('sup') || el.hasClass('sub')
+            }
+
+            n.removeClass('o')
+            n.addClass('sup sub')
+
+            if ( i !== id ) {
+                if ( i == 0 ) {
+                    n.removeClass('sub')
+                } else if ( i == l ) {
+                    n.removeClass('sup')
+                }
+            }
+
+            i++
+        }
+
+        if ( hasOpen || display ) {
+            el.removeClass('sup sub')
+
+            if ( nextEl ) {
+                if ( nid == l ) {
+                    nextEl.addClass('o')
+                } else {
+                    nextEl.removeClass('sub')
+                }
+            }
+
+            if ( preEl ) {
+                if ( pid == 0 ) {
+                    preEl.addClass('o')
+                } else {
+                    preEl.removeClass('sup')
+                }
+            }
+        } else {
+            el.addClass('sup sub')
+
+            if ( id == 0 ) {
+                el.removeClass('sub')
+            } else if ( id == l ) {
+                el.removeClass('sup')
+            }
+
+            if ( preEl ) {
+                if ( pid == 0 ) {
+                    preEl.removeClass('o')
+                }
+            }
+        }
+
+        var activeNav = el.find('.active')[0]
+
+        if ( activeNav ) {
+            setTimeout(function () {
+                el.previousScroller.scroller.scrollToElement(activeNav, 600)
+            }, 600)
+        }
+    }
+
+    function changeStream (display) {
+        if ( App.id ) {
+            var id = App.id.split('-')[1]
+
+            for (var i = 0, l = scope.nav.length; i < l; i++) {
+                if ( scope.nav[i].id == id ) {
+                    return openStream(i, display)
+                }
+            }
+        }
+    }
+
+    setTimeout(function () {
+        changeStream(true)
+    }, 1200)
+
+    function changeNav (id) {
+        var parentid = id.split('-')[0]
+        scope.setting.status.activeSubNav = id
+        scope.setting.status.activeMainNav = parentid
+        scope.setting.status.showAside = parentid === "docs" ? true : false
+        scope.setting.status.showMenuBtn = false
+        scope.setting.status.showMoreNav = false
+    }
+
+    App.on('transformstart', function (event) {
+        changeStream(true)
+        changeNav.call(null, event.ids[0])
+    })
+    App.id && changeNav(App.id)
+</script>

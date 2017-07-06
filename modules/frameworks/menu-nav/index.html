@@ -1,0 +1,103 @@
+<style>
+    @section (.menu-docs) {
+        this {
+            display: none;
+            position: absolute;
+            top: 0;
+            margin: 10dp;
+            width: 40dp;
+            height: 30dp;
+        }
+
+        this.active .line {
+            background: #ed143d;
+        }
+
+        this.active .line1 {
+            transform-origin: center;
+            transform: translate(0, 8dp) rotate(45deg);
+        }
+
+        this.active .line2 {
+            opacity: 0;
+        }
+
+        this.active .line3 {
+            transform-origin: center;
+            transform: translate(0, -8dp) rotate(-45deg);
+        }
+
+        .line {
+            margin: 6dp auto;
+            width: 30dp;
+            height: 2dp;
+            background: [active-color];
+            border-radius: 2dp;
+            transition: all 300ms ease-out;
+        }
+    }
+
+    @section (.menu-more) {
+        this {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10dp;
+            padding-left: 26dp;
+            width: 34dp;
+            height: 30dp;
+        }
+
+        .dot {
+            margin: 5dp 0;
+            width: 4dp;
+            height: 4dp;
+            background: [active-color];
+            border-radius: 2dp;
+        }
+    }
+
+    @media screen and (max-width: [max-width]) {    
+        .menu-docs, .menu-more { 
+            display: block;
+        }
+    }
+</style>
+<div class="menu-docs trans-all {{setting.status.showMenuBtn ? 'active' : ''}}" on-tap="showDocsNav(event, this)">
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+    <div class="line line3"></div>
+</div>
+<div class="menu-more trans-all {{setting.status.showMenuBtn ? 'active' : ''}}" on-tap="showMoreNav(event, this)">
+    <div class="dot dot1"></div>
+    <div class="dot dot2"></div>
+    <div class="dot dot3"></div>
+</div>
+<script>
+    function showDocsNav (e, btn) {
+        if ( scope.setting.status.showMoreNav ) {
+            scope.setting.status.showMoreNav = false
+            scope.setting.status.showMenuBtn = false
+            return
+        }
+
+        if ( scope.setting.status.showDocsNav ) {
+            scope.setting.status.showDocsNav = false
+            scope.setting.status.showMenuBtn = false
+        } else {
+            scope.setting.status.showDocsNav = true
+            scope.setting.status.showMenuBtn = true
+        }
+    }
+    function showMoreNav (e, btn) {
+        scope.setting.status.showDocsNav = false
+        if ( scope.setting.status.showMoreNav ) {
+            scope.setting.status.showMenuBtn = false
+            scope.setting.status.showMoreNav = false
+        } else {
+            scope.setting.status.showMenuBtn = true
+            scope.setting.status.showMoreNav = true
+        }
+    }
+</script>

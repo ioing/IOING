@@ -1,0 +1,188 @@
+<style>
+    .imodule-show {
+        position: relative;
+        width: 100%;
+    }
+    .idevice {
+        position: relative;
+        display: inline-block;
+        margin: 0 0 15dp;
+        padding: 12dp;
+        width: 50%;
+        min-width: 300dp;
+        max-width: 400dp;
+        min-height: 550dp;
+        max-height: 650dp;
+        height: 30vw;
+        overflow: hidden;
+    }
+
+    .idevice:before {
+        @class: piexborderradius(60);
+        border: 1px solid rgba(0,0,0,.2);
+    }
+
+    .iscreen {
+        position: absolute;
+        top: 46dp;
+        left: 10dp;
+        right: 10dp;
+        bottom: 50dp;
+        background-color: #fff;
+    }
+
+    .iscreen:before {
+        @class: piexborderradius(0);
+    }
+
+    .itouch {
+        position: absolute;
+        bottom: 5dp;
+        left: 50%;
+        margin-left: -20dp;
+        width: 40dp;
+        height: 40dp;
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: 30dp;
+    }
+
+    .ieye {
+        position: absolute;
+        left: 50%;
+        top: 18dp;
+        margin-left: -50dp;
+        width: 12dp;
+        height: 12dp;
+        border-radius: 12dp;
+        border: 1px solid rgba(0,0,0,.1);
+    }
+
+    .ieye i {
+        display: block;
+        margin: 4dp auto 0;
+        width: 2dp;
+        height: 2dp;
+        background-color: #00acff;
+        border-radius: 2dp;
+    }
+
+    .iear {
+        position: absolute;
+        left: 50%;
+        top: 19dp;
+        margin-left: -30dp;
+        width: 60dp;
+        height: 10dp;
+        border: 1px solid rgba(0,0,0,.1);
+        border-radius: 12dp;
+    }
+
+    .iscreen .iheader, .iscreen .ifooter {
+        position: absolute;
+        z-index: 9;
+        width: 100%;
+        height: 40dp;
+        color: #fff;
+        text-align: center;
+        font-size: 18dp;
+        line-height: 40dp;
+        background-color: [active-color];
+    }
+
+    .iscreen .ifooter {
+        top: auto;
+        bottom: 0;
+        background-color: #444;
+    }
+
+    .iscreen .ibody {
+        position: absolute;
+        top: 40dp;
+        bottom: 40dp;
+        z-index: 11;
+        padding: 15dp;
+        width: 100%;
+        text-align: center;
+        background-color: rgba(255,255,255,1);
+        transition: all .4s ease;
+    }
+
+    .iscreen .ibody.active {
+        transform: perspective(1000dp) rotateY(20deg);
+        box-shadow: -1px 3px 5px rgba(0,0,0,.5);
+    }
+
+    .iscreen .ibody:before {
+        @class: piexborderradius(0);
+    }
+
+    .iscreen .ibody p {
+        color: [active-color];
+        margin-bottom: 5dp;
+    }
+
+    .iscreen .ibody span {
+        display: block;
+        margin: 0 auto 12dp;
+        width: 100%;
+        height: 2dp;
+        background: [active-color];
+    }
+
+    .view-tip {
+        position: absolute;
+        top: 100dp;
+        left: 60%;
+    }
+
+    .view-tip li {
+        text-align: right;
+        width: 150dp;
+        border-bottom: 1px solid [active-color];
+        margin-bottom: 12dp;
+    }
+
+    .view-tip a {
+        font-size: 16dp;
+        color: [active-color]
+    }
+
+</style>
+<div class="imodule-show">
+    <div class="idevice">
+        <div class="ieye"><i></i></div>
+        <div class="iear"></div>
+        <div class="iscreen">
+            <div class="iheader">Header</div>
+            <div class="ibody">
+                <p>Module view</p>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="ifooter">Footer</div>
+        </div>
+        <div class="itouch"></div>
+    </div>
+    <div class="view-tip">
+        <ul>
+            <li><a>主模块</a></li>
+            <li><a>子模块</a></li>
+            <li><a>复合视图模块</a></li>
+            <li><a>独立视图模块</a></li>
+        </ul>
+    </div>
+</div>
+                

@@ -1,0 +1,217 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>pull 拉特性</h2>
+                <p>该特依赖 scroll 滚动控件，其分为 pullup / pulldown / pullright / pullleft</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>标签</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pullup</td>
+                                    <td>滚动边缘上拉响应标签</td>
+                                </tr>
+                                <tr>
+                                    <td>pulldown</td>
+                                    <td>滚动边缘下拉响应标签</td>
+                                </tr>
+                                <tr>
+                                    <td>pullright</td>
+                                    <td>滚动边缘右拉响应标签</td>
+                                </tr>
+                                <tr>
+                                    <td>pullleft</td>
+                                    <td>滚动边缘左拉响应标签</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>这四个标签应紧随 scrolling 标签后使用并且 scroll 类型为<code>finite</code>，单独使用时标签功能无效，每个标签都可包含以下四个状态标签，状态标签在对应的状态发生时可见</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>标签</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pullstart</td>
+                                    <td>开始拉动初期时该标签可见</td>
+                                </tr>
+                                <tr>
+                                    <td>pulling</td>
+                                    <td>拉动超过设定值（threshold）时该标签可见</td>
+                                </tr>
+                                <tr>
+                                    <td>pullend</td>
+                                    <td>拉动生效且松手时该标签可见</td>
+                                </tr>
+                                <tr>
+                                    <td>pullover</td>
+                                    <td>拉动标签配合的 scroll 加载翻页到最后一页时该标签可见</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>这四个标签还支持下面的指令配置</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>默认值</th>
+                                    <th>其它可选值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>threshold</td>
+                                    <td>50</td>
+                                    <td>[Number]</td>
+                                    <td>拉动生效的界限值</td>
+                                </tr>
+                                <tr>
+                                    <td>event-target</td>
+                                    <td>scroll</td>
+                                    <td>scroll 或 module</td>
+                                    <td>下拉刷新的目标对象</td>
+                                </tr>
+                                <tr>
+                                    <td>auto</td>
+                                    <td>无</td>
+                                    <td>无</td>
+                                    <td>为 auto 时滑动惯性也可引起事件</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>在拉动过程中上面状态对应的事件将会依次发生，丛 pullstart 状态改变到 pulling 状态时有一个关键参数，即<code>threshold</code>属性</p>
+                <p>我们来看一个简单的示例</p>
+                <code-light type=html>
+                    <scroll finite data="testscrolllist" style="height:500dp;" stop-propagation="true">
+                        <scrolling>
+                            <!-- 该 finite 没有设定 template，因为 scrolling 内容被识别为 template， 请参考 scroll 中的说明 -->
+                            <div style="background:{colorful[i]}">{_index}. {colorful[i]}</div>
+                        </scrolling>
+                        <pulldown threshold=50 event-target=scroll>
+                            <pullstart>下拉刷新</pullstart>
+                            <pulling>松手刷新</pulling>
+                            <pullend>
+                                <!-- ... loading 动画放这里 -->
+                            </pullend>
+                            <pullover>没有更多了</pullover>
+                        </pulldown>
+                        <pullup threshold=50 auto>
+                            <pullstart>上拉加载更多</pullstart>
+                            <pulling>松手加载更多</pulling>
+                            <pullend>
+                                <!-- ... loading 动画放这里 -->
+                            </pullend>
+                            <pullover>没有更多了</pullover>
+                        </pullup>
+                    </scroll>
+                </code-light>
+                <p>下面这个 demo 如果你正在 PC 机上观看，请使用鼠标点击拖拽</p>
+                <style>
+                    @keyframes bouncedelay {
+                      0%, 80%, 100% {
+                        transform: scale(0.0);
+                      } 40% {
+                        transform: scale(1.0);
+                      }
+                    }
+                    .load6 {
+                      margin: 0 auto;
+                      width: 100dp;
+                      text-align: center;
+                    }
+                    .load6 > div {
+                      width: 10dp;
+                      height: 10dp;
+                      background-color: #fe5a4c;
+                      border-radius: 10dp;
+                      display: inline-block;
+                      animation: bouncedelay 1.4s infinite ease-in-out;
+                      animation-fill-mode: both;
+                    }
+                    .load6 .bounce1 {
+                      animation-delay: -0.48s;
+                    }
+                    .load6 .bounce2 {
+                      animation-delay: -0.32s;
+                    }
+                    .load6 .bounce3 {
+                      animation-delay: -0.16s;
+                    }
+                    pullup, pulldown {
+                      bottom: -40dp;
+                      width: 100%;
+                      padding: 10dp 0;
+                      height: 40dp;
+                      line-height: 20dp;
+                      text-align: center;
+                      font-size: 13dp;
+                      color: #666;
+                      z-index: 99999;
+                    }
+
+                    pulldown {
+                      bottom: auto;
+                      top: -40dp;
+                    }
+                </style>
+                <scroll finite data="testscrolllist" style="height:500dp;" stop-propagation="true">
+                    <scrolling>
+                        <div style="margin-bottom:4dp;height:60dp;line-height:60dp;background:{colorful[i]};color:#fff;text-indent:20dp; border-radius:10dp">{_index}. {colorful[i]}</div>
+                    </scrolling>
+                    <pulldown threshold=50>
+                        <pullstart>下拉刷新</pullstart>
+                        <pulling>松手刷新</pulling>
+                        <pullend>
+                            <div class="load6">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                                <div class="bounce4"></div>
+                            </div>
+                        </pullend>
+                        <pullover>没有更多了</pullover>
+                    </pulldown>
+                    <pullup threshold=50 auto>
+                        <pullstart>上拉加载更多</pullstart>
+                        <pulling>松手加载更多</pulling>
+                        <pullend>
+                            <div class="load6">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                                <div class="bounce4"></div>
+                            </div>
+                        </pullend>
+                        <pullover>没有更多了</pullover>
+                    </pullup>
+                </scroll>
+                <p>本例中使用了 event-target 指令指定了下拉刷新的目标为刷新当前 finite 滚动内容，如果设定该值为 module 则下拉刷新的目标为刷新当前模块</p>
+                <p>pullup 标签中使用了 auto 指令，目的是使自然滑动中其滚动惯性也可触发下拉加载动作，而上拉加载则没有使用该特性，这是因为刷新操作并不符合预期，需要保持实际的拖拽下拉才能够触发刷新</p>
+                <p>结合 <a transform=docs-dom-scroll param=section:finite>#finite</a> 仅需几行代码就能轻松构建自动翻页和下拉刷新功能了，下拉刷新可选择刷新 finite 数据或刷新当前模块</p>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

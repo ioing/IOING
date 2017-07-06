@@ -1,0 +1,103 @@
+/* Main SVG */
+
+.letters {
+	position: relative;
+	display: block;
+	min-height: 400px;
+	max-height: 70vh;
+	margin: 0 auto;
+}
+
+
+/* Letter path */
+
+.letter__layer {
+	fill: none;
+	stroke-miterlimit: 3;
+	stroke-linecap: butt;
+	stroke-linejoin: bevel;
+}
+
+
+/* Individual effects/styles */
+
+
+/* Effect 1 */
+
+.letters--effect-1 .letter__layer:first-child {
+	stroke-width: 9px;
+}
+
+.letters--effect-1 .letter__layer:nth-child(2) {
+	stroke-width: 9.5px;
+}
+
+.letters--effect-1 .letter__layer:nth-child(3) {
+	stroke-width: 10px;
+}
+
+
+/* Effect 1 colors */
+
+.color-1 { stroke: #dea521; }
+.color-2 { stroke: #f84242; }
+.color-3 { stroke: #3758a7; }
+.color-4 { stroke: #f79c8c; }
+.color-5 { stroke: #84b5bd; }
+.color-6 { stroke: #feefde; }
+
+
+/* Effect 2 */
+
+.letters--effect-2 .letter__layer:first-child {
+	stroke: #4caf50;
+	stroke-width: 1px;
+}
+
+.letters--effect-2 .letter__layer:nth-child(2) {
+	stroke: #ffeb3b;
+	stroke-width: 4px;
+}
+
+.letters--effect-2 .letter__layer:nth-child(3) {
+	stroke: #e6437b;
+	stroke-width: 10px;
+}
+
+
+/* Effect 3 */
+
+.letters--effect-3 .letter__layer:first-child {
+	-webkit-transform: translate3d(-2px, -2px, 0);
+	transform: translate3d(-2px, -2px, 0);
+	stroke: #dddde6;
+	stroke-width: 10px;
+}
+
+.letters--effect-3 .letter__layer:nth-child(2) {
+	stroke: #eca80e;
+	stroke-width: 6px;
+}
+
+.letters--effect-3 .letter__layer:nth-child(3) {
+	stroke: #607d8b;
+	stroke-width: 8px;
+}
+
+
+/* Effect 4 */
+
+.letters--effect-4 .letter__layer:first-child {
+	stroke: #00966c;
+	stroke-width: 10px;
+}
+
+.letters--effect-4 .letter__layer:nth-child(2) {
+	stroke: #27272d;
+	stroke-width: 4px;
+}
+
+.letters--effect-4 .letter__layer:nth-child(3) {
+	stroke: #fcec9b;
+	stroke-width: 1px;
+}
