@@ -18,7 +18,6 @@ As a second engine, it provides a complete solution of modularization, component
 - 自动数据绑定 Automatic Data Binding
 - 沙盒技术 Sandbox
 - 媲美原生应用 Comparable Native App
-
   - ***物理像素 Physical Pixel***
   - ***模块沙盒 Module Sandbox***
   - ***模块转场 Module Transition***
