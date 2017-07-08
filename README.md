@@ -18,24 +18,24 @@ As a second engine, it provides a complete solution of modularization, component
 - 自动数据绑定 Automatic Data Binding
 - 沙盒技术 Sandbox
 - 媲美原生应用 Comparable Native App
-  - ***物理像素 Physical Pixel***
-  - ***模块沙盒 Module Sandbox***
-  - ***模块转场 Module Transition***
-  - ***动画线程控制 Animation Thread Control***
-  - ***无限滚动 Infinite Page Scroll***
-  - ***DOM 性能 Efficiency of DOM***
-  - ***图片背景流 Background Stream of Image***
-  - ***软键盘高度 Height Adjustment of Virtual Keyboard***
-  - ***光标位置 Cursor Position***
-  - ***滚动参数 Parameter Rolling***
-  - ***模块镜像 Module Mirroring***
-  - ***路由控制 Route Control***
-  - ***多指操控 Manipulation of multi-fingers***
-  - ***异步组件 Asynchronous Components***
-  - ***模块静默刷新 Silent Refresh of Modules***
-  - ***资源生命周期 Life Cycle of Resources***
-  - ***模块生命周期 Life Cycle of Modules***
-  - ***数据驱动视图 Data-Driven View***
+  - *物理像素 Physical Pixel*
+  - *模块沙盒 Module Sandbox*
+  - *模块转场 Module Transition*
+  - *动画线程控制 Animation Thread Control*
+  - *无限滚动 Infinite Page Scroll*
+  - *DOM 性能 Efficiency of DOM*
+  - *图片背景流 Background Stream of Image*
+  - *软键盘高度 Height Adjustment of Virtual Keyboard*
+  - *光标位置 Cursor Position*
+  - *滚动参数 Parameter Rolling*
+  - *模块镜像 Module Mirroring*
+  - *路由控制 Route Control*
+  - *多指操控 Manipulation of multi-fingers*
+  - *异步组件 Asynchronous Components*
+  - *模块静默刷新 Silent Refresh of Modules*
+  - *资源生命周期 Life Cycle of Resources*
+  - *模块生命周期 Life Cycle of Modules*
+  - *数据驱动视图 Data-Driven View*
 
 ## Documentation
 想要了解更多 IOING 实例和文档？请点击：<http://www.ioing.com/#docs-started-ioing>
