@@ -5,62 +5,35 @@ This is a brand new front-end engine which is going to be released officially in
 Really grateful to meet you all here and bring the differences of experience to the community within IOING.
 Continuous updating would be guaranteed of Docs and Website.
 
-## 什么是IOING
-- IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案。
+## 什么是IOING? What is IOING?
+- IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案。IOING is not a simple front-end framework. 
+As a second engine, it provides a complete solution of modularization, componentization, sandbox, memory management and pre loading of contents to improve the differences of HTML5 in comparison with the native App.
 
-## What is IOING
-- IOING is not a simple front-end framework. As a second engine, it provides a complete solution of modularization, componentization, sandbox, memory management and pre loading of contents to improve the differences of HTML5 in comparison with the native App.
+## IOING 特性 Features of IOING
+- 云组件 Cloud Components
+- DOM+：功能标签扩展 DOM Plus: Function Tag Development
+- 自动数据绑定 Automatic Data Binding
+- 沙盒技术 Sandbox
+- 媲美原生应用 Comparable Native App
 
-## IOING 特性
-- 云组件
-- DOM+：功能标签扩展
-- 自动数据绑定
-- 沙盒技术
-- 媲美原生应用
-
-  - ***物理像素***
-  - ***模块沙盒***
-  - ***模块转场***
-  - ***动画线程控制***
-  - ***无限滚动***
-  - ***DOM 性能***
-  - ***图片背景流***
-  - ***软键盘高度***
-  - ***光标位置***
-  - ***滚动参数***
-  - ***模块镜像***
-  - ***路由控制***
-  - ***多指操控***
-  - ***异步组件***
-  - ***模块静默刷新***
-  - ***资源生命周期***
-  - ***模块生命周期***
-  - ***数据驱动视图***
-
-## Features of IOING
-- Cloud Component
-- DOM Plus: Function Tag Development
-- Automatic Data Binding
-- Sandbox
-- Comparable Native App
-  - ***Physical Pixel***
-  - ***Module Sandbox***
-  - ***Module Transition***
-  - ***Animation Thread Control***
-  - ***Infinite Page Scroll***
-  - ***Efficiency of DOM***
-  - ***Background Stream of Image***
-  - ***Height Adjustment of Virtual Keyboard***
-  - ***Cursor Position***
-  - ***Parameter Rolling***
-  - ***Module Mirroring***
-  - ***Route Control***
-  - ***Manipulation of multi-fingers***
-  - ***Asynchronous Components***
-  - ***Silent Refresh of Modules***
-  - ***Life Cycle of Resources***
-  - ***Life Cycle of Modules***
-  - ***Data-Driven View***
+  - ***物理像素 Physical Pixel***
+  - ***模块沙盒 Module Sandbox***
+  - ***模块转场 Module Transition***
+  - ***动画线程控制 Animation Thread Control***
+  - ***无限滚动 Infinite Page Scroll***
+  - ***DOM 性能 Efficiency of DOM***
+  - ***图片背景流 Background Stream of Image***
+  - ***软键盘高度 Height Adjustment of Virtual Keyboard***
+  - ***光标位置 Cursor Position***
+  - ***滚动参数 Parameter Rolling***
+  - ***模块镜像 Module Mirroring***
+  - ***路由控制 Route Control***
+  - ***多指操控 Manipulation of multi-fingers***
+  - ***异步组件 Asynchronous Components***
+  - ***模块静默刷新 Silent Refresh of Modules***
+  - ***资源生命周期 Life Cycle of Resources***
+  - ***模块生命周期 Life Cycle of Modules***
+  - ***数据驱动视图 Data-Driven View***
 
 ## 文档
 想要了解更多 IOING 实例和文档？请点击：<http://www.ioing.com/#docs-started-ioing>
