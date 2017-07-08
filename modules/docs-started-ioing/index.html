@@ -316,7 +316,7 @@
                     <div class=btn-group>
                         <a class="pn download-btn" href="https://github.com/ioing/IOING/archive/master.zip">DOWNLOAD</a>
                         <a class="pn github-btn" href="https://github.com/ioing/IOING">GITHUB</a>
-                        <a class=become-backer-btn transform>赞助</a>
+                        <!-- <a class=become-backer-btn transform>赞助</a> -->
                     </div>
                 </shadow>
             </section>
@@ -428,69 +428,9 @@
                 <blockquote>IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案，真正实现用 H5 技术构建大型 web 视图应用</blockquote>
             </section>
 
-            <!-- <section>
-                <h2>
-                    IOING 的诞生和版本
-                    <small>开源引擎于 2017 年 7 月 7 日第一次对外发布</small>
-                </h2>
-                <p>IOING 最早的雏形诞生于 2013 年，直到 2017 年 7 月正式发布该文档时共历经了 3 次大版本重构和千余次的小版本迭代。它的诞生是为了让 WEB 应用有更好的交互体验和更好的开发体验</p>
-                <p>主要功能的版本支持状况：</p>
-                <scroll class=exp stop-propagation="auto" x=auto y=false>
-                    <scrolling style="min-width:{setting.articleWidth}dp">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>功能</th>
-                                    <th>支持</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>自动双向数据绑定</td>
-                                    <td>>= 1.0</td>
-                                </tr>
-                                <tr>
-                                    <td>模块场景切换</td>
-                                    <td>>= 1.0</td>
-                                </tr>
-                                <tr>
-                                    <td>场景切换动画</td>
-                                    <td>>= 1.0</td>
-                                </tr>
-                                <tr>
-                                    <td>场景内置动画</td>
-                                    <td>>= 3.0</td>
-                                </tr>
-                                <tr>
-                                    <td>沙箱模式</td>
-                                    <td>>= 1.0</td>
-                                </tr>
-                                <tr>
-                                    <td>影子模式</td>
-                                    <td>>= 2.0</td>
-                                </tr>
-                                <tr>
-                                    <td>镜像模块</td>
-                                    <td>>= 1.0</td>
-                                </tr>
-                                <tr>
-                                    <td>模块刷新</td>
-                                    <td>>= 2.0</td>
-                                </tr>
-                                <tr>
-                                    <td>组件化</td>
-                                    <td>>= 1.0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </scrolling>
-                </scroll>
-                <blockquote>需要注意的是 IOING 并不是一个传统的 javascript 库，它是一个解释引擎，但是它同样能够代替一些前端库，如 React、Angular、Vue 等，当然你也可以在 IOING 的模块或组件中使用这些其他类库，但是我们并不建议这样做</blockquote>
-            </section> -->
-
             <section>
                 <h2>媲美原生应用</h2>
-                <p>为了让使用者感知到一个更棒的 WEB 应用，我们必须重视这些工作：</p>
+                <p>为了让使用者感知到一个更棒的 WEB 应用，我们做了很多体验改善工作：</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:{setting.articleWidth}dp">
                         <table>
@@ -500,71 +440,71 @@
                                     <td>脱离 viewport 限制，物理像素让应用显示更细致</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-route>模块沙盒</a></td>
+                                    <td><a transform=docs-module-config param=section/sandbox>模块沙盒</a></td>
                                     <td>使模块独立运作互不干扰</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>模块转场</a></td>
+                                    <td><a transform=docs-module-config param=section/animation>模块转场</a></td>
                                     <td>内置多种模块转场过渡动画，也可自由定制动画</td>
                                 </tr>
-                                <tr>
-                                    <td><a transform=docs-module-route>动画线程控制</a></td>
+                                <!-- <tr>
+                                    <td><a transform>动画线程控制</a></td>
                                     <td>使用动画队列来提升动画性能</td>
-                                </tr>
+                                </tr> -->
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>无限滚动</a></td>
-                                    <td>统一滚动表现，循环利用 GPU 内存的滚动</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>DOM 性能</a></td>
-                                    <td>结合 shandbox 和 shadowroot 来提升 DOM 性能</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>图片背景流</a></td>
-                                    <td>CSS 新增 onload 语法控制背景图显示时机</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>软键盘高度</a></td>
-                                    <td>可获取软键盘谈起时的高度</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>光标位置</a></td>
-                                    <td>可获取光标在输入框中的实际位置</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>滚动参数</a></td>
+                                    <td><a transform=docs-dom-scroll>滚动参数</a></td>
                                     <td>可对滚动的弹性或惯性等参数进行自定义配置</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>模块镜像</a></td>
+                                    <td><a transform=docs-dom-scroll param=section/infnite>无限滚动</a></td>
+                                    <td>统一滚动表现，循环利用 GPU 内存的滚动</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-shadow>DOM 性能</a></td>
+                                    <td>结合 shandbox 和 shadowroot 来提升 DOM 性能</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform>图片背景流</a></td>
+                                    <td>CSS 新增 onload 语法控制背景图显示时机</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-input param=section/keyboardup>软键盘高度</a></td>
+                                    <td>可获取软键盘弹起时的高度</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-input param=section/selectionrangepos>光标位置</a></td>
+                                    <td>可获取光标在输入框中的实际位置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config param=section/mirroring>模块镜像</a></td>
                                     <td>使用该特性能够使不支持 "backdrop-filter" 的手机获得毛玻璃效果</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>路由控制</a></td>
+                                    <td><a transform=docs-module-config param=section/singleflow>路由控制</a></td>
                                     <td>按照模块等级以历史记录的方式进行单向回退，也可纯粹使用历史记录</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>多指操控</a></td>
+                                    <td><a transform=docs-attr-on>多指操控</a></td>
                                     <td>支持 20+ 多指手势操控，操作体验更完整</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>异步组件</a></td>
+                                    <td><a transform=docs-components-tags>异步组件</a></td>
                                     <td>异步载入组件，组件能够独立运作</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>模块静默刷新</a></td>
+                                    <td><a transform>模块静默刷新</a></td>
                                     <td>模块刷新时能够避免出现白屏和闪烁，且能保持阅读痕迹</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>资源生命周期</a></td>
+                                    <td><a transform=docs-module-resources param=section/cache>资源生命周期</a></td>
                                     <td>模块的所有资源都可设置单独的有效生命周期</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>模块生命周期</a></td>
+                                    <td><a transform=docs-module-config param=section/cache>模块生命周期</a></td>
                                     <td>模块自身可设置有效生命周期</td>
                                 </tr>
                                 <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>数据驱动视图</a></td>
+                                    <td><a transform=docs-dom-echo>数据驱动视图</a></td>
                                     <td>通过数据绑定实现数据驱动视图，减少 query 的逻辑操作</td>
                                 </tr>
                             </tbody>
@@ -732,27 +672,27 @@
                     </style>
                     <div class="row">
                         <div class="column">
-                            <h3>Rotate</h3>
+                            <strong>Rotate</strong>
                             <img src="../docs-attr-on/img/rotate.svg">
                         </div>
                         <div class="column">
-                            <h3>Pinch</h3>
+                            <strong>Pinch</strong>
                             <img src="../docs-attr-on/img/pinch.svg">
                         </div>
                         <div class="column">
-                            <h3>Press</h3>
+                            <strong>Press</strong>
                             <img src="../docs-attr-on/img/press.svg">
                         </div>
                         <div class="column">
-                            <h3>Pan</h3>
+                            <strong>Pan</strong>
                             <img src="../docs-attr-on/img/pan.svg">
                         </div>
                         <div class="column">
-                            <h3>Tap</h3>
+                            <strong>Tap</strong>
                             <img src="../docs-attr-on/img/tap.svg">
                         </div>
                         <div class="column">
-                            <h3>Swipe</h3>  
+                            <strong>Swipe</strong>  
                             <img src="../docs-attr-on/img/swipe.svg">
                         </div>
                     </div>

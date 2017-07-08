@@ -9,35 +9,35 @@
     "imitate" : [
         {
             "id" : "1",
-            "name" : "Facebook 首页 feed 流",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
             "href" : "/demo/facebook-feed"
         },
         {
             "id" : "2",
-            "name" : "twitter 动态列表",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
             "href" : "/demo/facebook-feed"
         },
         {
             "id" : "3",
-            "name" : "美团外卖首页",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
             "href" : "/demo/facebook-feed"
         },
         {
             "id" : "4",
-            "name" : "微信消息列表页",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
             "href" : "/demo/facebook-feed"
         },
         {
             "id" : "5",
-            "name" : "instagram",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
             "href" : "/demo/facebook-feed"
@@ -95,7 +95,7 @@
     "module" : [
         {
             "id" : "1",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "模块",
             "href" : "/demo/taobao"
@@ -116,21 +116,7 @@
         },
         {
             "id" : "4",
-            "name" : "准备中",
-            "avtr" : "upload/1.jpg",
-            "type" : "模块",
-            "href" : "/demo/taobao"
-        },
-        {
-            "id" : "5",
-            "name" : "准备中",
-            "avtr" : "upload/1.jpg",
-            "type" : "模块",
-            "href" : "/demo/taobao"
-        },
-        {
-            "id" : "1",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "模块",
             "href" : "/demo/taobao"
@@ -139,42 +125,42 @@
     "developer": [
         {
             "id" : "1",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "2",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "3",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "4",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "5",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "1",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "1",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         },
         {
             "id" : "1",
-            "name" : "准备中",
+            "name" : "to be continued",
             "avtr" : "upload/1.jpg"
         }
 

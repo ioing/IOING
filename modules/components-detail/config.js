@@ -25,7 +25,7 @@ define(function (require, module, exports) {
             sandbox : true,
             cache : 360,
             timeout : 60,
-            animation : device.ui.width < 923 ? "slider" : "flip"
+            animation : device.ui.width < 923 ? "slide" : "flip"
         }
     }
 })
