@@ -51,7 +51,7 @@ As a second engine, it provides a complete solution of modularization, component
 ## Stay In Touch
 关于 IOING 的近况，我们可以通过微信深度讨论。我的微信是：ioingroot
 
-> To learn the latest releases and announcements, welcome to follow the Wechat: 
+> To learn the latest releases and announcements, welcome to follow the Wechat: ioingroot
 
 ## License
 
