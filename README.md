@@ -15,7 +15,7 @@ As a second engine, it provides a complete solution of modularization, component
 ## Features of IOING
 - 云组件 Cloud Components
  ```html
-  <switch-slider></switch-slider>
+  <switch-slider src=http://www.ioing.com/components></switch-slider>
   <switch-slider value=on></switch-slider>
  ```
 - DOM+：功能标签扩展 DOM Plus: Function Tag Development
