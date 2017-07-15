@@ -32,7 +32,7 @@
         font-size: 48dp;
         line-height: 58dp;
         font-weight: 300;
-        letter-spacing: -.2dp;
+        /*letter-spacing: -.2dp;*/
         font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
     }
@@ -518,6 +518,8 @@
                 <h2>云组件</h2>
                 <p>开发者可自由对组件分装为文件，封装后可直接使用组件标签来使用该组件</p>
                 <code-light type=html>
+                    <switch-slider></switch-slider>
+                    <switch-slider value="on"></switch-slider>
                     <range-slider value=50></range-slider>
                     <range-slider value=80 bubble></range-slider>
                 </code-light>
@@ -526,9 +528,11 @@
                         .light { background-color: [active-color] }
                     </style>
                 </template>
+                <switch-slider></switch-slider>
+                <switch-slider value="on"></switch-slider>
+                <p></p>
                 <range-slider value=50 styler=range-slider-style></range-slider>
-                <p>
-                </p>
+                <p></p>
                 <range-slider value=80 bubble styler=range-slider-style></range-slider>
                 <p>组件默认存放在项目根目录的<code>components</code>目录下，当然一些非通用组件也可以放在模块下面，只需加一个<code>path</code>指令即可</p>
                 <code-light type=html>

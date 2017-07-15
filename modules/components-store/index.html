@@ -24,7 +24,7 @@
                     <scrolling style="width:{{discover.components.length * 175 + 15}}dp;">
                         <loop data="discover.components" as value i>
                             <div class="card-info" style="transform:translate({{i * 175 + 15}}dp, 0px) translateZ(0px)" transform="components-detail" param="id/{value.href}">
-                                <div class="card-icon" style="background-image: url({value.href}/preview.jpg)"></div>
+                                <div class="card-icon" style="background-image: onload url({value.href}/preview.jpg)"></div>
                                 <div class="card-title">{value.name}</div>
                                 <div class="card-type-text">{value.free}</div>
                             </div>
@@ -41,9 +41,9 @@
                     <scrolling style="width:{{discover.module.length * 174 + 15}}dp;">
                         <loop data="discover.module" as value i>
                             <div class="card-info" style="transform:translate({{i * 174 + 15}}dp, 0px) translateZ(0px)" transform="{value.href}">
-                                <div class="card-banner" style="background-image: url({value.href}/preview.jpg')"></div>
+                                <div class="card-banner" style="background-image: onload url({value.href}/preview.jpg')"></div>
                                 <div class="card-bar">
-                                    <div class="bar-icon" style="background-image: url({value.href}/icon.jpg)"></div>
+                                    <div class="bar-icon" style="background-image: onload url({value.href}/icon.jpg)"></div>
                                     <div class="bar-title">{value.name}</div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                     <scrolling style="width:{{discover.developer.length * 175 + 15}}dp;">
                         <loop data="discover.developer" as value i>
                             <div class="card-info" style="transform:translate({{i * 175 + 15}}dp, 0px) translateZ(0px)" transform="me" prefetch>
-                                <div class="card-icon" style="background-image: url('./avt/{value.id}.jpg')"></div>
+                                <div class="card-icon" style="background-image: onload url('./avt/{value.id}.jpg')"></div>
                                 <div class="card-title">{value.name}</div>
                             </div>
                         </loop>
@@ -82,7 +82,7 @@
                     <scrolling style="width:{{discover.imitate.length * flowcard.width + 15}}dp;">
                         <loop data="discover.imitate" as value i>
                             <div class="card-info" style="transform:translate({{i * flowcard.width + 15}}dp, 0px) translateZ(0px)" transform="{value.href}">
-                                <div class="card-icon" style="background-image: url('./mod/{value.id}.jpg')"></div>
+                                <div class="card-icon" style="background-image: onload url('./mod/{value.id}.jpg')"></div>
                                 <div class="card-title">{value.name}</div>
                                 <div class="card-type-text">{value.type}</div>
                             </div>

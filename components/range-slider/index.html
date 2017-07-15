@@ -181,6 +181,10 @@
 	components.register('onchange')
 	components.register('onflow')
 
+	node('slider').addEventListener('mousemove', function (e) {
+		e.stopPropagation()
+	}, false)
+
 </script>
 
 <range>

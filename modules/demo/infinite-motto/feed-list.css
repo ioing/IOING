@@ -1,0 +1,91 @@
+.feed infinite {
+  padding: 10dp;
+  padding-left: 56dp;
+  background: #fff;
+  border-bottom: solid #f2f2f2 10dp;
+}
+  .feed infinite .avt {
+    float: left;
+    margin-left: -46dp;
+    width: 36dp;
+    height: 36dp;
+    background: #eee center no-repeat;
+    background-size: cover;
+    border-radius: 60dp;
+  }
+  .feed .bar {
+    position: relative;
+  }
+    .feed .bar time {
+      float: right;
+      color: #b3b3b3;
+      font-size: 16dp;
+      line-height: 30dp;
+      font-weight: bold;
+    }
+    .feed .bar .name {
+      color: #333;
+      font-size: 20dp;
+      font-weight: bold;
+      line-height: 36dp;
+    }
+
+  .feed .text {
+    margin-bottom: 15dp;
+    font-size: 18dp;
+    font-weight: bold;
+  }
+
+  .feed .msg {
+    font-size: 20dp;
+  }
+    .feed .msg b {
+      color: #ed1c24;
+    }
+
+  .feed .banner {
+    width: 100%;
+    margin-top: 10dp;
+    margin-bottom: 10dp;
+    padding-top: 70dp;
+    height: 70dp;
+    box-sizing: content-box;
+    background: #ccc center no-repeat;
+    background-size: cover;
+  }
+    .feed .action {
+      margin-bottom: 10dp;
+    }
+      .feed .action button {
+        float: right;
+        background: #ed5f64;
+        padding: 10dp 25dp;
+        color: #fff;
+        font-size: 18dp;
+        line-height: 1;
+        border-radius: 6dp;
+      }
+      .feed .meta {
+        line-height: 37dp;
+        font-size: 14dp;
+        font-weight: bold;
+      }
+
+    .feed .footerBar {
+      margin-bottom: 10dp;
+    } 
+      .feed .footerBar .praise, .feed .footerBar .comment {
+        margin-right: 20dp;
+        height: 30dp;
+        text-indent: 30dp;
+        font-size: 20dp;
+        color: #999;
+      }
+      .feed .footerBar .praise {
+        background: url('static/svg/feed-icon-heart.svg') no-repeat center left;
+        background-size: auto 80%;
+      }
+      .feed .footerBar .comment {
+        background: url('static/svg/feed-icon-comment.svg') no-repeat center left;
+        background-size: auto 80%;
+      }

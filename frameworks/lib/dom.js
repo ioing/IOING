@@ -9,7 +9,8 @@ define('~/dom', [], function (require, module, exports) {
         token : /[^\w\_\$\.]/,                                               // 非变量关键词切割
         string : /(['"])[^'"]*\1/,                                            // 过滤掉字符
         route : /(\[(.*?)(?=\])\])/g,                                        // 替换活动变量
-        origin : /\{\{([\s\S]*?)(?=\}\})\}\}|\{([\s\S]*?)(?=\})\}/g,
+        origin : /\{([\s\S]*?)(?=\})\}/g,
+        origins : /\{\{([\s\S]*?)(?=\}\})\}\}/g,
         imports : /[^\.\]]\s*[@|$]import\s*\(\s*["']([^'"\s]+)["']\s*\)/g
     }
 
@@ -667,6 +668,18 @@ define('~/dom', [], function (require, module, exports) {
                         this.createTextNode(root, node, value, scope)
                     }, uuid + ':text')
 
+            // template for contentText
+            
+            if ( text.html ) {
+
+                root.uuid = this.target(node)
+                this.compile(root.clone(), this.parser(text.html), scope)
+
+                return
+            }
+
+            // createTextNode
+
             if ( this.DOMS[uuid] ) {
 
                 // innerText
@@ -865,6 +878,29 @@ define('~/dom', [], function (require, module, exports) {
             return result.result
         },
 
+        getOriginType : function (origin) {
+            var html = false
+            var watch = true
+
+            // #
+
+            switch ( origin.charAt(0) ) {
+                case '#':
+                    origin = origin.substr(1)
+                break
+                case '!':
+                    origin = origin.substr(2)
+                    html = true
+                break
+            }
+
+            return {
+                html : html,
+                watch : watch,
+                origin : origin
+            }
+        },
+
         /**
          * 获取动态值
          * @param  {Object}
@@ -876,28 +912,38 @@ define('~/dom', [], function (require, module, exports) {
          * @return {String}
          */
         variable : function (root, scope, value, callback, uuid, type) {
+            var origin
+            var originType = {}
+
+            // all {variable} code
+            
             if ( value.indexOf('{') !== -1 ) {
-                value = value.replace(REGEXP.origin, function (content, origin, magic) { 
-                    var result
-                    
-                    if ( magic ) {
-                        magic = magic.split('|')
-                        origin = magic[0]
-                        result = this.getValueByMagic(scope, magic)
-                    } else {
-                        if ( origin.indexOf('#') == 0 ) {
-                            origin = origin.substr(1)
-                            uuid = null
-                        }
-                        result = this.getValueByRoute(scope, origin)
-                    }
 
-                    if ( callback && uuid ) {
-                        this.watch(root, scope, origin, callback, uuid, type)
-                    }
-
-                    return result
+                value = value.replace(REGEXP.origins, function (content, origins) { 
+                    originType = this.getOriginType(origins)
+                    origin = originType.origin
+                    return this.getValueByRoute(scope, origin)
+                }.bind(this)).replace(REGEXP.origin, function (content, origins) { 
+                    originType = this.getOriginType(origins)
+                    origins = originType.origin.split('|')
+                    origin = origins[0]
+                    return this.getValueByMagic(scope, origins)
                 }.bind(this))
+
+
+                // callback
+
+                if ( callback && uuid && originType.watch == true) {
+                    this.watch(root, scope, origin, callback, uuid, type)
+                }
+
+                // html type
+                
+                if ( originType.html == true ) {
+                    value = {
+                        html : value
+                    }
+                }
             }
 
             return value

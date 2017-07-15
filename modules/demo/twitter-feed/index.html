@@ -1,0 +1,119 @@
+<var active>
+	'home'
+</var>
+
+<header>
+	<nav>
+		<ul>
+			<li class="{{active == 'home' ? 'active' : ''}}"><a><i class="icon-home"></i></a></li>
+			<li on-tap="showTip()"><a><i class="icon-search"></i></a></li>
+			<li on-tap="showTip()"><a><i class="icon-notif"></i></a></li>
+			<li on-tap="showTip()"><a><i class="icon-message"></i></a></li>
+		</ul>
+	</nav>
+</header>
+
+<scroll fullscreen id="scroller" class="feed" finite cycles="5" item-min-size=400 template="feed" data=feed>
+	<pulldown threshold=50>
+        <pullstart>下拉刷新</pullstart>
+        <pulling>松手刷新</pulling>
+        <pullend>
+            <div class="load6">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+                <div class="bounce4"></div>
+            </div>
+        </pullend>
+        <pullover>没有更多了</pullover>
+    </pulldown>
+    <pullup threshold=50 auto>
+        <pullstart>上拉加载更多</pullstart>
+        <pulling>松手加载更多</pulling>
+        <pullend>
+            <div class="load6">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+                <div class="bounce4"></div>
+            </div>
+        </pullend>
+        <pullover>没有更多了</pullover>
+    </pullup>
+</scroll>
+
+<template feed>
+	<div class="feed-box">
+		<div class="avt" style="background-image: url('test_upload/user/{uid}.jpg')" on-tap="showTip()"></div>
+		<div class="bar" on-tap="showTip()">
+			<time>{time}</time>
+			<span class="name">{name}</span>
+			<if certification><span class="certification"></span></if>
+			<if at><span class="at">{at}</span></if>
+		</div>
+
+		<div class="text">{!#text}</div>
+		<div class="content">
+
+			<if picture>
+				<div class="banner-box {{desc ? 'hasdesc' : ''}}">
+					<div class="banner" style="background-image: url('{picture}')" on-tap="showTip()"></div>
+					<if desc>
+						<div class="desc">
+							{!#desc}
+							<if link><div class="link">{link}</div></if>
+						</div>
+					</if>
+				</div>
+			</if>
+
+			<div class="footerBar" on-tap="showTip()">
+				<div class="interactive">
+					<button class="comment">{content.reply}</button>
+					<button class="praise">{content.retweet}</button>
+					<button class="like">{content.like}</button>
+					<button class="msg"> </button>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<div uuid=tip class="tip-overlay" on-tap="showTip(1)">
+	<shadow>
+		<style>
+			.c {
+				margin:0 auto;
+				max-width:600dp;
+				padding-top:40vh;
+				text-align:center;
+				font-size:16dp;
+			}
+			button {
+				padding: 3dp 25dp;
+				border-radius: 20dp;
+				color: #fff;
+				font-size:16dp;
+				background-color: rgb(27, 149, 224);
+			}
+		</style>
+		<div class="c">
+			<p>当前演示只包含 Tweet 时间轴</p>
+			<p>
+				<small>主要技术：Finite Scroll</small>
+			</p>
+			<br>
+			<button><span>知道了</span></button>
+		</div>
+	</shadow>
+</div>
+
+<script>
+	function showTip (x) {
+		if (x) {
+			node('tip').hide()
+		} else {
+			node('tip').show()
+		}
+	}
+</script>

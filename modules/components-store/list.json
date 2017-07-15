@@ -16,10 +16,10 @@
         },
         {
             "id" : "2",
-            "name" : "to be continued",
+            "name" : "twitter 时间轴动态",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
-            "href" : "/demo/facebook-feed"
+            "href" : "/demo/twitter-feed"
         },
         {
             "id" : "3",
@@ -33,7 +33,7 @@
             "name" : "to be continued",
             "avtr" : "upload/1.jpg",
             "type" : "演示",
-            "href" : "/demo/facebook-feed"
+            "href" : "/demo/infinite-motto"
         },
         {
             "id" : "5",
@@ -95,17 +95,10 @@
     "module" : [
         {
             "id" : "1",
-            "name" : "to be continued",
+            "name" : "Twitter-一个由 Finite Scroll 创建的时间轴示范",
             "avtr" : "upload/1.jpg",
             "type" : "模块",
-            "href" : "/demo/taobao"
-        },
-        {
-            "id" : "2",
-            "name" : "天气预报-带动画的天气预报模块",
-            "avtr" : "upload/1.jpg",
-            "type" : "模块",
-            "href" : "/demo/localtion-weather"
+            "href" : "/demo/twitter-feed"
         },
         {
             "id" : "3",
@@ -116,10 +109,17 @@
         },
         {
             "id" : "4",
-            "name" : "to be continued",
+            "name" : "循环的格言",
             "avtr" : "upload/1.jpg",
             "type" : "模块",
-            "href" : "/demo/taobao"
+            "href" : "/demo/infinite-motto"
+        },
+        {
+            "id" : "2",
+            "name" : "天气预报-带动画的天气预报模块",
+            "avtr" : "upload/1.jpg",
+            "type" : "模块",
+            "href" : "/demo/localtion-weather"
         }
     ],
     "developer": [

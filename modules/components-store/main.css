@@ -114,6 +114,7 @@ section > h3 {
 	margin: 0;
 	padding: 18dp 0 12dp;
 	color: #000;
+	font-size: 18dp;
 	text-align: left;
 	background: none;
 }
@@ -277,7 +278,7 @@ scroll.flow-card.photo-card {
 		width: 159dp;
 		height: 283dp;
 		border: 1px solid rgba(0,0,0,.15);
-		background-size: 104% auto;
+		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		background-position: center;
 		background-clip: border-box;

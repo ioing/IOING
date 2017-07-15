@@ -48,7 +48,7 @@ define([], function (require, module, exports) {
                                 },
                                 {
                                     color: '#ff5252',
-                                    background: '#fff'
+                                    background: '#f1f1f1'
                                 },
                                 {
                                     color: '#00bc9c',
@@ -98,27 +98,10 @@ define([], function (require, module, exports) {
                                 // },
                                 {
                                     color: '#43d297',
-                                    background: '#43d297'
+                                    background: '#f1f1f1'
                                 }
                             ]
 
-                        // if ( device.ui.width < 858 ) {
-                        //     theme = [
-                        //         {
-                        //             color: '#007fff',
-                        //             background: '#fff'
-                        //         }
-                        //     ]
-                        // }
-
-                        if ( device.os.wechat ) {
-                            theme = [
-                                {
-                                    color: '#007fff',
-                                    background: '#1c1b20'
-                                }
-                            ]
-                        }
 
                         var i = 0
 

@@ -1,0 +1,168 @@
+<style>
+shadow-root, .grid {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+scroll {
+	width: 100%;
+	height: 100%;
+	background: #000;
+}
+
+@if (width) {
+	scroll {
+		width: [width]dp;
+	}
+}
+
+@if (height) {
+	scroll {
+		height: [height]dp;
+	}
+	.grid dl {
+		height: [height]dp !important;
+	}
+}
+
+/*注意："<>" 的执行符号不可做变量重复在 "<>" 中再带入*/
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.grid dl {
+	position: relative;
+	width: 100%;
+	height: calc(50vw);
+	overflow: hidden;
+}
+
+.grid dl, .icon-content div:first-child {
+	margin-bottom: 4dp;
+}
+
+.icon, .banner {
+	width: 100%;
+	height: 100%;
+	background-color: #444;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-sizing: border-box;
+}
+
+.icon {
+	padding-bottom: 3dp;
+}
+
+.icon-content {
+	position: relative;
+	width: 33.3%;
+	height: 50%;
+}
+
+.banner-content {
+	position: relative;
+	width: 66.6%;
+	height: 100%;
+}
+
+.right.banner-content {
+	padding-left: 3dp;
+}
+
+.right.icon-content {
+	padding-left: 3dp;
+}
+
+#scroller {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.viewport-flip {
+	perspective: 1000;
+	position: absolute;
+}
+
+.flip {
+	transform: translateX(0);
+	animation-duration: 1000ms;
+	animation-fill-mode: forwards;
+	animation-timing-function: ease-out;
+}
+
+.flip.front {
+	animation-name: flipfront;
+	transform: rotateX(0deg);
+}
+
+.flip.back {
+	animation-name: flipback;
+	transform: rotateX(180deg);
+}
+
+@keyframes flipfront {
+    0% { transform: rotateX(180deg); }
+    50% { transform: rotateX(90deg) scale(.8); opacity: .1; }
+    100% { transform: rotateX(0deg); }
+}
+
+@keyframes flipback {
+    0% { transform: rotateX(0deg); }
+    50% { transform: rotateX(90deg) scale(.8); opacity: .1; }
+    100% { transform: rotateX(180deg); }
+}
+
+@media screen and (max-width: 800px) {
+	.grid dl {
+		height: calc(33.3vh);
+	}
+}
+
+</style>
+
+<if inject>
+	<include inject></include>
+</if>
+
+<div class="grid">
+
+	<scroll uuid="scroller" stop-propagation="auto" infinite data-origin="{{origin}}" cycles="7" item-min-size="480" limit="50" template="grid" data="list"></scroll>
+
+	<template grid>
+
+			<dl class="cl">
+				<dd class="banner-content left">
+					<div class="banner" style="background-image: url(./test_upload/{{parseInt(Math.random(0,27)*10)}}.jpg)"></div>
+				</dd>
+				<dd class="icon-content right">
+					<div class="icon" style="background-image: url(./test_upload/{{parseInt(Math.random(0,27)*10)}}.jpg)"></div>
+					<div class="icon" style="background-image: url(./test_upload/{{parseInt(Math.random(0,27)*10)}}.jpg)"></div>
+				</dd>
+			</dl>
+
+			<dl class="cl">
+				<dd class="icon-content left">
+					<div class="icon" style="background-image: url(./test_upload/{{parseInt(Math.random(0,27)*10)}}.jpg)"></div>
+					<div class="icon" style="background-image: url(./test_upload/{{parseInt(Math.random(0,27)*10)}}.jpg)"></div>
+				</dd>
+				<dd class="banner-content right">
+					<div class="banner" style="background-image: url(./test_upload/{{parseInt(Math.random(0,27)*10)}}.jpg)"></div>
+				</dd>
+			</dl>
+
+	</template>
+	
+</div>

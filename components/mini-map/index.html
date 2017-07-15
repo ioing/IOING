@@ -1,0 +1,66 @@
+<var setting>
+	{
+		x : x || -254,
+		y : y || -194,
+		scale : scale || 3,
+		width : width || 235,
+		height : height || 321,
+		image : image || 'ermine.jpg'
+	}
+</var>
+
+<style>
+shadow-root { display: block; zoom: 1; }
+	shadow-root:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; overflow: hidden; }
+scroll {
+	float: left;
+	margin: 0 10dp 10dp 0;
+	width: [width]dp;
+	height: [height]dp;
+	top: 0;
+	left: 0;
+	background: #555;
+	overflow: hidden;
+}
+
+scrolling {
+	width: @(width * scale)dp;
+	height: @(height * scale)dp;
+	background: url([setting.image]);
+	background-size: 100%;
+	tap-highlight-color: rgba(0,0,0,0);
+	transform: translateZ(0);
+	user-select: none;
+	text-size-adjust: none;
+}
+
+scrollbar {
+	float: left;
+	width: 235dp;
+	height: 321dp;
+	background: url([setting.image]);
+	background-size: 100%;
+}
+
+indicator {
+	position: absolute;
+	z-index: 1;
+	border: 1dp solid #fe0;
+	box-shadow: 0 0 5dp #000;
+	background: rgba(255,255,255,0.15);
+	transform: translateZ(0);
+}
+</style>
+
+<scroll uuid="minimap" x y start-x={setting.x} start-y="{setting.y}" scrollbars="false" fade-scrollbars="false" indicator free interactive>
+	<scrolling></scrolling>
+</scroll>
+
+<scrollbar>
+	<indicator></indicator>
+</scrollbar>
+
+<script>
+	components.scroller = node('minimap').scroller
+	components.ontrigger('onScroll')
+</script>

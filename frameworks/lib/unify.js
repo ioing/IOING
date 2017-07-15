@@ -40,7 +40,7 @@
                         + 'scroll { position: relative; padding: 0; border: 0; overflow: hidden } \n'
                         + 'scroll[fullscreen] { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 2 } \n'
                         + 'scroll > scrolling, scroll > scrolling > infinite { display: block; position: absolute; z-index: 2; backface-visibility: hidden } \n'
-                        + 'scroll > scrolling { min-width: 100%; min-height: 100%; width: auto; height: auto } \n'
+                        + 'scroll > scrolling { min-width: 100%; min-height: 100% } \n'
                         + 'scroll[y=false] > scrolling { position: relative; display: inline-block } \n'
                         + 'scroll > scrolling > infinite { top: 0; left: 0; width: 100% } \n'
                         + 'scroll > scrolling > infinite > fragment { display: block; position: relative; z-index: 2; width: 100% } \n'

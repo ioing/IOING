@@ -9,6 +9,7 @@ define('~/scroll', [], function (require, module, exports) {
 	 * @type {Object}
 	 */
 	var UI = device.ui
+	var DPR = devicePixelRatio
 
 	/**
 	 * 设备属性描述
@@ -775,7 +776,6 @@ define('~/scroll', [], function (require, module, exports) {
 			},
 
 			resetPosition : function (time) {
-				
 				var bouncing = this.isBounce()
 
 				time = time || 0
@@ -1890,10 +1890,10 @@ define('~/scroll', [], function (require, module, exports) {
 					
 					distances = current - start,
 					direction = distances < 0 ? -1 : 1
-					speed = Math.min(Math.abs(distances) / time, this.options.speedLimit)
-					speed = this.speedM == undefined ? speed : Math.min(this.speedM, speed)
+					speed = Math.min(Math.abs(distances) * DPR / time, this.options.speedLimit)
+					speed = this.speedM == undefined ? speed : Math.min(this.speedM * DPR, speed)
 					deceleration = Math.max(this.options.deceleration - this.acceleration, 0.003)
-					distance = speed * speed / deceleration / 2 * direction
+					distance = speed * speed / deceleration / DPR / 2 * direction
 					duration = speed / deceleration * this.options.speedRate
 					destination = current + distance
 
@@ -3597,6 +3597,14 @@ define('~/scroll', [], function (require, module, exports) {
 						}
 
 						this._refresh()
+
+						// set start pos
+						
+						if ( this.options.startY || this.options.startY ) {
+							setTimeout(function () {
+								this._refresh()
+							}.bind(this), 0)
+						}
 					})
 				},
 

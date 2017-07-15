@@ -30,12 +30,13 @@ a:hover {
 }
 
 p {
-    margin: 15dp 0 18dp;
+    margin: 12dp 0;
 	font-size: 15dp;
     font-style: normal;
     line-height: 1.59091;
     letter-spacing: 0;
     word-spacing: 0.05em;
+    word-wrap: break-word;
 }
 
 ul, ol, dl {

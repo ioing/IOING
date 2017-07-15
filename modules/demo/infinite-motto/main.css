@@ -1,0 +1,24 @@
+
+body {
+	background-color: #f2f2f2;
+}
+#scroller {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	background: #f2f2f2;
+	max-width: 600dp;
+	margin: 0 auto;
+}
+
+scrolling {
+	tap-highlight-color: rgba(0,0,0,0);
+	transform: translateZ(0);
+	user-select: none;
+	text-size-adjust: none;
+}

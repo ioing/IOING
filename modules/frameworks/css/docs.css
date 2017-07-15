@@ -53,7 +53,8 @@ section h3::before {
     width: 12dp;
     height: 12dp;
     background-color: [active-color];
-    margin: 3dp auto auto -18dp;
+    margin: 4dp auto auto -18dp;
+    border-radius: 12dp;
     /*border-top-left-radius: 100%;*/
     /*border-bottom-right-radius: 100%;*/
 }
@@ -61,7 +62,7 @@ section h3::before {
 section h1 small, section h2 small {
     display: block;
     margin-bottom: -10dp;
-    color: slategray;
+    color: #657786;
     font-size: 12dp;
     font-weight: normal;
 }
@@ -102,10 +103,7 @@ blockquote, blockquote p {
 blockquote {
     margin: 0 0 20dp;
     padding: 10dp 15dp;
-    /*background: #fceec1;*/
-    /*background-image: linear-gradient(top,#fceec1 0,#f7e8bc 100%); */
     font-size: 13dp;
-    /*text-shadow: 0 1dp 1dp rgba(255, 255, 255, .25); */
     border: 1dp solid [active-color];
     border-radius: 6dp;
 }
@@ -183,7 +181,7 @@ scroll.exp {
 
     tr th, tr td {
         padding: 8dp 10dp;
-        color: #444;
+        color: #333;
         font-size: 13.3dp;
         line-height: 17.1dp;
         text-align: left;
