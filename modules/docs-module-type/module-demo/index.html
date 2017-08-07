@@ -2,11 +2,15 @@
     .imodule-show {
         position: relative;
         width: 100%;
+        padding: 25dp 0;
+        margin-top: 10dp;
+        border-top: 1px solid #e8e8e8;
+        border-bottom: 1px solid #e8e8e8;
     }
     .idevice {
         position: relative;
         display: inline-block;
-        margin: 0 0 15dp;
+        margin: 0;
         padding: 12dp;
         width: 50%;
         min-width: 300dp;
@@ -117,16 +121,17 @@
     }
 
     .iscreen .ibody p {
-        color: [active-color];
-        margin-bottom: 5dp;
+        color: #ddd;
+        font-size: 14dp;
+        margin-bottom: 10dp;
     }
 
     .iscreen .ibody span {
         display: block;
-        margin: 0 auto 12dp;
+        margin: 0 auto 21dp;
         width: 100%;
-        height: 2dp;
-        background: [active-color];
+        height: 1dp;
+        background: #e8e8e8;
     }
 
     .view-tip {
@@ -138,16 +143,64 @@
     .view-tip li {
         text-align: right;
         width: 150dp;
-        border-bottom: 1px solid [active-color];
+        border-bottom: 1px solid #e8e8e8;
         margin-bottom: 12dp;
     }
 
     .view-tip a {
         font-size: 16dp;
-        color: [active-color]
+        color: #e8e8e8;
     }
 
+    .view-tip li.active {
+        border-color: [active-color];
+    }
+
+    .view-tip li.active a {
+        color: [active-color];
+    }
+
+    .tips {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 17;
+    }
+
+    .tips.none {
+        display: none;
+    }
+
+    .s-header, .s-footer {
+        position: absolute;
+        z-index: 99;
+        top: -5dp;
+        right: -5dp;
+        left: -5dp;
+        height: 50dp;
+        border: 2px solid [active-color];
+    }
+    .s-footer {
+        top: auto;
+        bottom: -5dp;
+    }
+
+    .s-child-body {
+        position: absolute;
+        z-index: 99;
+        top: 35dp;
+        bottom: 35dp;
+        right: -5dp;
+        left: -5dp;
+        border: 2px solid [active-color];
+    }
 </style>
+
+<var s>
+    {
+        nav : "main"
+    }
+</var>
 <div class="imodule-show">
     <div class="idevice">
         <div class="ieye"><i></i></div>
@@ -173,16 +226,30 @@
                 <span></span>
             </div>
             <div class="ifooter">Footer</div>
+
+            <div class="tips {{s.nav=='main' ? 'block' : 'none'}}">
+                <div class="s-header"></div>
+                <div class="s-footer"></div>
+            </div>
+
+            <div class="tips {{s.nav=='child' ? 'block' : 'none'}}">
+                <div class="s-child-body"></div>
+            </div>
+
         </div>
         <div class="itouch"></div>
     </div>
     <div class="view-tip">
         <ul>
-            <li><a>主模块</a></li>
-            <li><a>子模块</a></li>
-            <li><a>复合视图模块</a></li>
-            <li><a>独立视图模块</a></li>
+            <li class="{{s.nav=='main' ? 'active' : ''}}" on-tap="c(main)"><a>主模块</a></li>
+            <li class="{{s.nav=='child' ? 'active' : ''}}" on-tap="c(child)"><a>子模块</a></li>
         </ul>
     </div>
 </div>
+
+<script>
+    function c (n) {
+        scope.s.nav = n
+    }
+</script>
                 

@@ -9,8 +9,7 @@ define('~/dom', [], function (require, module, exports) {
         token : /[^\w\_\$\.]/,                                               // 非变量关键词切割
         string : /(['"])[^'"]*\1/,                                            // 过滤掉字符
         route : /(\[(.*?)(?=\])\])/g,                                        // 替换活动变量
-        origin : /\{([\s\S]*?)(?=\})\}/g,
-        origins : /\{\{([\s\S]*?)(?=\}\})\}\}/g,
+        origins : /\{\{([\s\S]*?)(?=\}\})\}\}|\{([\s\S]*?)(?=\})\}/g,
         imports : /[^\.\]]\s*[@|$]import\s*\(\s*["']([^'"\s]+)["']\s*\)/g
     }
 
@@ -99,6 +98,15 @@ define('~/dom', [], function (require, module, exports) {
         // helper
         
         helper : {
+            encode : function (s) {
+                return typeof s === 'string' ? encodeURIComponent(s) : s
+            },
+            decode : function (s) {
+                return typeof s === 'string' ? decodeURIComponent(s) : s
+            },
+            replace : function (s, r, p) {
+                return typeof s === 'string' ? s.replace(r, p) : s
+            }
         },
 
         /**
@@ -819,17 +827,15 @@ define('~/dom', [], function (require, module, exports) {
                 if ( i == 0 ) {
                     result = scope.getValueByRoutes(magic[0].splitCells(/\,/))
                 } else {
-                    handle = this.helper[magic[i]]
+                    handle = this.helper[magic[i]] || scope.helper[magic[i]]
 
                     if ( handle ) {
-                        result = [handle.apply(null, result)]
-                    } else {
-                        result = [undefined]
+                        result = handle.apply(null, result)
                     }
                 }
             }
 
-            return result[0]
+            return result
         },
 
         /**
@@ -857,7 +863,7 @@ define('~/dom', [], function (require, module, exports) {
 
             // result
             
-            result = scope.getFunctionByRoutes(origin, this.Function[origin])
+            result = scope.getFunctionByRoute(origin, this.Function[origin])
 
             // helper
             
@@ -913,33 +919,44 @@ define('~/dom', [], function (require, module, exports) {
          */
         variable : function (root, scope, value, callback, uuid, type) {
             var origin
-            var originType = {}
+            var identity = {}
 
             // all {variable} code
             
             if ( value.indexOf('{') !== -1 ) {
 
-                value = value.replace(REGEXP.origins, function (content, origins) { 
-                    originType = this.getOriginType(origins)
-                    origin = originType.origin
-                    return this.getValueByRoute(scope, origin)
-                }.bind(this)).replace(REGEXP.origin, function (content, origins) { 
-                    originType = this.getOriginType(origins)
-                    origins = originType.origin.split('|')
-                    origin = origins[0]
-                    return this.getValueByMagic(scope, origins)
+                value = value.replace(REGEXP.origins, function (content, double, single) { 
+
+                    // get origin
+                    
+                    if ( single ) {
+                        identity = this.getOriginType(single)
+                        single = identity.origin.split('|')
+                        origin = single[0]
+                    } else if ( double ) {
+                        identity = this.getOriginType(double)
+                        origin = identity.origin
+                    }
+
+                    // watch
+
+                    if ( callback && uuid && identity.watch == true) {
+                        this.watch(root, scope, origin, callback, uuid, type)
+                    }
+
+                    // return
+                    
+                    if ( single ) {
+                        return this.getValueByMagic(scope, single)
+                    } else if (double) {
+                        return this.getValueByRoute(scope, origin)
+                    }
+
                 }.bind(this))
-
-
-                // callback
-
-                if ( callback && uuid && originType.watch == true) {
-                    this.watch(root, scope, origin, callback, uuid, type)
-                }
 
                 // html type
                 
-                if ( originType.html == true ) {
+                if ( identity.html === true ) {
                     value = {
                         html : value
                     }
@@ -988,10 +1005,13 @@ define('~/dom', [], function (require, module, exports) {
                     var k = origin[i]
 
                     if ( k ) {
+                        var prop = k.split(REGEXP.key)[0]
 
                         // 无效源
-                        
-                        if ( i == 0 && scope[k.split(REGEXP.key)[0]] == undefined ) break
+
+                        if ( scope[prop] === undefined ) {
+                            scope[prop] = null
+                        }
 
                         // 存在有效watch对象检测
                         
@@ -1040,7 +1060,7 @@ define('~/dom', [], function (require, module, exports) {
 
             //检测 watch 对象属性是否存在
 
-            if ( !object || typeof object !== 'object' || object[prop] === undefined || typeof object.watch !== 'function' ) {
+            if ( !object || typeof object !== 'object' || typeof object.watch !== 'function' ) {
 
                 // App.console.warn('SCOPE[' + route + '] is not defined')
 
@@ -1331,7 +1351,7 @@ define('~/dom', [], function (require, module, exports) {
 
                             // transform module
 
-                            App.transform.to(id, param)
+                            App.transform.to(id, param, null, { touches : event })
 
                             // stopPropagation
 
@@ -1381,9 +1401,9 @@ define('~/dom', [], function (require, module, exports) {
                                 App._EXISTS = -1
 
                                 if ( target ) {
-                                    window.top.open(url, target)
+                                    top.open(url, target)
                                 } else {
-                                    window.top.location.href = url
+                                    top.location.href = url
                                 }
                             }, 200)
 
@@ -1406,7 +1426,12 @@ define('~/dom', [], function (require, module, exports) {
 
                 case 'style':
 
-                    value = this.css.compile(this.module.id, value + ';', scope, {path:root.path, descendant:false}, dom)
+                    value = this.css.compile(this.module.id, value + ';', scope, 
+                            {
+                                sid : this.spath(root.id),
+                                path : root.path, 
+                                descendant : false
+                            }, dom)
 
                 break
 
@@ -1525,16 +1550,17 @@ define('~/dom', [], function (require, module, exports) {
                         switch (scopeEventName) {
                             // on-event = 'events | function(event)'
                             case 'event':
+                            case 'events':
                                 scopeNamedEvent = scopeNamedEvent.split('|')
-                                scopeEventName = scopeNamedEvent[0]
-                                scopeNamedEvent = scopeNamedEvent[1]
+                                scopeEventName = scopeNamedEvent[1]
+                                scopeNamedEvent = scopeNamedEvent[0]
 
                             break
                         }
 
                         // EVENT
 
-                        switch (scopeEventName) {
+                        switch (scopeEventName.split(' ')[0]) {
 
                             case 'pan':
                             case 'panstart':
@@ -1779,8 +1805,7 @@ define('~/dom', [], function (require, module, exports) {
                     // DEBUG
 
                     if ( id == null ) {
-                        App.console.error('<VAR ?> [name] is not defined')
-                        App.console.dir([node])
+                        this.debug(name, 'name=?', true)
                     }
 
                     scope[id] = scope.getValueByRoute(val)
@@ -2179,7 +2204,7 @@ define('~/dom', [], function (require, module, exports) {
                             scrollY : this.sign(name, command, 'y', -1, null, true, true),
                             freeScroll : this.sign(name, command, 'free', -1, null, true, false),
                             stepLimit : this.sign(name, command, 'step-limit', -1, null, false, 120),
-                            speedLimit : this.sign(name, command, 'speed-limit', -1, null, false, 7),
+                            speedLimit : this.sign(name, command, 'speed-limit', -1, null, false, 4),
                             speedRate : this.sign(name, command, 'speed-rate', -1, null, false, 1),
                             scrollbars : this.sign(name, command, 'scrollbars', -1, null, true, true),
                             indicator : this.sign(name, command, 'indicator', -1, null, true, null),
@@ -2270,7 +2295,7 @@ define('~/dom', [], function (require, module, exports) {
                                     endflag : dataEnds, 
                                     turnover : turnover
                                 }, function (row, end) {
-                                    if ( row == null && end == false ) that.debug(name, 'data:{Array}', null)
+                                    if ( row == null && end == false ) that.debug(name, 'data={Array}', null)
 
                                     // 回调给滚动组件
                                     
@@ -2296,6 +2321,8 @@ define('~/dom', [], function (require, module, exports) {
 
                                     if ( !data ) return
 
+                                    data.__proto__ = scope
+
                                     data._index = key
 
                                     // uuid 多滚动条
@@ -2309,7 +2336,7 @@ define('~/dom', [], function (require, module, exports) {
 
                                     // compile
                                     
-                                    that.compile(root, source.cloneNode(true), Object.create(scope).extend(data))
+                                    that.compile(root, source.cloneNode(true), data)
 
                                     // Fragment
                                     
@@ -2381,6 +2408,8 @@ define('~/dom', [], function (require, module, exports) {
 
                                     if ( !data ) return
 
+                                    data.__proto__ = scope
+
                                     data._index = key
 
                                     // uuid 多滚动条
@@ -2398,7 +2427,7 @@ define('~/dom', [], function (require, module, exports) {
 
                                         // compile
                                         
-                                        that.compile(root, source.cloneNode(true), Object.create(scope).extend(data))
+                                        that.compile(root, source.cloneNode(true), data)
 
                                     }
 
@@ -2468,14 +2497,28 @@ define('~/dom', [], function (require, module, exports) {
                 case 'SCRIPT':
                     node.command = true
 
-                    var rooot = {}.extend(root)
                     var src = this.commands('src', node).value
+                    var type = this.commands('type', node).value
                     var global = this.commands('global', node).key
                     var normal = this.commands('normal', node).key
+                    var rooot = {}.extend(root)
                     var imports = global ? [] : null
                     var prepath = App.config.root + (root.scopeid ? root.path : 'modules/' + this.module.id)
                     var doorplate = this.commands('name', node).value || 'default'
                     var javascript = node.textContent
+
+                    // scope
+                    
+                    if ( type === "scope" ) {
+
+                        new this.sandbox.window.Function('scope', javascript + '\n')(scope)
+
+                        node.textContent = null
+
+                        break
+                    }
+
+                    // run script
 
                     this.mission[rooot.order].scripts.push(function (window) {
 
@@ -2749,11 +2792,16 @@ define('~/dom', [], function (require, module, exports) {
                     dom.extendProperty("reflow", function () {
                         that.reflow(dom.previousScroller)
                     })
+
+                    // 简 on
+                    
                     dom.extendProperty("register", function (evt) {
                         if ( dom[evt] == undefined ) {
                             dom.extendProperty(evt, function (callback) {
                                 dom.bind(evt, callback)
                             })
+                        } else {
+                            App.console.error('components register', 'componentsError', '"' + evt + '" is token')
                         }
                     })
 
@@ -3107,7 +3155,7 @@ define('~/dom', [], function (require, module, exports) {
             // Performance alerts
             
             if ( this.countTime > (uuid == 0 ? 100 : 10) ) {
-                App.console.warn('<' + node.nodeName.toLowerCase() + '> Consuming too long', 'Performance alerts', this.countTime/1000 + 's')
+                App.console.warn('<' + node.nodeName.toLowerCase() + '> Consuming too long', 'Performance warning', this.countTime/1000 + 's')
             }
 
             return this.DOMS[uuid]
@@ -3199,7 +3247,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Object}
          */
         debug : function (tagname, type, e, end) {
-            App.console.error('[' + type + ']', '<' + tagname + '>', 'is not defined')
+            App.console.error('<' + tagname + ' ' + type + '=?>', 'DOMError', 'is not defined')
             if ( e ) App.console.dir([e])
             if ( end ) throw '<' + tagname + '> error'
         }

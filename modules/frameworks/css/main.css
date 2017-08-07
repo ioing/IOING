@@ -103,6 +103,10 @@ body {
 		}
 	}
 
+	.more-nav {
+		display: none;
+	}
+
 	.site-nav {
 		float: right;
 		margin-left: 48dp;

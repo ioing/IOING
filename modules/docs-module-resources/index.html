@@ -71,8 +71,9 @@
                         }
                     })
                 </code-light>
-                <p>资源仓库中如果对应的资源类型不存在，则可省略不写</p>
+                <p>资源仓库中如果对应的资源类型不存在，该类型则可缺省</p>
                 <blockquote>
+                    <h5>清晰的资源管控</h5>
                     <p>资源库的目的是提高代码的可读性，其能够被可知该模块的所有引用资源，另外该模块资源库中的资源也能够共享给其他模块。资源库能够有效避免开发者在代码逻辑中引用资源文件，从而构建一个简单明了的模块模型</p>
                 </blockquote>
             </section>
@@ -97,7 +98,7 @@
                         <tr>
                             <td>/</td>
                             <td>/moduleA/a.css</td>
-                            <td>modules根目录</td>
+                            <td>modules 根目录</td>
                         </tr>
                         <tr>
                             <td>::</td>
@@ -142,10 +143,11 @@
                         }
                     })
                 </code-light>
-                <p>根据该应用特性可省略对模块<code>frameworks</code>的指向引用。</p>
+                <p>根据该应用特性可省略对模块<code>frameworks</code>的指向引用</p>
 
                 <blockquote>
-                    <p>如果使用<code>::</code>的形式引用其他模块资源时，如果被引用模块尚未被加载，则会自动分析依赖关系加载被依赖的模块配置。此方法是为了引用复用率高的资源，但应注意避免多级引用</p>
+                    <h5>注意多层级依赖</h5>
+                    <p>如果使用<code>::</code>的形式引用其他模块资源时，如果被引用模块尚未被加载，则会自动分析依赖关系加载被依赖的模块配置。此方法是为了引用复用率高的资源，但应注意避免设置多层级依赖资源</p>
                 </blockquote>
             </section>
 
@@ -175,9 +177,28 @@
                     })
                 </code-light>
                 <blockquote>
-                    <p>注意：直接返回 Object 对象时需要注意的是该对象被修改时会影响之后所有该模块的副本，如果你不想将这个改变传递给后续模块副本可以是用匿名函数将对象抛出</p>
+                    <h5>注意</h5>
+                    <p>直接返回 Object 对象时需要注意的是该对象被修改时会影响之后所有该模块的副本，如果你不想将这个改变传递给后续模块副本可以是使用匿名函数将对象抛出</p>
+                    <code-light type=js>
+                        define(function (require, module, exports) {
+                            module.exports = {
+                                resources: {
+                                    data : {
+                                        // 数据源 book 为一个直接返回的 Object 对象
+                                        book : function () {
+                                            return {
+                                                name : "道德经",
+                                                title : "道可道，非常道。名可名，非常名。"
+                                            }
+                                        }
+                                    }
+                                },
+                                config: { ...config }
+                            }
+                        })
+                    </code-light>
                 </blockquote>
-                <p>技巧： 多个模块引用同一个直接返回的 Object 资源时能够利用改变传递特性进行模块间数据通信。比如登录状态，如果多模块通过引用登录状态对象来渲染模版，当这个状态在任何模块中被更新时都能及时响应到所有引用模块</p>
+                <p><strong>技巧：</strong>多个模块引用同一个直接返回的 Object 资源时能够利用改变传递特性进行模块间数据通信。比如登录状态，如果多模块通过引用登录状态对象来渲染模版，当这个状态在任何模块中被更新时都能及时响应到所有引用模块</p>
 
                 <h3>Function 类型</h3>
                 <p>通过函数返回以上两种类型，返回后的类型同样符合对应应用类型的解析规则，比如该函数执行后返回一个字符串，那么该字符串会被识别为一个新的 URL 路径解析即重新执行 String 类型逻辑，如果该函数返回的是一个 Object 类型数据则直接返回获取数据，如果该函数返回为<code>undefinde</code>时该函数则被认为是一个异步返回值函数，会等待函数 callback 结果</p>
@@ -249,7 +270,8 @@
                     })
                 </code-light>
                 <blockquote>
-                    <p>注意：缺省此设置项时默认以 GET 方式请求数据</p>
+                    <h5>注意</h5>
+                    <p>缺省此设置项时默认以 GET 方式请求数据</p>
                 </blockquote>
 
                 <h3>@param 请求参数</h3>
@@ -290,7 +312,7 @@
                         }
                     })
                 </code-light>
-                <p>上例数据源[book]的请求 URL 实际解释为：http://api.ioing.com/getBook?id=100&page=0,limit=20</p>
+                <p>上例数据源<code>[book]</code>的请求 URL 实际解释为：http://api.ioing.com/getBook?id=100&page=0,limit=20</p>
                 <p>有的时候服务端有一些奇怪的传参需求，比如参数为类似 JSON 的格式</p>
                 <code-light type=js>
                     define(function (require, module, exports) {
@@ -315,9 +337,10 @@
                         }
                     })
                 </code-light>
-                <p>上例数据源[book]的请求 URL 实际解释为：http://api.ioing.com/getBook?request={'{'}"id":100,"page":0,"limit"=20}</p>
+                <p>上例数据源<code>[book]</code>的请求 URL 实际解释为：http://api.ioing.com/getBook?request={'{'}"id":100,"page":0,"limit"=20}</p>
                 <blockquote>
-                    <p>注意：@param() 里的参数和 JSON 类似（可以缺省外面的花括号），key 值是字符串不被解析，value 值为对象<code>可被解析</code>，其可以解析与模块参数同名的变量</p>
+                    <h5>注意</h5>
+                    <p>@param() 里的参数和 JSON 类似（可以缺省外面的花括号），key 值是字符串不被解析，value 值为对象<code>可被解析</code>，其可以解析与模块参数同名的变量</p>
                 </blockquote>
 
                 <h3 uuid=cache>@cache 数据源的缓存时间</h3>
@@ -419,7 +442,8 @@
                 </table>
                 <p>默认情况下如果被请求的 URL 与当前域存在跨域，引擎将自动为请求带上 'withCredentials' 认证，以保证跨域请求，而有时我们请求跨域的静态资源时并需要设置认证，此时使用 @origin(true) 指令可以取消跨域认证</p>
                 <blockquote>
-                    <p>知识点补充：跨域请求静态资源时 CDN/服务器的 Response Headers 一般会设置 Access-Control-Allow-Origin:*，此时如果为跨域请求自动带上 'withCredentials' 认证则会被拒绝，如果服务器返回的设定不是 '*' 而是你当前请求域名则可以通过，但出于安全考虑一般都会使用 '*' 指定，此时请求不会传送 cookie</p>
+                    <h5>知识点补充</h5>
+                    <p>跨域请求静态资源时 CDN/服务器的 Response Headers 一般会设置 Access-Control-Allow-Origin:*，此时如果为跨域请求自动带上 'withCredentials' 认证则会被拒绝，如果服务器返回的设定不是 '*' 而是你当前请求域名则可以通过，但出于安全考虑一般都会使用 '*' 指定，此时请求不会传送 cookie</p>
                 </blockquote>
                 <table>
                     <thead>
@@ -613,6 +637,7 @@
                     <p>style、source、data 分别可以定义资源库中的三大类资源文件，如果你需要更多的文件类型方法可使用 define 进行封装</p>
                 </table>
                 <blockquote>
+                    <h5>提示</h5>
                     <p>这个改写过程需要使用官方提供的 Node 工具 或 使用 Gulp 自制插件来完成</p>
                 </blockquote>
             </section>

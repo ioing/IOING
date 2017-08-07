@@ -47,10 +47,6 @@ define([], function (require, module, exports) {
                                     background: '#ff5252'
                                 },
                                 {
-                                    color: '#ff5252',
-                                    background: '#f1f1f1'
-                                },
-                                {
                                     color: '#00bc9c',
                                     background: '#00bc9c'
                                 },
@@ -59,46 +55,8 @@ define([], function (require, module, exports) {
                                     background: '#ff7752'
                                 },
                                 {
-                                    color: '#42b983',
-                                    background: '#42b983'
-                                },
-                                // {
-                                //     color: '#ab5115',
-                                //     background: '#403e28 url(bg/4.jpg) no-repeat 50% 50%;'
-                                // },
-                                // {
-                                //     color: '#e24b1e',
-                                //     background: '#27272b url(bg/5.jpg) no-repeat 50% 50%;'
-                                // },
-                                // {
-                                //     color: '#9cc12a',
-                                //     background: '#9cc12a url(bg/7.jpg) no-repeat 50% 50%;'
-                                // },
-                                // {
-                                //     color: '#fc8554',
-                                //     background: '#fc8554 url(bg/8.png) no-repeat 80% 0;',
-                                //     backgroundSize: '"contain"'
-                                // },
-                                // {
-                                //     color: '#8bc34a',
-                                //     background: '#dae2da url(bg/11.png) no-repeat 80% 50%;',
-                                //     backgroundSize: '"contain"'
-                                // },
-                                // {
-                                //     color: '#565767',
-                                //     background: '#565767 url(bg/12.jpg) no-repeat 50% 50%;',
-                                // },
-                                // {
-                                //     color: '#366988',
-                                //     background: '#366988 url(bg/13.jpg) no-repeat 50% 50%;',
-                                // },
-                                // {
-                                //     color: '#a96539',
-                                //     background: '#a96539'
-                                // },
-                                {
                                     color: '#43d297',
-                                    background: '#f1f1f1'
+                                    background: '#43d297'
                                 }
                             ]
 
@@ -455,7 +413,9 @@ define([], function (require, module, exports) {
         },
         config : {
             index : "docs-started-ioing",
-            singleflow : false, // 历史归类，没有前进，到达首页无回退
+            system : true,
+            singleflow : true, // 历史归类，没有前进，到达首页无回退
+            singlelocking : true,
             absolute : false,
             style : ["global", "common", "main"],
             script : [],
@@ -470,7 +430,13 @@ define([], function (require, module, exports) {
                 t = t || 'active'
                 f = f || ''
 
-                return nav == id ? t : f
+                id.split(',').each(function (i,_id) {
+                    if ( nav == _id ) {
+                        id = t
+                    }
+                })
+
+                return id == t ? t : f
             },
             activeSubNav : function (nav, value) {
                 nav = nav || ''

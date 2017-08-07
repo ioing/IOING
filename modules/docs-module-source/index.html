@@ -16,6 +16,11 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td>data</td>
+                                    <td>Array</td>
+                                    <td>style:['list', 'user']</td>
+                                </tr>
+                                <tr>
                                     <td>style</td>
                                     <td>Array</td>
                                     <td>style:['common', 'main']</td>
@@ -29,11 +34,6 @@
                                     <td>source</td>
                                     <td>Array</td>
                                     <td>source:['index', 'footer']</td>
-                                </tr>
-                                <tr>
-                                    <td>data</td>
-                                    <td>Array</td>
-                                    <td>style:['list', 'user']</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -82,8 +82,50 @@
                         }
                     })
                 </code-light>
+                <p>资源配置项是设定在 resources 中的，而引用的配置项是在 config 中的</p>
                 <blockquote>
-                    <p>注意：source 配置项中数组中第一个定义的模版为主模版，其他模版资源都应该是在主模版中进行引用的</p>
+                    <h5>提示</h5>
+                    <p>配置项 source 数组的第一个配置模版为主模版，其他模版资源都是通过在主模版中进行引用（如 {'<'}include name>）来进行渲染的</p>
+                </blockquote>
+
+                <h3>关于 source 的扩展用法 <small>进阶内容</small></h3>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>类型</th>
+                                    <th>示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>source</td>
+                                    <td>String</td>
+                                    <td>source: "http://you-app-host.com/app-url"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>资源引用配置项 source 的默认类型为<code>Array</code>，其表示该模块的结构元素由该数组中的模版组成，但在一些复杂体系应用的情况下，例如一个 Web OS 系统只有一个 IOING 体系是无法支撑这样的业务逻辑的，而通过模块嵌套引入 IOING 体系能是解决问题的关键，因而在配置项 source 上可以直接引用一个新的 IOING 应用，其称之为“画中画模块应用”</p>
+                <blockquote>
+                    <h5>画中画模块应用</h5>
+                    <p>若 source 类型为<code>String</code>则该模块为一个窗口模块，即模块没有实质渲染内容，而是在模块窗口中会嵌入另一个 IOING 应用，source 即为这个 IOING 应用的 URL</p>
+                    <code-light type=js>
+                        define(function (require, module, exports) {
+                            module.exports = {
+                                config : {
+                                    level : 8,
+                                    absolute : true,
+                                    background : "#fff",
+                                    source: "modules/demo-app/twitter",   // 引入的新的 IOING 应用
+                                    animation : "zoom"
+                                }
+                            }
+                        })
+                    </code-light>
                 </blockquote>
             </section>
 

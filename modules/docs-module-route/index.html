@@ -6,9 +6,7 @@
                     路由
                     <small>路由访问和远程云模块</small>
                 </h2>
-                <p>在传统的多页面网页中每个页面都对应了一个 URL 链接，而在 IOING 引擎的架构下每个模块同样有其对应的 URL 链接，不过这些模块并不是通过刷新进行跳转的。通过模块的 URL 就能直接访问该模块，这和传统的多页面网页是一样的，但不同的是每个模块都需要在程序中注册配置文件才能被访问</p>
-                
-                <p>以<code>hash</code>作为基础的模块路由规则为 ：you-host.com#module-name, 在 App 主页面的 URL 后面加上<code>#模块名</code>即可访问模块</p>
+                <p>路由起到了模块的映射作用，每个模块都有与之对应的路由，该路由规则与模块相对路径匹配，不需要进行配置</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:{setting.articleWidth}dp">
                         <table>
@@ -29,6 +27,15 @@
                         </table>
                     </scrolling>
                 </scroll>
+                <p>以<code>hash</code>作为基础的模块路由规则为 ：<strong>you-host.com#module-name</strong>， 在 App 主页面的 URL 后面加上<code>#模块名</code>即可访问模块</p>
+                
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <module-demo path="./"></module-demo>
+                    </scrolling>
+                </scroll>
+
+                <h3>改变模块仓库默认位置<small>进阶内容</small></h3>
                 <p>默认情况下模块放置在根目录的<code>modules</code>目录下，一般我们不需要修改，当然你也可以自定义这个位置，比如将所有模块文件都放置在<code>CDN</code>上，改变这一项你需要使用下面的方法：</p>
                 <code-light type=js>
                     App.on('launch', function () {
@@ -41,6 +48,8 @@
                     })
                 </code-light>
                 <p>该段代码应放置在引擎脚本之后执行，其中设置项<code>origin</code>为数组类型，若<code>root</code>项的域和主域不同时则会开启<code>CORS</code>跨域，模块中数据源的加载也符合该规则</p>
+
+                <h3>访问远程模块或相对路径模块<small>进阶内容</small></h3>
                 <p>如果想访问某个绝对路径或相对路径的模块时可以使用<code>[module-path]</code>来定义 URL</p>
                 <code-light type=js>
                     "http://your-host.com/[http://your-host.com/module-path/module-id]/param-name/value"
@@ -48,7 +57,8 @@
                 </code-light>
                 <p>通过加载远程模块的方式可以让应用模块更便于共享，这个远程模块也叫做<code>云模块</code></p>
                 <blockquote>
-                    <p>路由是模块天生的特性，因此不需要开发者对其进行特殊设定，任何有效模块都会被自动建立路由。比如当前文档页即是一个 IOING 模块，根据当前页面的 URL 地址可知当前访问的模块 id 为 ：<code>docs-module-route</code></p>
+                    <h5>提示</h5>
+                    <p>路由和有效模块能够自动映射，不需要开发者额外进行设定。比如当前文档页即是一个 IOING 模块，根据当前页面的 URL 地址可知当前访问的模块 id 为 ：<code>docs-module-route</code></p>
                 </blockquote>
             </section>
 

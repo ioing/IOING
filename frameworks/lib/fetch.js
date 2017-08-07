@@ -67,7 +67,7 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                 if ( id !== 'frameworks' ) {
                     uri = 'frameworks::' + name
                 } else {
-                    App.console.error('resources.' + type + '["' + name + '"] is not definde')
+                    App.console.error('resources.' + type + '[' + name + ']', 'Config error', 'is not definde')
                 }
             }
 
@@ -330,20 +330,11 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
 
                                                 try {
                                                     cache = App.sandbox.window.eval('(' + cache + ')')
-                                                } catch (e) {}
-
-                                                if ( typeof cache === 'object' ) {
-                                                    // debug
-
-                                                    App.console.warn('url[' + suri.url + ']' + ' SyntaxError: Unexpected token a in JSON')
-                                                } else {
-
-                                                    // debug
-
-                                                    App.console.error('url[' + suri.url + ']' + ' callback error')
-
+                                                } catch (e) {
                                                     cache = null 
                                                 }
+
+                                                App.console[typeof cache === 'object' ? 'Warning' : 'error']('url[' + suri.url + ']', 'SyntaxError', 'Unexpected token in JSON')
                                             }
                                         }
 
@@ -366,7 +357,7 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                                             
                                         }, 2000)
 
-                                        App.console.info('Data [' + sname + ']', 'from cache', sid)
+                                        App.console.info('Data [' + sname + ']', 'From cache', sid)
 
                                         break
                                     }

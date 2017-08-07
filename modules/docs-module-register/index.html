@@ -3,8 +3,46 @@
         <article>
             <section uuid=config>
                 <h2>配置文件</h2>
-                <p>每个模块都对应一个文件夹，其中包含了模块的 HTML 模版、CSS 样式、javascript 脚本、以及其它资源文件和配置文件，其中配置文件是不可缺少的</p>
-                <p>在模块文件夹下创建<code>config.js</code>文件</p>
+                <p>config.js 是模块目录下的必要文件，起到模块注册和模块配置的作用</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>&nbsp;主要配置项</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a transform=docs-module-resources>resources</a></td>
+                                    <td>资源库配置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config>config</a></td>
+                                    <td>基本特性配置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-resources>events</a></td>
+                                    <td>模块载入的事件触发</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-resources>param</a></td>
+                                    <td>模块默认参数配置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-resources>controller</a></td>
+                                    <td>数据源的操作配置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-resources>helper</a></td>
+                                    <td>模版数据输出辅助函数</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <p>一个标准的模块配置<code>config.js</code>文件</p>
                 <code-light type=js>
                     define(function (require, module, exports) {
                         module.exports = {
@@ -88,6 +126,12 @@
                                     // TO-DO
                                 },
                             },
+                            // 数据输出辅助函数
+                            helper: {
+                                decode: function (res) {
+                                    return decodeURIComponent(res)
+                                }
+                            }
                             // 数据源默认参数
                             param: {
                                 id: 100

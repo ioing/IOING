@@ -2,18 +2,18 @@
     .imodule-show {
         position: relative;
         width: 100%;
+        padding: 25dp 0;
+        margin-top: 10dp;
+        border-top: 1px solid #e8e8e8;
+        border-bottom: 1px solid #e8e8e8;
     }
     .idevice {
         position: relative;
         display: inline-block;
-        margin: 0 0 15dp;
+        margin: 0;
         padding: 12dp;
-        width: 50%;
-        min-width: 300dp;
-        max-width: 400dp;
-        min-height: 550dp;
-        max-height: 650dp;
-        height: 30vw;
+        width: 300dp;
+        height: 550dp;
         overflow: hidden;
     }
 
@@ -77,8 +77,32 @@
         border-radius: 12dp;
     }
 
+    .iscreen .urltool {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 40dp;
+        background-image: linear-gradient(#e8e8e8, #f9f9f9);
+    }
+
+    .iscreen .urltool .input {
+        margin: 5dp;
+        height: 30dp;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 6dp;
+        box-shadow: inset 0 0 3dp rgba(0,0,0,.15);
+    }
+
+    .iscreen .urltool .input span {
+        font-size: 12dp;
+        padding: 0 8dp;
+        line-height: 30dp;
+    }
+
     .iscreen .iheader, .iscreen .ifooter {
         position: absolute;
+        top: 40dp;
         z-index: 9;
         width: 100%;
         height: 40dp;
@@ -89,16 +113,10 @@
         background-color: [active-color];
     }
 
-    .iscreen .ifooter {
-        top: auto;
-        bottom: 0;
-        background-color: #444;
-    }
-
     .iscreen .ibody {
         position: absolute;
-        top: 40dp;
-        bottom: 40dp;
+        top: 80dp;
+        bottom: 0;
         z-index: 11;
         padding: 15dp;
         width: 100%;
@@ -117,16 +135,17 @@
     }
 
     .iscreen .ibody p {
-        color: [active-color];
-        margin-bottom: 5dp;
+        color: #ddd;
+        font-size: 14dp;
+        margin-bottom: 10dp;
     }
 
     .iscreen .ibody span {
         display: block;
-        margin: 0 auto 12dp;
+        margin: 0 auto 21dp;
         width: 100%;
-        height: 2dp;
-        background: [active-color];
+        height: 1dp;
+        background: #e8e8e8;
     }
 
     .view-tip {
@@ -138,22 +157,41 @@
     .view-tip li {
         text-align: right;
         width: 150dp;
-        border-bottom: 1px solid [active-color];
+        border-bottom: 1px solid #e8e8e8;
         margin-bottom: 12dp;
     }
 
     .view-tip a {
         font-size: 16dp;
-        color: [active-color]
+        color: #e8e8e8;
+    }
+
+    .view-tip li.active {
+        border-color: [active-color];
+    }
+
+    .view-tip li.active a {
+        color: [active-color];
     }
 
 </style>
+
+<var s>
+    {
+        nav : "home"
+    }
+</var>
 <div class="imodule-show">
     <div class="idevice">
         <div class="ieye"><i></i></div>
         <div class="iear"></div>
         <div class="iscreen">
-            <div class="iheader">Header</div>
+            <div class="urltool">
+                <div class=input>
+                    <span>http://ioing.com#<font>{s.nav}</font></span>
+                </div>
+            </div>
+            <div class="iheader">{s.nav}</div>
             <div class="ibody">
                 <p>Module view</p>
                 <span></span>
@@ -172,17 +210,22 @@
                 <span></span>
                 <span></span>
             </div>
-            <div class="ifooter">Footer</div>
         </div>
         <div class="itouch"></div>
     </div>
     <div class="view-tip">
         <ul>
-            <li><a>主模块</a></li>
-            <li><a>子模块</a></li>
-            <li><a>复合视图模块</a></li>
-            <li><a>独立视图模块</a></li>
+            <li class="{{s.nav=='home' ? 'active' : ''}}" on-tap="c(home)"><a>home 模块</a></li>
+            <li class="{{s.nav=='feed' ? 'active' : ''}}" on-tap="c(feed)"><a>feed 模块</a></li>
+            <li class="{{s.nav=='message' ? 'active' : ''}}" on-tap="c(message)"><a>message 模块</a></li>
+            <li class="{{s.nav=='discover' ? 'active' : ''}}" on-tap="c(discover)"><a>discover 模块</a></li>
         </ul>
     </div>
 </div>
+
+<script>
+    function c (n) {
+        scope.s.nav = n
+    }
+</script>
                 

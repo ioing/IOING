@@ -51,38 +51,10 @@ define('~/move', [], function (require, module, exports) {
     * Module Dependencies.
     */
 
-    var after = (function () {
 
-        var hasTransitions = device.feat.prefixStyle('transition')
-        
-        function after (el, fn) {
-            if ( !hasTransitions ) return fn()
-            el.bind('transitionend', fn)
-            return fn
-        }
+    var hasTransitions = device.feat.prefixStyle('transition')
 
-        /**
-        * Same as `after()` only the function is invoked once.
-        *
-        * @param {Element} el
-        * @param {Function} fn
-        * @return {Function}
-        * @api public
-        */
-
-        after.once = function (el, fn) {
-            var callback = function () {
-                  el.unbind('transitionend', callback)
-                  fn()
-                }
-                
-            after(el, callback)
-        }
-
-        return after
-
-    })()
-
+    
     /**
     * Get computed style.
     */
@@ -105,12 +77,12 @@ define('~/move', [], function (require, module, exports) {
 
     Move.select = function (selector) {
         if ('string' != typeof selector) return selector
-        return $(selector)[0]
+        return $$(selector)[0]
     }
 
     function Move (el) {
         if (!(this instanceof Move)) return new Move(el)
-        if ('string' == typeof el) el = $(el)[0]
+        if ('string' == typeof el) el = $$(el)[0]
         if (!el) return
         this.el = el
         this._props = {}
@@ -121,6 +93,14 @@ define('~/move', [], function (require, module, exports) {
     }
 
     var proto = Move.prototype
+
+
+    // once fn
+    
+    proto.once = function (fn) {
+        if ( this._duration == 0 || !hasTransitions ) return fn()
+        this.el.one('transitionend', fn)
+    }
 
     /**
     * Buffer `transform`.
@@ -164,14 +144,22 @@ define('~/move', [], function (require, module, exports) {
         return this.transform('skewY(' + n + 'deg)')
     }
 
+    proto._pos = {}
+
     proto.translate =
     proto.translate3d =
     proto.to = function (x, y, z) {
-        x = x != undefined ? x : null
-        y = y != undefined ? y : null
-        z = z != undefined ? z : null
+        x = x != undefined ? x : this._pos.x
+        y = y != undefined ? y : this._pos.y
+        z = z != undefined ? z : this._pos.z
 
-        if ( x !== null && y !== null && z !== null ) {
+        this._pos = {
+            x : x,
+            y : y,
+            z : z
+        }
+
+        if ( x != null && y != null && z != null ) {
             this.transform('translate3d(' + (x ? x + 'px' : 0) + ',' + (y ? y + 'px' : 0) + ',' + (z ? z + 'px' : 0) + ')')
             return this
         }
@@ -318,6 +306,23 @@ define('~/move', [], function (require, module, exports) {
         return this.setProperty('transition-delay', n + 'ms')
     }
 
+    proto.origin = function (x, y, n) {
+        n = x
+
+        if ( typeof x === 'object' ) {
+            y = x[1] || 0
+            x = x[0] || 0
+        }
+
+        if ( !isNaN(x) && !isNaN(y) ) {
+            n = x + 'px' + ' ' + y + 'px'
+        } else if ( y ) {
+            n = x + ' ' + y
+        }
+
+        return this.setProperty('transform-origin', n)
+    }
+
     /**
     * Set `prop` to `val`, deferred until `.end()` is invoked.
     *
@@ -419,11 +424,16 @@ define('~/move', [], function (require, module, exports) {
     * @api private
     */
 
-    proto.applyProperties = function () {
+    proto.applyProperties = function (callback) {
         var that = this
         
         rAF(function () {
             that.el.css(that._props)
+            that._props = {}
+
+            // callback
+            
+            callback.call(that)
         })
         
         return this
@@ -498,6 +508,7 @@ define('~/move', [], function (require, module, exports) {
 
     proto.clear = function () {
         this.el.style.set('transition-duration', '0ms')
+        this._transforms = {}
 
         return this
     }
@@ -515,7 +526,7 @@ define('~/move', [], function (require, module, exports) {
 
         // transition properties 检索或设置对象中的参与过渡的属性
 
-        this.setProperty('transition-properties', this._transitionProps.join(', '))
+        this.setProperty('transition-property', this._transitionProps.join(', '))
 
         // transforms
 
@@ -523,23 +534,15 @@ define('~/move', [], function (require, module, exports) {
         
         // set properties
 
-        this.applyProperties()
+        this.applyProperties(function () {
 
-        // emit "end" when complete
+            // emit "end" when complete
 
-        if ( this._duration == 0 ) {
-            rAF(function () {
-                that.clear()
-
+            that.once(function () {
                 if (fn) fn.call(that)
-            })
-        } else {
-            after.once(this.el, function () {
                 that.clear()
-
-                if (fn) fn.call(that)
             })
-        }
+        })
 
         return this
     }

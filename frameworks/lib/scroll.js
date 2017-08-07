@@ -479,7 +479,7 @@ define('~/scroll', [], function (require, module, exports) {
 			 * scroll.scrolling属性记录了该滚动的scrolling元素
 			 * 当scrolling元素不存在纪律中时会尝试获取scroll中的scrolling元素
 			 */
-			this.uuid = 'scroll::' + App.id + ':' + (el.id || el.uuid)
+			this.uuid = 'scroll::' + (App.name || 'top') + ':' + App.id + ':' + (el.id || el.uuid)
 			this.wrapper = el
 			this.scroller = el.scrolling
 
@@ -525,7 +525,7 @@ define('~/scroll', [], function (require, module, exports) {
 			// snap: reset speedLimit
 			
 			if ( !options.speedLimit && options.snap ) {
-				this.options.speedLimit = 1;
+				this.options.speedLimit = dP(1)
 			}
 
 			/**
@@ -552,6 +552,7 @@ define('~/scroll', [], function (require, module, exports) {
 			this.options.startX = dP(this.options.startX)
             this.options.startY = dP(this.options.startY)
             this.options.stepLimit = dP(this.options.stepLimit)
+            this.options.speedLimit = dP(this.options.speedLimit)
 
 			// If you want eventPassthrough I have to lock one of the axes
 
@@ -669,7 +670,7 @@ define('~/scroll', [], function (require, module, exports) {
 				// 重置位置
 
 				if ( reset ) {
-					this.scrollTo(this.options.startX, this.options.startY)
+					this.scrollTo(this.options.startX, this.options.startY, -1)
 				}
 
 				this.enable()
@@ -907,11 +908,12 @@ define('~/scroll', [], function (require, module, exports) {
 			},
 
 			scrollTo : function (x, y, time, easing, bounce) {
+				time = time || 0
 				easing = easing || EASEING.circular
 
 				this.isInTransition = this.options.useTransition && time > 0
 
-				if ( x == this._x && y == this._y ) {
+				if ( x === this._x && y === this._y && time !== -1 ) {
 					if ( time ) this._execEvent('scrollend', 'end')
 					return
 				}
@@ -930,7 +932,7 @@ define('~/scroll', [], function (require, module, exports) {
                     }
 				}
 
-				if ( !time ) {
+				if ( time <= 0 ) {
 					this._promiseKeyFrame('translate', [x, y], true)
 					this._promiseKeyFrame('transitionTime', null, true)
 					this._drawing()
@@ -1626,7 +1628,6 @@ define('~/scroll', [], function (require, module, exports) {
 
 				_drawing : function (callback) {
 					var that = this
-					if ( callback == true ) return that._drawKeyFrame.call(that, callback || noop)
 					rAF(function () {
 						that._drawKeyFrame.call(that, callback || noop)
 					})
@@ -1690,8 +1691,8 @@ define('~/scroll', [], function (require, module, exports) {
 					 */
 					if ( x == null ) {
 						s = this.getComputedPosition()
-						x = s.x
-						y = s.y
+						x = s.x + this.dropX
+						y = s.y + this.dropY
 						s = null
 
 						if ( isNaN(x) ) return
@@ -1702,12 +1703,14 @@ define('~/scroll', [], function (require, module, exports) {
 					z = z || 0
 					s = s || this.options.zoom ? this.scale : null
 
-					if ( x === this.x && y === this.y ) return
+					if ( x === this.x && y === this.y && z === this.z && s === this.s ) return
 
 					this.scrollerStyle[BROWSER.prefixStyle.transform] = 'translate3d(' + x + 'px' + ',' + y + 'px' + ', ' + z + 'px' + ')' + (s ? ' scale(' + s + ')' : '')
 
 					this.x = x
 					this.y = y
+					this.z = z
+					this.s = s
 
 					if ( !v ) {
 						this._x = x
@@ -1771,8 +1774,8 @@ define('~/scroll', [], function (require, module, exports) {
 
 						// lost rate
 
-						that.dropX = Math.round(pos.x - that.x)
-						that.dropY = Math.round(pos.y - that.y)
+						that.dropX = Math.round(pos.x - that.x) || that.dropX || 0
+						that.dropY = Math.round(pos.y - that.y) || that.dropY || 0
 
 						that.x = Math.round(pos.x)
 						that.y = Math.round(pos.y)
@@ -2214,7 +2217,7 @@ define('~/scroll', [], function (require, module, exports) {
 						// clear TimingFunction
 					
 						this._promiseKeyFrame('transitionTimingFunction', null, true)
-						this._drawing(true)
+						this._drawing()
 
 						// 动画时间清零
 
@@ -2229,11 +2232,6 @@ define('~/scroll', [], function (require, module, exports) {
 					// startTime
 					
 					this.startTime = Date.now()
-
-					// drop rate
-
-					this.dropX = 0
-					this.dropY = 0
 
 					this.startX    = this.x
 					this.startY    = this.y
@@ -2837,7 +2835,7 @@ define('~/scroll', [], function (require, module, exports) {
 						}
 					}
 
-					l = this.pages[i].length
+					l = this.pages[i] ? this.pages[i].length : 0
 
 					for ( ; m < l; m++ ) {
 						if ( y >= this.pages[0][m].cy ) {
@@ -3163,14 +3161,13 @@ define('~/scroll', [], function (require, module, exports) {
 					this.on('scrollend', function () {
 						try {
 							sessionStorage.setItem(uuid, this.x + ',' + this.y)
-						} catch (e) {}
-					})
 
-					// remove
+							// remove
 					
-					App.on('transformstart', function () {
-						try {
-							sessionStorage.removeItem(uuid)
+							App.on('transformstart background', function () {
+								sessionStorage.removeItem(uuid)
+							})
+
 						} catch (e) {}
 					})
 				},
@@ -3431,7 +3428,7 @@ define('~/scroll', [], function (require, module, exports) {
 					}
 
 					if ( this._options.speedLimit == undefined ) {
-						this.options.speedLimit = .5
+						this.options.speedLimit = dP(.5)
 					}
 
 					if ( this._options.fadeScrollbars == undefined ) {
@@ -3577,6 +3574,7 @@ define('~/scroll', [], function (require, module, exports) {
 					this.minScrollX = 0
 					this.minScrollY = 0
 
+					this.fragments = {}
 					this.infiniteCache = []
 					this.turnoverTimes = 0
 					this.finiteFragment = this.options.finiteFragment
@@ -3597,14 +3595,6 @@ define('~/scroll', [], function (require, module, exports) {
 						}
 
 						this._refresh()
-
-						// set start pos
-						
-						if ( this.options.startY || this.options.startY ) {
-							setTimeout(function () {
-								this._refresh()
-							}.bind(this), 0)
-						}
 					})
 				},
 

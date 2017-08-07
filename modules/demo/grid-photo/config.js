@@ -31,8 +31,7 @@ define([], function (require, module, exports) {
                 index: "index.html",
             },
             style: {
-                main: "main.css",
-                common: "frameworks::common"
+                main: "main.css"
             },
             data: {
                 list : function (param) {
@@ -44,11 +43,11 @@ define([], function (require, module, exports) {
         config : {
             level : 2,
             absolute : true,
-            style : ["common", "main"],
+            style : ["main"],
             script : [],
             source: ["index"],
             data : ["list"],
-            cache : 120,
+            update: true,
             sandbox : true,
             animation : true
         },

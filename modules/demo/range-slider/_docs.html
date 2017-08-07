@@ -3,7 +3,7 @@
 </template>
 
 <template content>
-	<section>
+    <section>
         <h2>使用</h2>
         <scroll class=exp stop-propagation="auto" x=auto y=false>
             <scrolling style="min-width:{setting.articleWidth}dp">
@@ -19,89 +19,31 @@
                         <tr>
                             <td>value</td>
                             <td>on/off</td>
-                            <td>Switch 的默认状态</td>
+                            <td>滑动条初始值</td>
+                        </tr>
+                        <tr>
+                            <td>bubble</td>
+                            <td>true/false</td>
+                            <td>跟随的漂浮气泡</td>
                         </tr>
                     </tbody>
                 </table>
             </scrolling>
         </scroll>
         <code-light type=html>
-        	<switch-slider></switch-slider>
+            <range-slider></range-slider>
         </code-light>
-        <p>Switch 在未设置值时默认为关闭状态</p>
-        <p><switch-slider></switch-slider></p>
-        <p>通过设定<code>value</code>改变 Switch 的默认状态</p>
+        <p>在未设置滑动条初始值时默认值为 0</p>
+        <p><range-slider></range-slider></p>
+        <p>通过设定<code>value</code>定位滑动条位置</p>
         <code-light type=html>
-            <switch-slider value="on"></switch-slider>
+            <range-slider value=50></range-slider>
         </code-light>
-        <switch-slider value="on"></switch-slider>
-        <p>通过设定<code>styler</code>注入样式模版，改变组件外观</p>
+        <p><range-slider value=50></range-slider></p>
+        <p>通过设定<code>bubble</code>显示滑动条漂浮气泡</p>
         <code-light type=html>
-            <template name=switch-style-1>
-                <style>
-                    .switch.active {
-                        border-color: rgba(255,255,255,.2);
-                        background: [active-color];
-                    }
-                </style>
-            </template>
-            <template name=switch-style-2>
-                <style>
-                    .switch, .circle {
-                        border-radius: 2dp;
-                    }
-                </style>
-            </template>
-            <switch-slider value=on styler=switch-style-1></switch-slider>
-            <switch-slider value=on styler=switch-style-2></switch-slider>
+            <range-slider bubble value=50></range-slider>
         </code-light>
-
-        <template name=switch-style-1>
-            <style>
-                .switch.active {
-                    border-color: rgba(255,255,255,.2);
-                    background: [active-color];
-                }
-            </style>
-        </template>
-        <template name=switch-style-2>
-            <style>
-                .switch, .circle {
-                    border-radius: 2dp;
-                }
-            </style>
-        </template>
-        <switch-slider value=on styler=switch-style-1></switch-slider>
-        <switch-slider value=on styler=switch-style-2></switch-slider>
-        <p>通过外部事件触发状态改变</p>
-        <scroll class=exp stop-propagation="auto" x=auto y=false>
-            <scrolling style="min-width:{setting.articleWidth}dp">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>事件</th>
-                            <th>值</th>
-                            <th>描述</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>set</td>
-                            <td>on/off</td>
-                            <td>设置改变状态</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </scrolling>
-        </scroll>
-        <code-light type=html>
-            <switch-slider uuid=receive value=on></switch-slider>
-            <script>
-                node('receive').on('ready', function () {
-                    this.trigger('set', 'off')
-                })
-            </script>
-        </code-light>
-        <p>注意：改变组件状态事件要在组件<code>ready</code>之后执行。</p>
+        <p><range-slider bubble value=50></range-slider></p>
     </section>
 </template>

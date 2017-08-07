@@ -4,6 +4,8 @@
 
     'use strict'
 
+    window.App = 'top'
+
     // module && components css style reset
 
     /*＊
@@ -27,13 +29,16 @@
     window.CSSBaseStyle = '* { box-sizing: border-box; margin : 0; padding : 0; text-size-adjust: 100%; tap-highlight-color: rgba(0, 0, 0, 0) } \n'
                         + 'html, body { position: absolute; width: 100%; height: 100%; background: #fff; font-size: 10dp; overflow: hidden } \n'
                         + 'a { text-decoration: none } \n'
-                        + '*[href], *[transform] { cursor: pointer }'
+                        + '*[href], *[transform], *[on-tap] { cursor: pointer }'
                         + 'button { background-color: transparent; border: 0; outline: 0 } \n'
                         + 'input, textarea, htmlarea { user-select: initial; touch-callout: initial; border: 0; outline: 0; appearance: none } \n'
                         + 'htmlarea { display: inline-block; text-rendering: auto; letter-spacing: normal; word-spacing: normal; text-indent: 0px; text-align: start; font: initial } \n'
                         + 'article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block } \n'
                         + 'ol, ul { list-style: none } \n'
                         + 'table { border-collapse: collapse; border-spacing: 0 } \n'
+
+                        // frame
+                        + 'iframe[app] { width: 100%; height: 100%; border: 0 } \n'
 
                         // scroll
                         + 'scroll, scrolling, scrollbar, indicator { display: block; box-sizing: border-box } \n'
@@ -63,9 +68,58 @@
                         + 'relative-windows, absolute-windows { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 10000; width: 100%; height: 100%; overflow: hidden } \n'
 
 
+
+    // 设备属性检测
+
+    var OS = (function (navigator, userAgent, platform, appVersion) {
+
+        this.webkit = userAgent.match(/WebKit\/([\d.]+)/) ? true : false
+
+        this.ipod = /iPod/i.test(platform) || userAgent.match(/(iPod).*OS\s([\d_]+)/) ? true : false
+        this.ipad = /iPad/i.test(navigator.userAgent) ||userAgent.match(/(iPad).*OS\s([\d_]+)/) ? true : false
+        this.iphone = /iPhone/i.test(platform) || !this.ipad && userAgent.match(/(iPhone\sOS)\s([\d_]+)/) ? true : false
+
+        this.ie = userAgent.match(/MSIE 10.0/i) ? true : false
+        this.mac = /Mac/i.test(platform)
+        this.ios = this.ipod || this.ipad || this.iphone
+        this.android = userAgent.match(/(Android)\s+([\d.]+)/) || userAgent.match(/Silk-Accelerated/) ? true : false
+        this.android = this.android && !this.webkit
+        this.androidICS = this.android && userAgent.match(/(Android)\s4/) ? true : false
+
+        this.chrome = userAgent.match(/Chrome/) ? true : false
+        this.safari = userAgent.match(/Safari/) && !this.chrome ? true : false
+        this.mobileSafari = this.ios && !!appVersion.match(/(?:Version\/)([\w\._]+)/)
+        this.opera = userAgent.match(/Opera/) ? true : false
+        this.fennec = userAgent.match(/fennec/i) ? true : userAgent.match(/Firefox/) ? true : false
+        this.MSApp = typeof(MSApp) === "object"
+        this.wechat = userAgent.match(/MicroMessenger/i) ? true : false
+
+        this.ieTouch = this.ie && userAgent.toLowerCase().match(/touch/i) ? true : false
+        this.supportsTouch = ((window.DocumentTouch && document instanceof window.DocumentTouch) || 'ontouchstart' in window)
+
+        this.webos = userAgent.match(/(webOS|hpwOS)[\s\/]([\d.]+)/) ? true : false
+        this.touchpad = this.webos && userAgent.match(/TouchPad/) ? true : false
+
+        this.playbook = userAgent.match(/PlayBook/) ? true : false
+        this.blackberry10 = userAgent.match(/BB10/) ? true : false
+        this.blackberry = this.playbook || this.blackberry10|| userAgent.match(/BlackBerry/) ? true : false
+
+        // 主流系统版本检测
+
+        if ( this.ios ) this.iosVersion = parseFloat(appVersion.slice(appVersion.indexOf("Version/")+8)) || -1
+        if ( this.android ) this.androidVersion = parseFloat(appVersion.slice(appVersion.indexOf("Android")+8)) || -1
+        if ( this.safari ) this.safariVersion = appVersion.match(/Safari\/([\d.]+)/)[1]
+        if ( this.chrome ) this.chromeVersion = appVersion.match(/Chrome\/([\d.]+)/)[1]
+        if ( this.webkit ) this.webKitVersion = appVersion.match(/WebKit\/([\d.]+)/)[1]
+
+        return this
+
+    }).call({}, navigator, navigator.userAgent, navigator.platform, navigator.appVersion || navigator.userAgent)
+
+
     /*===================================== viewport scale ========================================*/
 
-    !(function () {
+    var reviewport = function () {
 
         // 创建 viewport meta
 
@@ -79,7 +133,7 @@
                                     + 'minimum-scale=' + scale + ',' 
                                     + 'maximum-scale=' + scale + ',' 
                                     + 'user-scalable=no' 
-                                    + (tdpi ? (devicePixelRatio > 2 ? '' : ',target-densitydpi=device-dpi') : '') 
+                                    + (tdpi && OS.androidVersion < 5 ? ',target-densitydpi=device-dpi' : '') 
                             + '">')
             return document.getElementById(id)
         }
@@ -142,7 +196,15 @@
 
         window.viewportScale = scale
 
-    })()
+    }
+
+    // 嵌套应用
+
+    if ( window.parent.viewportScale ) {
+        window.viewportScale = window.parent.viewportScale
+    } else {
+        reviewport()
+    }
 
 
 
@@ -390,55 +452,6 @@
 
 
     /*=============================================================================*/
-
-
-    // 设备属性检测
-
-    var OS = (function (navigator, userAgent, platform, appVersion) {
-
-        this.webkit = userAgent.match(/WebKit\/([\d.]+)/) ? true : false
-
-        this.ipod = /iPod/i.test(platform) || userAgent.match(/(iPod).*OS\s([\d_]+)/) ? true : false
-        this.ipad = /iPad/i.test(navigator.userAgent) ||userAgent.match(/(iPad).*OS\s([\d_]+)/) ? true : false
-        this.iphone = /iPhone/i.test(platform) || !this.ipad && userAgent.match(/(iPhone\sOS)\s([\d_]+)/) ? true : false
-
-        this.ie = userAgent.match(/MSIE 10.0/i) ? true : false
-        this.mac = /Mac/i.test(platform)
-        this.ios = this.ipod || this.ipad || this.iphone
-        this.android = userAgent.match(/(Android)\s+([\d.]+)/) || userAgent.match(/Silk-Accelerated/) ? true : false
-        this.android = this.android && !this.webkit
-        this.androidICS = this.android && userAgent.match(/(Android)\s4/) ? true : false
-
-        this.chrome = userAgent.match(/Chrome/) ? true : false
-        this.safari = userAgent.match(/Safari/) && !this.chrome ? true : false
-        this.mobileSafari = this.ios && !!appVersion.match(/(?:Version\/)([\w\._]+)/)
-        this.opera = userAgent.match(/Opera/) ? true : false
-        this.fennec = userAgent.match(/fennec/i) ? true : userAgent.match(/Firefox/) ? true : false
-        this.MSApp = typeof(MSApp) === "object"
-        this.wechat = userAgent.match(/MicroMessenger/i) ? true : false
-
-        this.ieTouch = this.ie && userAgent.toLowerCase().match(/touch/i) ? true : false
-        this.supportsTouch = ((window.DocumentTouch && document instanceof window.DocumentTouch) || 'ontouchstart' in window)
-
-        this.webos = userAgent.match(/(webOS|hpwOS)[\s\/]([\d.]+)/) ? true : false
-        this.touchpad = this.webos && userAgent.match(/TouchPad/) ? true : false
-
-        this.playbook = userAgent.match(/PlayBook/) ? true : false
-        this.blackberry10 = userAgent.match(/BB10/) ? true : false
-        this.blackberry = this.playbook || this.blackberry10|| userAgent.match(/BlackBerry/) ? true : false
-
-        // 主流系统版本检测
-
-        if ( this.ios ) this.iosVersion = parseFloat(appVersion.slice(appVersion.indexOf("Version/")+8)) || -1
-        if ( this.android ) this.androidVersion = parseFloat(appVersion.slice(appVersion.indexOf("Android")+8)) || -1
-        if ( this.safari ) this.safariVersion = appVersion.match(/Safari\/([\d.]+)/)[1]
-        if ( this.chrome ) this.chromeVersion = appVersion.match(/Chrome\/([\d.]+)/)[1]
-        if ( this.webkit ) this.webKitVersion = appVersion.match(/WebKit\/([\d.]+)/)[1]
-
-        return this
-
-    }).call({}, navigator, navigator.userAgent, navigator.platform, navigator.appVersion || navigator.userAgent)
-
 
 
     // DETECT
@@ -1555,21 +1568,17 @@
                         var OBJECT_RE = /\.|\[/
                         var LINKER_RE = /^[\w\_\$\.]*$/
 
-                        return function (link, object, factory) {
+                        return function (link, factory, error) {
                             var result
-
-                            // 传参模式
-                            
-                            object = object || this
 
                             // 传参空直接返回this
 
-                            if ( !link ) return object
+                            if ( !link ) return this
 
                             // 无运算直接输出
                             
                             if ( LINKER_RE.test(link) ) {
-                                result = object.getValueByLink(link)
+                                result = this.getValueByLink(link)
 
                                 // get Function
                                 
@@ -1582,7 +1591,7 @@
 
                                 return result
                             } else {
-                                result = object[link]
+                                result = this[link]
                                 
                                 if ( result ) {
 
@@ -1618,15 +1627,15 @@
 
                                 if ( !inscope[val] ) { 
 
-                                    // 取得根对象，且检测根对象是否合法
+                                    // 取得根对象，且检测根对象是否合法 (object.val || window.val)
 
-                                    if ( val && val.length && val.staticAnalysis() == 'variable' ) {
+                                    if ( val && val.length && (this[val] || val.staticAnalysis() == 'variable') ) {
                                         
                                         // watched 可读变量
                                         
-                                        if ( val in object ) {
+                                        if ( val in this ) {
                                             splits.push(val)
-                                            scope.push(object[val])
+                                            scope.push(this[val])
                                         } else {
                                             splits.push(val)
                                             scope.push(undefined)
@@ -1636,9 +1645,13 @@
                                     inscope[val] = true
                                 }
                             }
-
-                            fn = typeof factory == 'function' ? factory : new window.SandboxFunction(splits.join(','), 'try { return (' + link + ') } catch (e) {}')
-                            result = fn.apply(null, scope)
+                            
+                            try {
+                                fn = typeof factory == 'function' ? factory : new window.SandboxFunction(splits.join(','), 'try { return (' + link + ') } catch (e) {}')
+                                result = fn.apply(null, scope)
+                            } catch (e) {
+                                error && error(e)
+                            }
 
                             // get Function
 
@@ -1656,24 +1669,30 @@
 
                     })())
 
-                    // getValueByRoute
+                    // getValueByRoutes
 
-                    proto.extendProperty("getFunctionByRoutes", function (link, fn) {
-                        return this.getValueByRoute(link, null, fn || true)
-                    })
-
-                    // getValueByRoute
-
-                    proto.extendProperty("getValueByRoutes", function (links) {
+                    proto.extendProperty("getValueByRoutes", function (links, fact, error) {
                         var result = []
 
                         if ( typeof links == 'string' ) links = [links]
 
                         for (var i = 0, l = links.length; i < l; i++) {
-                            result.push(this.getValueByRoute(links[i]))
+                            result.push(this.getValueByRoute(links[i], fact, error))
                         }
 
                         return result
+                    })
+
+                    // getValueByRoute
+
+                    proto.extendProperty("getFunctionByRoute", function (link, fact, error) {
+                        return this.getValueByRoute(link, fact || true, error)
+                    })
+
+                    // getValueByRoutes
+                    
+                    proto.extendProperty("getFunctionByRoutes", function (links, fact, error) {
+                        return this.getValueByRoutes(links, fact || true, error)
                     })
 
                     // getValueByLink

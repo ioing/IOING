@@ -115,6 +115,7 @@ section > h3 {
 	padding: 18dp 0 12dp;
 	color: #000;
 	font-size: 18dp;
+	font-weight: normal;
 	text-align: left;
 	background: none;
 }
@@ -132,6 +133,7 @@ section > h3 small {
 	color: #666;
 	font-size: 12dp;
 	line-height: 12dp;
+	border: 0;
 }
 
 section > h3 small .icon-link {
@@ -259,7 +261,7 @@ section > h3 small .icon-link {
 	.card-icon {
 		width: 95dp;
 		height: 95dp;
-		border-radius: 18dp;
+		border-radius: 25dp;
 	}
 }
 

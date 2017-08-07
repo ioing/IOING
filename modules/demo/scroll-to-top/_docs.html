@@ -1,7 +1,3 @@
-<template title>
-	Switch
-</template>
-
 <template content>
 	<section>
         <h2>使用</h2>
@@ -17,91 +13,39 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>value</td>
-                            <td>on/off</td>
-                            <td>Switch 的默认状态</td>
+                            <td>page</td>
+                            <td>Number</td>
+                            <td>滑动至该页数出现滚动置顶</td>
+                        </tr>
+                        <tr>
+                            <td>styler</td>
+                            <td>template-name</td>
+                            <td>注入模版内容，用于进行样式定制</td>
+                        </tr>
+                        <tr>
+                            <td>scroller</td>
+                            <td>Number</td>
+                            <td>关联滚动条的 uuid，默认就近自动吸附，一般不需要设置</td>
                         </tr>
                     </tbody>
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
-        	<switch-slider></switch-slider>
-        </code-light>
-        <p>Switch 在未设置值时默认为关闭状态</p>
-        <p><switch-slider></switch-slider></p>
-        <p>通过设定<code>value</code>改变 Switch 的默认状态</p>
-        <code-light type=html>
-            <switch-slider value="on"></switch-slider>
-        </code-light>
-        <switch-slider value="on"></switch-slider>
-        <p>通过设定<code>styler</code>注入样式模版，改变组件外观</p>
-        <code-light type=html>
-            <template name=switch-style-1>
-                <style>
-                    .switch.active {
-                        border-color: rgba(255,255,255,.2);
-                        background: [active-color];
-                    }
-                </style>
-            </template>
-            <template name=switch-style-2>
-                <style>
-                    .switch, .circle {
-                        border-radius: 2dp;
-                    }
-                </style>
-            </template>
-            <switch-slider value=on styler=switch-style-1></switch-slider>
-            <switch-slider value=on styler=switch-style-2></switch-slider>
-        </code-light>
 
-        <template name=switch-style-1>
-            <style>
-                .switch.active {
-                    border-color: rgba(255,255,255,.2);
-                    background: [active-color];
-                }
-            </style>
-        </template>
-        <template name=switch-style-2>
-            <style>
-                .switch, .circle {
-                    border-radius: 2dp;
-                }
-            </style>
-        </template>
-        <switch-slider value=on styler=switch-style-1></switch-slider>
-        <switch-slider value=on styler=switch-style-2></switch-slider>
-        <p>通过外部事件触发状态改变</p>
-        <scroll class=exp stop-propagation="auto" x=auto y=false>
-            <scrolling style="min-width:{setting.articleWidth}dp">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>事件</th>
-                            <th>值</th>
-                            <th>描述</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>set</td>
-                            <td>on/off</td>
-                            <td>设置改变状态</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <var colorful>
+            ["#00bc9c", "#1aaf5e", "#2e97df", "#e97e06", "#ea4b36", "#33495f","#00bc9c", "#1aaf5e", "#2e97df", "#e97e06", "#ea4b36", "#33495f","#00bc9c", "#1aaf5e", "#2e97df", "#e97e06", "#ea4b36", "#33495f","#00bc9c", "#1aaf5e", "#2e97df", "#e97e06", "#ea4b36", "#33495f"]
+        </var>
+        <scroll class="demo" style="height: 500dp;">
+            <scrolling>
+                <loop colorful as value key>
+                    <div style="margin-bottom:4dp;height:60dp;line-height:60dp;background:{value};color:#fff;text-indent:20dp">{key}.{value}</div>
+                </loop>
             </scrolling>
+            <scroll-to-top></scroll-to-top>
         </scroll>
-        <code-light type=html>
-            <switch-slider uuid=receive value=on></switch-slider>
-            <script>
-                node('receive').on('ready', function () {
-                    this.trigger('set', 'off')
-                })
-            </script>
-        </code-light>
-        <p>注意：改变组件状态事件要在组件<code>ready</code>之后执行。</p>
+        <blockquote>
+            <h5>注意</h5>
+            <p>若未设置 scroller 时，组件默认就近自动吸附，但是要注意组件的位置，组件要放置在需要滚动顶部的滚动条的内部或之后</p>
+        </blockquote>
     </section>
 </template>

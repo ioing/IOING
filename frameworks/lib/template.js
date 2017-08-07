@@ -80,7 +80,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 data.data)
             
             this.css.init(id).setup({
-                data       : {
+                data : {
                     module     : this.module,
                     config     : this.config,
                     params     : this.module.param,
@@ -91,7 +91,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                     feat       : device.feat,
                     prefix     : device.feat.prefix
                 },
-                descendant       : (this.config.sandbox || this.config.shadowbox || id == 'frameworks') ? null : "#module-" + id + "-context"
+                descendant : (this.config.sandbox || this.config.shadowbox || ["frameworks", "system"].consistOf(id)) ? null : "module-container[name='" + id + "']"
             })
 
             // init 清除 Dom 的未完成异步回调
@@ -115,6 +115,12 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             var config = this.config
             var dimension = module.dimension
             var prefetched = module.prefetch[dimension]
+
+            // new app
+
+            if ( module.remoteframe ) {
+                return this.frame(module)
+            }
 
             // 如果存在缓存并且没有被定义为强制刷新模块
 
@@ -164,9 +170,9 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
             // set application
 
-            App.modules[id].addElement('sandbox', sandbox)
-            App.modules[id].addElement('context', context)
-            App.modules[id].addElement('content', content)
+            module.addElement('sandbox', sandbox)
+            module.addElement('context', context)
+            module.addElement('content', content)
 
             // 模块错误收集
 
@@ -215,13 +221,12 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 css.innerHTML = style
 
             var body = document.createElement("module-context")
-                body.id = "module-" + id + "-context"
                 body.name = id
                 body.className = "module-context"
 
             // inset style
 
-            id == 'frameworks' && type == 0 && !this.config.shadowbox 
+            id == "frameworks" && type == 0 && !this.config.shadowbox 
                 ? document.head.appendChild(css) 
                 : body.appendChild(css)
 
@@ -243,7 +248,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 if ( path ) {
                     script += '<script src=' + App.realpath(id, null, path) + '></script> \n'
                 } else {
-                    App.console.error('resources.script["' + name + '"] is not definde')
+                    App.console.error('resources.script["' + name + '"]', 'Config error' ,'is not definde')
                 }
             })
 
@@ -351,23 +356,79 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             module.addElement('mirroring', sandbox.iframe)
         },
 
-        container : function (target) {
-            var mirroring = this.config.mirroring
-            var clip = mirroring ? mirroring.clip : false
+        container : function () {
+            var view
+              , mask
+              , clip
+              , mirroring
 
-            var mask = document.createElement('mask')
-            var view = document.createElement('view')
+            if ( ["frameworks", "system"].consistOf(this.id) ) {
+                view = this.target
+            } else {
+                mirroring = this.config.mirroring
+                clip = mirroring ? mirroring.clip : false
 
-            mask.appendChild(view)
+                mask = document.createElement('mask')
+                view = document.createElement('view')
 
-            // in module
-            
-            this.target.appendChild(mask)
-            this.module.addElement('mask', mask)
-            this.module.addElement('view', view)
-            this.module.clipView(clip)
+                mask.appendChild(view)
+
+                // in module
+                
+                this.target.appendChild(mask)
+                this.module.addElement('mask', mask)
+                this.module.addElement('view', view)
+                this.module.clipView(clip)
+            }
 
             return this.config.shadowbox && view.createShadowRoot ? view.createShadowRoot() : view
+        },
+
+        frame : function (module) {
+            var that = this
+            var frame = document.createElement('iframe')
+
+            frame.src = module.config.source
+            frame.setAttribute('app', true)
+
+            this.target.appendChild(frame)
+
+            // remoteframe
+
+            module.remoteframe = frame.contentWindow
+
+            module.addElement('context', frame.contentWindow.document)
+            module.addElement('content', frame)
+
+            // fetched
+
+            this.fetched(module, noop)
+
+            // loaded
+
+            frame.contentWindow.addEventListener("load", function () {
+                if ( this.App ) {
+                    
+                    // set name
+                        
+                    this.App = module.id
+
+                    // load
+                    
+                    this.addEventListener(module.config.preview === 2 ? "frameworksload" : "frameworksready", function () {
+                        that.readied(module, noop)
+
+                        setTimeout(function () {
+                            that.loaded(module, noop)
+                        }, 0)
+                    }, false)
+                } else {
+                    that.readied(module, noop)
+                    setTimeout(function () {
+                        that.loaded(module, noop)
+                    }, 0)
+                }
+            }, false)
         },
 
         sandbox : function (style, dom) {

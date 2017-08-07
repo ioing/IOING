@@ -26,7 +26,7 @@ scroll {
 scrolling {
 	width: @(width * scale)dp;
 	height: @(height * scale)dp;
-	background: url([setting.image]);
+	background: url(~~/[setting.image]);
 	background-size: 100%;
 	tap-highlight-color: rgba(0,0,0,0);
 	transform: translateZ(0);
@@ -38,7 +38,7 @@ scrollbar {
 	float: left;
 	width: 235dp;
 	height: 321dp;
-	background: url([setting.image]);
+	background: url(~~/[setting.image]);
 	background-size: 100%;
 }
 
@@ -62,5 +62,5 @@ indicator {
 
 <script>
 	components.scroller = node('minimap').scroller
-	components.ontrigger('onScroll')
+	components.register('onScroll')
 </script>

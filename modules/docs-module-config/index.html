@@ -639,8 +639,33 @@
                                 </tr>
                                 <tr>
                                     <td>animation</td>
+                                    <td>'zoom'</td>
+                                    <td>使用内置动画：缩放</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
                                     <td>'slide'</td>
-                                    <td>使用内置动画：滑动</td>
+                                    <td>使用内置动画：（左）滑动</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'slide-up'</td>
+                                    <td>使用内置动画：上滑动</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'slide-right'</td>
+                                    <td>使用内置动画：右滑动</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'slide-down'</td>
+                                    <td>使用内置动画：下滑动</td>
+                                </tr>
+                                <tr>
+                                    <td>animation</td>
+                                    <td>'slide-left'</td>
+                                    <td>使用内置动画：左滑动</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -654,27 +679,26 @@
                             resources: { ...resources },
                             config: {
                                 ...
-                                animation : [function (event) {
-                                                reset(event)
-                                                viewin.duration(0).to(width, 0, 0).end(function () {
-                                                    viewout.duration(400).to(-width, 0, 0).end()
-                                                    viewin.duration(400).to(0, 0, 0).end(function () {
-                                                        event.callback(false)
-                                                    })
-                                                })
-                                            },
-                                            function (event) {
-                                                reset(event)
-                                                viewin.duration(0).to(-width, 0, 0).end(function () {
-                                                    viewin.duration(400).to(0, 0, 0).end()
-                                                    viewout.duration(400).to(width, 0, 0).end(function () {
-                                                        event.callback(false)
-                                                    })
-                                                })
-                                            }],
+                                animation : [
+                                    function (e) {
+                                        e.in.duration(0).to(0, 0, 0).opacity(0).end(function () {
+                                            e.in.duration(400).opacity(1).end(function () {
+                                                e.callback(false)
+                                            })
+                                        })
+                                    },
+                                    function (e) {
+                                        e.in.duration(0).to(0, 0, 0).opacity(1).end(function () {
+                                            e.out.duration(400).opacity(0).end(function () {
+                                                e.callback(false)
+                                            })
+                                        })
+                                    }
+                                ],
                                 ...
                             }
-                        })
+                        }
+                    })
                 </code-light>
                 <p>使用函数的方式定义一个动画函数</p>
                 <code-light type=js>
@@ -684,36 +708,18 @@
                             resources: { ...resources },
                             config: {
                                 ...
-                                animation : function (event) {
-                                    var width = device.ui.width
-                                    var height = device.ui.height
-
-                                    // 当前两个模块的视图元素数组，[module-A-element, module-B-element]
-                                    var view = event.view
-                                    // 根据模块层级得到的模块转场的走向
-                                    var reverse = event.reverse
-                                    // 模块流向
-                                    var backset = event.backset
-
-                                    if ( backset == 0 ) return event.callback(false)             
-
-                                    if ( reverse ) {
-                                        view[0].Animate().duration(0).to(-width/3, 0, 0).end(function () {
-                                            view[1].Animate().duration(150).to(width, 0, 0).end()
-                                            this.duration(150).to(0, 0, 0).end(function () {
-                                                event.callback(false)
+                                animation : function (e) {
+                                    e.in.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*e.direction).end(function () {
+                                        e.out.duration(400).perspective(1000).rotate3d(0, 1, 0, -90*e.direction).end(function () {
+                                            e.out.duration(0).opacity(0).end()
+                                            e.in.duration(0).opacity(1).end(function () {
+                                                e.in.duration(400).rotate3d(0, 1, 0, 0).end(function () {
+                                                    e.callback(false)
+                                                })
                                             })
                                         })
-                                    } else {
-                                        view[0].Animate().duration(0).to(width, 0, 0).end(function () {
-                                            view[1].Animate().duration(300).to(-width/3, 0, 0).end()
-                                            this.duration(300).to(0, 0, 0).end(function () {
-                                                event.callback(false)
-                                            })
-                                        })
-
-                                    }
-                                },
+                                    })
+                                }
                                 ...
                             }
                         }
@@ -732,9 +738,49 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td>x</td>
+                                    <td>Number</td>
+                                    <td>点按事件（tap）触发转场的屏幕 x 位置</td>
+                                </tr>
+                                <tr>
+                                    <td>y</td>
+                                    <td>Number</td>
+                                    <td>点按事件（tap）触发转场的屏幕 y 位置</td>
+                                </tr>
+                                <tr>
+                                    <td>in</td>
+                                    <td>Animate</td>
+                                    <td>进入模块的动画 Animate 对象</td>
+                                </tr>
+                                <tr>
+                                    <td>out</td>
+                                    <td>Animate</td>
+                                    <td>移出模块的动画 Animate 对象</td>
+                                </tr>
+                                <tr>
+                                    <td>origin</td>
+                                    <td>String</td>
+                                    <td>动画变换原点，若存在 x,y 则等于 [x]px, [y]px，默认为 center</td>
+                                </tr>
+                                <tr>
+                                    <td>width</td>
+                                    <td>Number</td>
+                                    <td>视图窗口宽度</td>
+                                </tr>
+                                <tr>
+                                    <td>height</td>
+                                    <td>Number</td>
+                                    <td>视图窗口高度</td>
+                                </tr>
+                                <tr>
                                     <td>view</td>
                                     <td>Array</td>
                                     <td>两个动画模块的操作元素</td>
+                                </tr>
+                                <tr>
+                                    <td>viewport</td>
+                                    <td>Array</td>
+                                    <td>复合模块框架元素和独立模块框架元素</td>
                                 </tr>
                                 <tr>
                                     <td>backset</td>
@@ -745,6 +791,11 @@
                                     <td>reverse</td>
                                     <td>Boolean</td>
                                     <td>backset == 1 时为 false 反之为 true</td>
+                                </tr>
+                                <tr>
+                                    <td>direction</td>
+                                    <td>Boolean</td>
+                                    <td>和 reverse 类似，动画前进为 1 后退为 -1</td>
                                 </tr>
                                 <tr>
                                     <td>callback</td>

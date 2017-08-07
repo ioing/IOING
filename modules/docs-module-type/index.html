@@ -3,11 +3,7 @@
         <article>
             <section uuid=topic>
                 <h2>模块类型</h2>
-                <p>模块是构成应用的基本结构，也是应用内容的载体</p>
-                <blockquote>
-                    <h5>模块与视图的对应关系</h5>
-                    <p>一个应用是由多个功能场景组成的（我们可以理解为视图页面），功能场景则是由模块来构建的，每个场景都可作为一个模块进行独立开发</p>
-                </blockquote>
+                <p>模块是构成应用的主要元素，也是应用内容展示的载体，模块能够在应用中独立运行且可以在应用中自由装卸</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:{setting.articleWidth}dp">
                         <module-demo src=module-demo></module-demo>
@@ -16,6 +12,7 @@
                 <p>模块分为 <a on-tap="event::viewModule(0)">#主模块</a> 和 <a on-tap="event::viewModule(1)">#子模块</a>，主模块一般承载了应用程序的公共部分，如视图中的 header 和 footer 部分以及其它公共组件部分，子模块一般承载了具体的功能场景，如“消息界面”和“通讯录界面”等</p>
                 <p>子模块又分为<code>复合型</code>模块（也称嵌合型模块）和<code>独立型</code>模块（即全屏模块），复合型模块是被嵌入在主模块视图中显示的，独立性模块是全屏显示的</p>
                 <blockquote>
+                    <h5>应用模块的意义</h5>
                     <p>传统单页面中我们所有的使用场景都被堆放在同一个 DOM Tree 下，于是造成了高耦合的问题，比如模块之间相互影响以及 CSS 样式和 Javascript 变量的重名覆盖，而沙盒化能够将模块页面限制在沙盒（Sandbox）中，使其与主 DOM Tree 脱离</p>
                 </blockquote>
             </section>

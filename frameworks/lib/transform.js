@@ -78,10 +78,27 @@ define('~/transform', [], function (require, module, exports) {
 
             App.absoluteViewport = absoluteViewport
 
+            // creat fixed view
+
+            var fixedViewport = document.createElement('fixed-windows')
+                fixedViewport.id = "fixed-viewport"
+                fixedViewport.style.position = "fixed"
+                fixedViewport.style.zIndex = 999999
+                fixedViewport.style.width = "100%"
+                absoluteViewport.style.height = "0"
+                fixedViewport.style.overflow = "visible"
+
+                // set DNA
+
+                DNA(fixedViewport)
+
+            App.fixedViewport = fixedViewport
+
             // append to document
 
             document.body.appendChild(App.relativeViewport)
             document.body.appendChild(App.absoluteViewport)
+            document.body.appendChild(App.fixedViewport)
         },
 
         setup : function (options) {
@@ -119,7 +136,7 @@ define('~/transform', [], function (require, module, exports) {
 
             // level == 0 return
 
-            if ( this.options.singlelocking && this.module.config.level === 0 ) {
+            if ( this.options.singlelocking && (this.id === "frameworks" || this.module.config.level === 0) ) {
 
                 this.singleflowtimes++
 
@@ -127,7 +144,7 @@ define('~/transform', [], function (require, module, exports) {
 
                 // exit App
 
-                App.trigger('exit', { singleflow : this.singleflowtimes})
+                App.trigger('exit', { singleflow : this.singleflowtimes })
 
                 return
             }
@@ -219,7 +236,7 @@ define('~/transform', [], function (require, module, exports) {
             return /\//.test(id) && id.indexOf('[') !== 0 ? '[' + id + ']' : id
         },
 
-        get : function (id, od, input) {
+        get : function (id, od, param, history, events, callback) {
             var that = this
             var nofind = that.options.nofindpage || '404'
 
@@ -239,7 +256,7 @@ define('~/transform', [], function (require, module, exports) {
 
                 // RE
 
-                that.to.apply(that, input)
+                that.to.apply(that, [id, param, history, events, that.callback])
             }, function () {
                 if ( id === nofind ) return
                 that.loading(od, 0)
@@ -249,7 +266,7 @@ define('~/transform', [], function (require, module, exports) {
             return this
         },
 
-        to : function (id, param, history) {
+        to : function (id, param, history, events, callback) {
             var that = this
 
             // filter
@@ -259,6 +276,10 @@ define('~/transform', [], function (require, module, exports) {
             // in the process
 
             this.inProcess = 0
+
+            // clear again back
+
+            this.singleflowtimes = 0
 
             // is number ? go to history
 
@@ -280,7 +301,7 @@ define('~/transform', [], function (require, module, exports) {
 
             if ( App.modules[id] === undefined ) {
                 this.inProcess = -1
-                return this.get(id, od, arguments)
+                return this.get(id, od, param, history, events)
             }
 
             // nomal param url
@@ -291,15 +312,28 @@ define('~/transform', [], function (require, module, exports) {
 
             this.id = id
             this.param = param
-            this.callback = noop  // reset callback
+            this.events = events
+            this.callback = callback || noop  // reset callback
 
             // od & id
 
-            var od = this.od
+            var od = this.od || (App._EXISTS ? "frameworks" : null)
             var ids = od ? [id, od] : [id]
             var module = App.modules[id]
             var modulu = App.modules[od]
             var moduli = od ? [module, modulu] : [module]
+
+            // update events
+            
+            if ( events ) {
+                module.events = events
+            }
+
+            // all back frameworks
+
+            if ( id === "frameworks" ) {
+                history = -1
+            }
 
             // self module
 
@@ -333,7 +367,7 @@ define('~/transform', [], function (require, module, exports) {
 
             // get animation
 
-            this.animation = (this.self || !od || od === 'frameworks') 
+            this.animation = (this.self || !od) 
                                 ? false
                                 : (history == -1 ? modulu : module).config.animation
 
@@ -429,21 +463,30 @@ define('~/transform', [], function (require, module, exports) {
                 || module.update === true 
                 || module.config.update === true ) 
             {   
+                // 毁灭
+
                 module.destroy(1)
 
-                if ( that.prefetched || module.config.preview ) {
-                    that.include(id, null, readied)
+                // 联网且预览或预取
+                
+                if ( navigator.onLine === true && (this.prefetched || module.config.preview) ) {
+                    this.include(id, null, readied)
                 } else {
-                    rAF(function () {
-                        readied(module, function () {
-                            that.include(id, null, function (module, callback) { 
-                                callback()
-                            })
+                    readied(module, function () {
+                        that.include(id, null, function (module, callback) { 
+                            callback()
                         })
                     })
                 }
             } else {
-                readied(module)
+                readied(module, function () {
+
+                    // 刷新远程应用
+
+                    if ( module.remoteframe ) {
+                        module.refresh()
+                    }
+                })
             }
         },
 
@@ -474,7 +517,7 @@ define('~/transform', [], function (require, module, exports) {
             var module = App.modules[id]
             var config = module.config
             var container = module.elements.container
-            var frameworks = id == "frameworks" ? true : false
+            var frameworks = ["frameworks", "system"].consistOf(id)
 
             // clear style
 
@@ -585,7 +628,7 @@ define('~/transform', [], function (require, module, exports) {
                 if ( module.timeout ) {
                     if ( id == 'frameworks' ) return
                     setTimeout(function () {
-                        module.refresh(dimension)
+                        module.refresh()
                     }, 100)
                 }
 
@@ -693,13 +736,13 @@ define('~/transform', [], function (require, module, exports) {
 
         container : function (id) {
             var that = this
-              , module = App.modules[id]
-              , config = module.config
-              , target = config.absolute === false ? App.relativeViewport : App.absoluteViewport
+            var module = App.modules[id]
+            var config = module.config
+            var target = id == "system" ? App.fixedViewport : config.absolute === false ? App.relativeViewport : App.absoluteViewport
 
             var container = document.createElement("module-container")
                 container.setAttribute("name", id)
-                container.setAttribute("type", id === "frameworks" ? "frameworks" : "module")
+                container.setAttribute("type", ["frameworks", "system"].consistOf(id) ? id : "module")
 
             // set DNA
 
@@ -719,76 +762,46 @@ define('~/transform', [], function (require, module, exports) {
         },
 
         animations : function (type) {
-            var viewin,
-                viewout,
-                reverse,
-                width,
-                height
-
-            function reset (event) {
-                viewin = event.view[0].Animate()
-                viewout = event.view[1].Animate()
-                reverse = event.reverse
-
-                width = device.ui.width
-                height = device.ui.height
-            }
+            var A = this.Animations
 
             switch (type) {
                 case 'flip':
-                    return [function (event) {
-                                reset(event)
-                                reverse = reverse ? -1 : 1
-                                viewin.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*reverse).end(function () {
-                                    viewout.duration(400).perspective(1000).rotate3d(0, 1, 0, -90*reverse).end(function () {
-                                        viewout.duration(0).opacity(0).end()
-                                        viewin.duration(0).opacity(1).end(function () {
-                                            viewin.duration(400).rotate3d(0, 1, 0, 0).end(function () {
-                                                event.callback(false)
-                                            })
-                                        })
-                                    })
-                                })
-                            }]
+                    return [A.flip, A.flip]
                 break
+
                 case 'fade':
-                    return [function (event) {
-                                reset(event)
-                                viewin.duration(0).to(0, 0, 0).opacity(0).end(function () {
-                                    viewin.duration(400).opacity(1).end(function () {
-                                        event.callback(false)
-                                    })
-                                })
-                            },
-                            function (event) {
-                                reset(event)
-                                viewin.duration(0).to(0, 0, 0).opacity(1).end(function () {
-                                    viewout.duration(400).opacity(0).end(function () {
-                                        event.callback(false)
-                                    })
-                                })
-                            }]
+                    return [A.fade(1), A.fade(0)]
                 break
+
+                case 'zoom':
+                    return [A.zoom(1), A.zoom(0)]
+                break
+
                 case 'slide':
-                    return [function (event) {
-                                reset(event)
-                                viewin.duration(0).to(width, 0, 0).end(function () {
-                                    viewout.duration(400).to(-width, 0, 0).end()
-                                    viewin.duration(400).to(0, 0, 0).end(function () {
-                                        event.callback(false)
-                                    })
-                                })
-                            },
-                            function (event) {
-                                reset(event)
-                                viewin.duration(0).to(-width, 0, 0).end(function () {
-                                    viewin.duration(400).to(0, 0, 0).end()
-                                    viewout.duration(400).to(width, 0, 0).end(function () {
-                                        event.callback(false)
-                                    })
-                                })
-                            }]
+                case 'slideLeft':
+                case 'slideleft':
+                case 'slide-left':
+                    return [A.slide(1), A.slide(3)]
                 break
+
+                case 'slideRight':
+                case 'slideright':
+                case 'slide-right':
+                    return [A.slide(3), A.slide(1)]
+                break
+
+                case 'slideUp':
+                case 'slideup':
+                case 'slide-up':
+                    return [A.slide(0), A.slide(2)]
+                break
+
+                case 'slideDown':
+                case 'slidedown':
+                case 'slide-down':
+                    return [A.slide(2), A.slide(0)]
+                break
+
                 default:
                     return false
                 break
@@ -797,6 +810,7 @@ define('~/transform', [], function (require, module, exports) {
 
         transform : function (callback) {
             var that = this
+            var events = this.events
             var module = this.module
             var modulu = this.modulu
             var modules = this.moduli
@@ -804,6 +818,57 @@ define('~/transform', [], function (require, module, exports) {
             var backset = (modules.length === 1 || module.config.level === modulu.config.level) ? false : (module.config.level > modulu.config.level ? 0 : 1)
             var reverse = backset === 0 ? false : true
             var animation = function (event) { event.callback() }
+
+            var views = cutting ? [
+                                    module.config.absolute === false 
+                                    ? App.relativeViewport 
+                                    : App.absoluteViewport
+                                    , modulu.config.absolute === false 
+                                    ? App.relativeViewport 
+                                    : App.absoluteViewport
+                                ] 
+                                : [
+                                    module.elements.container, 
+                                    modulu.elements.container
+                                ]
+
+            var x = 0, y = 0, attach = "center", origin = "center"
+            var width = device.ui.width
+            var height = device.ui.height
+            var touches = events ? events.touches : null
+
+            touches = touches ? touches.srcEvent : null
+            
+            if ( !touches ) {
+                touches = modulu.events.touches
+                touches = touches ? touches.srcEvent : {}
+            }
+
+            if ( touches.changedTouches ) {
+                x = touches.changedTouches[0].pageX
+                y = touches.changedTouches[0].pageY
+            } else {
+                x = touches.x
+                y = touches.y
+            }
+
+            if ( x && y ) {
+                origin = [x, y]
+
+                if ( x < width/4 ) {
+                    x = 0
+                } else if ( x > width*3/4 ) {
+                    x = width
+                }
+
+                if ( y < height/4 ) {
+                    y = 0
+                } else if ( y > height*3/4 ) {
+                    y = height
+                }
+
+                attach = [x, y]
+            }
 
             // get animation
             
@@ -842,12 +907,22 @@ define('~/transform', [], function (require, module, exports) {
 
             rAF(function () {
                 animation({
-                    "view"     : cutting ? [module.config.absolute === false ? App.relativeViewport : App.absoluteViewport, modulu.config.absolute === false ? App.relativeViewport : App.absoluteViewport] : [module.elements.container, modulu.elements.container],
-                    "viewport" : [App.relativeViewport, App.absoluteViewport],
-                    "modules"  : modules,
-                    "reverse"  : reverse,
-                    "backset"  : backset,
-                    "callback" : end
+                    view       : views,
+                    x          : x,
+                    y          : y,
+                    in         : views[0].Animate(),
+                    out        : views[1].Animate(),
+                    width      : width,
+                    height     : height,
+                    viewport   : [App.relativeViewport, App.absoluteViewport],
+                    modules    : modules,
+                    reverse    : reverse,
+                    direction  : reverse ? -1 : 1,
+                    backset    : backset,
+                    callback   : end,
+                    origin     : origin,
+                    attach     : attach,
+                    touches    : touches
                 })
             })
         },
@@ -914,8 +989,14 @@ define('~/transform', [], function (require, module, exports) {
 
                     // clear cache
             
-                    if ( !this.modulu.config.cache && !this.self ) {
+                    if ( !this.self && (this.modulu.config.update || this.modulu.config.cache <= 0) ) {
                         this.modulu.destroy(1)
+                    }
+
+                    // App background
+
+                    if ( this.modulu.remoteframe.App ) {
+                        this.modulu.remoteframe.App.trigger('background')
                     }
                 }
 
@@ -969,6 +1050,116 @@ define('~/transform', [], function (require, module, exports) {
 
         then : function (callback) {
             this.callback = callback || noop
+        }
+    }
+
+
+    // Animations
+
+    Transform.prototype.Animations = {
+        flip : function (e) {
+            e.in.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*e.direction).end(function () {
+                e.out.duration(300).perspective(1000).rotate3d(0, 1, 0, -90*e.direction).end(function () {
+                    e.out.duration(0).opacity(0).end()
+                    e.in.duration(0).opacity(1).end(function () {
+                        e.in.duration(300).rotate3d(0, 1, 0, 0).end(function () {
+                            e.callback(false)
+                        })
+                    })
+                })
+            })
+        },
+        fade : function (type) {
+            return function (e) {
+                var inO, outO, inV, outV
+                switch (type) {
+                    case 0:
+                        inO = 1
+                        outO = 0
+                        inV = e.in
+                        outV = e.out
+                    break
+                    case 1:
+                        inO = 0
+                        outO = 1
+                        inV = outV = e.in
+                }
+                inV.duration(0).to(0, 0, 0).opacity(inO).end(function () {
+                    outV.duration(300).opacity(outO).end(function () {
+                        e.callback(false)
+                    })
+                })
+            }
+        },
+        slide : function (type) {
+            return function (e) {
+                var inX, outX, inY, outY
+                switch (type) {
+                    case 0:
+                        outY = e.height
+                        inY = -outY
+                        inX = outX = 0
+                    break
+                    case 1:
+                        inX = e.width
+                        outX = -inX
+                        inY = outY = 0
+                    break
+                    case 2:
+                        inY = e.height
+                        outY = -inY
+                        inX = outX = 0
+                    break
+                    case 3:
+                        outX = e.width
+                        inX = -outX
+                        inY = outY = 0
+                    break
+                }
+
+                if ( e.reverse ) {
+                    e.in.duration(0).to(inX, inY, 0).end(function () {
+                        e.in.duration(300).to(0, 0, 0).end()
+                        e.out.duration(300).to(outX, outY, 0).end(function () {
+                            e.callback(false)
+                        })
+                    })
+                } else {
+                    e.in.duration(0).to(inX, inY, 0).end(function () {
+                            e.out.duration(300).to(outX, outY, 0).end()
+                            e.in.duration(300).to(0, 0, 0).end(function () {
+                                e.callback(false)
+                            })
+                        })
+                    }
+                }
+        },
+        zoom :  function (type) {
+            return function (e) {
+                switch (type) {
+                    case 0:
+                        e.in.origin(e.attach).duration(0).to(0, 0, 0).scale(2.5).end(function () {
+                            e.out.origin(e.origin).duration(0).to(0, 0, 0).opacity(1).scale(1).end(function () {
+                                e.in.duration(300).scale(1).end()
+                                e.out.duration(300).opacity(0).scale(0).end(function () {
+                                    e.callback(false)
+                                })
+                            })
+                        })
+                    break
+                    case 1:
+                        e.in.origin(e.origin).duration(0).to(0, 0, 0).scale(0).end(function () {
+                            e.out.origin(e.attach).duration(0).to(0, 0).scale(1).end(function () {
+                                e.out.duration(300).scale(2.5).end()
+                                e.in.to(0, 0, 0).duration(300).scale(1).end(function () {
+                                    e.callback(false)
+                                })
+                            })
+                        })
+                    break
+                }
+
+            }
         }
     }
 

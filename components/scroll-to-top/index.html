@@ -40,7 +40,7 @@
 </style>
 
 <if styler>
-	<include name="{{styler}}"></include>
+	<include name="{styler}"></include>
 </if>
 
 <script>
@@ -53,13 +53,13 @@
 		maxstep : 最大回滚路程
 	*/
 
-	var scroller = DOMS[scope.scroller] || components.previousScroller
+	var scroller = node(scope.scroller) || components.previousScroller
 	
 	if ( scroller ) {
 
-		var scroll = scroller.scroller
-		var top = scroll.wrapperHeight * (scope.pagenum || 3)
-		var btn = DOM['scrollTopBtn']
+		var scroll = scroller.Scroll()
+		var top = scroll.wrapperHeight * (scope.page || 1)
+		var btn = node('scrollTopBtn')
 		var maxstep = scope.maxstep || 1000
 
 		scroll.on('scroll', function (event) {

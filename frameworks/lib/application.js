@@ -38,6 +38,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 		this.dimension = null
 		this.controller = {}
 		this.updatetime = {}
+		this.remoteframe = false
 		this.storagemaps = []
 		this.initialparam = {}
 		this.initialconfig = {}
@@ -234,11 +235,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 		addElement : function (name, element) {
 			if ( this.elements[name] instanceof Element ) {
-				if ( module.refreshing ){
+				if ( this.refreshing ){
 					this.refreshing.push(this.elements[name])
 				} else {
 					this.elements[name].remove()
 				}
+			}
+			// sandbox
+			
+			if ( name === 'sandbox' ) {
+				this.sandbox = element
 			}
 
 			this.elements[name] = element
@@ -392,8 +398,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			// console version
 
-			this.version = '2.0.0.180'
-			this.console.log(this.version, 'version', 'ioing.com')
+			this.name = App
+			this.version = '3.0.1'
+			this.console.log(this.version, 'Version', 'ioing.com')
 
 	        // lock top window
 	        
@@ -506,7 +513,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             		fn.apply(that, [].slice.call(args, 1))
             	} catch (e) {
             		that.off(type, fn)
-            		that.console.warn('App event:' + type, 'expire', 'be off')
+            		that.console.warn('event:' + type, 'Expire', 'be off')
             	}
             })
         },
@@ -622,7 +629,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
                 } else if ( url.indexOf('./') === 0 ) {
                     url = prepath + url.substr(1)
                 } else if ( url.indexOf('~/') === 0 ) {
-                    url = modpath + '/' + url.substr(1)
+                    url = prepath + url.substr(1)
+                } else if ( url.indexOf('~~/') === 0 ) {
+                    url = modpath + url.substr(2)
                 } else {
                     url = prepath + '/' + url
                 }
@@ -639,7 +648,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			var uri = ''
 			var frame = this.frameworks 
 			var config = frame ? frame.config : {}
-			var origins = config.origins || []
+			var origins = config.origins
 
 			if ( !id ) return
 
@@ -647,7 +656,13 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			if ( id.match(/^\w+\:/) === null ) {
 				uri = this.realpath(id, id, 'config')
-			} else if ( origins.indexOf(id) !== -1 ) {
+			} else if ( origins ) {
+				origins.each(function (i, origin) {
+					if ( id.indexOf(origin) == 0 ) {
+						uri = id + '/config'
+					}
+				})
+			} else {
 				uri = id + '/config'
 			}
 
@@ -709,7 +724,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					// 标记为update模块预取无效
 
 					if ( modules[id].config.update === true || modules[id].config.cache === 0 ) {
-						return that.console.warn('Modules[' + id + ']', 'prefetch', 'config[update == true or cache == 0] cannot prefetch')
+						return that.console.warn('Modules[' + id + ']', 'Prefetch', 'config[update == true or cache == 0] cannot prefetch')
 					}
 
 					// 预取资源
@@ -718,7 +733,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 						
 						// console
 
-                		that.console.info('Module [' + id + ']', 'prefetch', (Date.now() - startTime) + 'ms')
+                		that.console.info('Module [' + id + ']', 'Prefetch', (Date.now() - startTime) + 'ms')
 
 						/* 
 						 * 预取成功
@@ -746,7 +761,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 						delete modules[id].prefetch[params]
 
-						that.console.error('Module [' + id + ']', 'prefetch', 'failed')
+						that.console.error('Module [' + id + ']', 'Prefetch', 'failed')
 					})
 				}
 			})
@@ -917,7 +932,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         		}
 
 			} catch (e) {
-				this.console.warn('storage', 'warn', 'no')
+				this.console.warn('storage', 'Warn', 'error')
 				return false
 			}
         },
@@ -1007,17 +1022,35 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
         	// 主模块禁止卸载
         	
-        	if ( id == 'frameworks' ) {
+        	if ( ["frameworks", "system"].consistOf(id) ) {
+        		config.sandbox = false
         		config.destroy = false
+
+        		if ( id == "system" ) {
+        			config.shadowbox = true
+        		}
         	}
 
-        	// 1. iframe input blur bug
+        	// reset level
+        	
+        	if ( isNaN(config.level) ) {
+        		config.level = 0
+        	}
 
-            if ( device.feat.iframeInputBlurBug ) {
-            	this.console.warn('There iframe input focus bug in your browser sandbox > been config sandbox = false')
-            }
+        	// app type
+        	
+        	if ( typeof config.source === 'string' ) {
+        		module.remoteframe = true
+        	}
 
-            // 2. shadowRoot
+
+        	// iframe input blur bug
+
+            // if ( device.feat.iframeInputBlurBug ) {
+            // 	this.console.warn('There iframe input focus bug in your browser sandbox > been config sandbox = false')
+            // }
+
+            // shadowRoot
 
             if ( device.feat.shadowRoot == false ) {
                 config.shadowbox = false
@@ -1037,12 +1070,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
             // cache timeout
 
-            config.cache = config.cache == undefined ? 360 : config.cache
+            config.cache = config.cache == undefined ? 600 : config.cache
 
             // WARMING: cache and update cannot coexist
 
             if ( config.cache && config.update ) {
-            	this.console.warn('config > cache and config > update cannot coexist')
+            	this.console.warn('cache and update cannot coexist', 'Config error', 'The cache should be 0')
             }
 
             // module type
@@ -1144,6 +1177,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			var mainc = module.config
 			var index = mainc.index
+			var system = mainc.system
 
 			// current page
 
@@ -1184,35 +1218,56 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				// no transform
 				
-				if ( !id ) return
+				if ( id ) {
 
-				// no need mark hash, because id is hash
-				
-				App.to(id, param, mainc.singleflow ? 1 : 0).then(function () {
+					// no need mark hash, because id is hash
+					
+					App.to(id, param, mainc.singleflow ? 1 : 0).then(function () {
+
+						App._EXISTS = true
+
+						window.trigger('frameworksload')
+						
+						// 预取得默认首页
+
+						if ( !App.modules[index] ) {
+							setTimeout(function () {
+								App.prefetch(index)
+							}, 2000)
+						}
+						
+					})
+
+				} else {
 
 					App._EXISTS = true
 
 					window.trigger('frameworksload')
-					
-					// 预取得默认首页
+				}
 
-					if ( !App.modules[index] ) {
-						setTimeout(function () {
-							App.prefetch(index)
-						}, 2000)
-					}
-					
-				})
+				if ( system ) {
+					App.get('system', function (module) {
+						this.transform.container('system')
+						module.Template = App.template('system').prefetch(function (module, callback) {
+							callback()
+						}).then(function (module, callback) {
+							window.trigger('frameworksload')
+							callback()
+						}).get(function (module) {
+						}).error(function (module) {
+						})
+					})
+				}
 
 			})
 		}, function () {
-			console.log('modules > frameworks is necessary')
+			App.console.error('Module[frameworks]', 'Fatal error', 'is necessary')
 		})
 
 		// error
 
 		window.onerror = function () {
-			App.console.error(arguments[1] || '(anonymous function)', 'onerror', arguments[2] + ':' + arguments[3])
+			App.console.error(arguments[1] || '(anonymous function)', 'Error', arguments[2] + ':' + arguments[3])
 			App.trigger('unknownerror', arguments)
 
 			return false

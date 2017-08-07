@@ -24,11 +24,19 @@
             <span class="{setting.status.activeMainNav,'developers'|activeMainNav}">开发者</span>
         </div>
 
-        <nav class="site-nav {{setting.status.showMoreNav ? 'visible' : 'hidden'}}">
+        <nav class="site-nav more-nav {{setting.status.showMoreNav ? 'visible' : 'hidden'}}">
             <ul>
-                <li><a class="{setting.status.activeMainNav,'components'|activeMainNav}" transform="components-store">推荐</a></li>
+                <li><a href="https://github.com/ioing/IOING/archive/master.zip">Download</a></li>
+                <li><a href="https://github.com/ioing/IOING" target="_bank">Github</a></li>
+                <!-- <li><a>赞助</a></li> -->
+            </ul>
+        </nav>
+
+        <nav class="site-nav">
+            <ul>
+                <li><a class="{setting.status.activeMainNav,'components,tutorial'|activeMainNav}" transform="components-store">推荐</a></li>
                 <li><a class="{setting.status.activeMainNav,'docs'|activeMainNav}" transform="docs-started-ioing">文档</a></li>
-                <li><a class="{setting.status.activeMainNav,'developers'|activeMainNav}" transform="developers">开发者</a></li>
+                <li><a class="{setting.status.activeMainNav,'developers'|activeMainNav}" transform="developers-notice">开发者</a></li>
             </ul>
         </nav>
     </div>
@@ -37,7 +45,7 @@
 <aside uuid="site-aside" class="{{setting.status.showDocsNav ? 'visible' : 'hidden'}}">
     <scroll uuid="aside-scroll" class="sidebar">
         <scrolling>
-            <div class="section-mod {setting.status.activeMainNav, 'components'|showAsideNav}">
+            <div class="section-mod {setting.status.activeMainNav, 'components,tutorial'|showAsideNav}">
                 <section>
                     <nav class="link-item">
                         <ul>
@@ -49,7 +57,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <li transform=components-tutorial class="{setting.status.activeSubNav,'components-tutorial'|activeSubNav}">
+                            <li transform=components-tutorial class="{setting.status.activeSubNav,'tutorial'|activeSubNav}">
                                 <a>
                                     <div class="link-box">
                                         <span class="title">教程</span>
@@ -61,7 +69,39 @@
                     </nav>
                 </section>
             </div>
-            <div class="section-mod {setting.status.activeMainNav, 'docs,components,developers'|showAsideNav}">
+            <div class="section-mod {setting.status.activeMainNav, 'developers'|showAsideNav}">
+                <section>
+                    <nav class="link-item">
+                        <ul>
+                            <li transform=developers-notice class="n {setting.status.activeSubNav,'developers-notice'|activeSubNav}">
+                                <a>
+                                    <div class="link-box">
+                                        <span class="title">开发须知</span>
+                                        <i></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li transform=developers-debug class="n {setting.status.activeSubNav,'developers-debug'|activeSubNav}">
+                                <a>
+                                    <div class="link-box">
+                                        <span class="title">debug</span>
+                                        <i></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li transform=components-tutorial class="{setting.status.activeSubNav,'tutorial'|activeSubNav}">
+                                <a>
+                                    <div class="link-box">
+                                        <span class="title">教程</span>
+                                        <i></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </section>
+            </div>
+            <div class="section-mod {setting.status.activeMainNav, 'docs,components,tutorial,developers'|showAsideNav}">
                 <section class="search-mod">
                     <div class="search-box">
                         <input type="text" placeholder="检索文档类目" on-input="search::searchDoc(this)" normal>
@@ -86,7 +126,7 @@
             <div class="section-mod {setting.status.activeMainNav, 'docs'|showAsideNav}">
                 <include nav></include>
             </div>
-            <div class="section-mod {setting.status.activeMainNav, 'components,developers'|showAsideNav}">
+            <div class="section-mod {setting.status.activeMainNav, 'components,tutorial,developers'|showAsideNav}">
                 <section class="hover-item">
                     <scroll class=midea-box>
                         <scrolling>
@@ -111,7 +151,7 @@
                     </nav>
                 </section>
             </div>
-            <div class="section-mod {setting.status.activeMainNav, 'docs,components,developers'|showAsideNav}">
+            <div class="section-mod {setting.status.activeMainNav, 'docs,components,tutorial,developers'|showAsideNav}">
                 <section class=links-list>
                     <h3 class="hd">标签</h3>
                     <ul class="list-of-lists">
@@ -135,7 +175,7 @@
                         </style>
                         <div class=btn-group>
                             <a class="download-btn" href="https://github.com/ioing/IOING/archive/master.zip">Download</a>
-                            <a class="github-btn" href="https://github.com/ioing/IOING">Github</a>
+                            <a class="github-btn" href="https://github.com/ioing/IOING" target="_bank">Github</a>
                             <!-- <a class=become-backer-btn transform>赞助</a> -->
                         </div>
                     </shadow>
@@ -174,7 +214,7 @@
             </li> -->
 
             <li>
-                <a transform="developers" class="{setting.status.activeMainNav,'developers','scaleBounce active','reScaleBounce'|activeMainNav}">
+                <a transform="developers-notice" class="{setting.status.activeMainNav,'developers','scaleBounce active','reScaleBounce'|activeMainNav}">
                     <span class="icon nav-icon-test1"></span>
                     <span class="title"></span>
                 </a>

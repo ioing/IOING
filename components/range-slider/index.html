@@ -111,6 +111,10 @@
 	  , circleBtn = DOM['circle']
 	  , rangeMark = scope.bubble ? DOM['mark'] : null
 
+	if ( isNaN(scope.value) ) {
+		scope.value = 0
+	}
+
 	function init() {
 		sliderW = lightLine.width()
 		circleW = DOM['circle'].width()
@@ -128,7 +132,7 @@
 	init()
 
 	function pos (x) {
-		x = typeof x == "number" ? x : (components.attr("value") / 100) * sliderW
+		x = typeof x == "number" ? x : (scope.value / 100) * sliderW
 		rangeMark && rangeMark.style.set('transform', 'translate3d(' + x + 'px, 0px, 0px)')
 		circleBtn.style.set('transform', 'translate3d(' + x + 'px, 0px, 0px)')
 		lightLine.style.set('transform', 'translate3d(' + (x - sliderW) + 'px, 0px, 0px)')
@@ -170,7 +174,7 @@
 	}
 
 
-	var value = parseInt(components.attr('value'))
+	var value = parseInt(scope.value)
 
 	var defx = (value / 100) * sliderW
 

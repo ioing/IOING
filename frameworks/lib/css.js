@@ -294,7 +294,7 @@ define('~/css', [], function (require, module, exports) {
         },
 
         realpath : function (url) {
-            return application.realpath(this.id, null, url, this.opts.path)
+            return application.realpath(this.id, this.opts.sid, url, this.opts.path)
         },
 
         unit : function (value, data, li, ri) {

@@ -8,40 +8,43 @@
     ],
     "imitate" : [
         {
-            "id" : "1",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg",
-            "type" : "演示",
-            "href" : "/demo/facebook-feed"
+            "id" : "/demo/app-ios",
+            "name" : "IOS 系统交互",
+            "type" : "演示"
         },
         {
-            "id" : "2",
-            "name" : "twitter 时间轴动态",
-            "avtr" : "upload/1.jpg",
-            "type" : "演示",
-            "href" : "/demo/twitter-feed"
+            "id" : "/demo/app-twitter",
+            "name" : "twitter App 交互",
+            "type" : "演示"
         },
-        {
-            "id" : "3",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg",
-            "type" : "演示",
-            "href" : "/demo/facebook-feed"
-        },
-        {
-            "id" : "4",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg",
-            "type" : "演示",
-            "href" : "/demo/infinite-motto"
-        },
-        {
-            "id" : "5",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg",
-            "type" : "演示",
-            "href" : "/demo/facebook-feed"
-        }
+        // {
+        //     "id" : "1",
+        //     "name" : "to be continued",
+        //     "avtr" : "upload/1.jpg",
+        //     "type" : "演示",
+        //     "href" : "/demo/facebook-feed"
+        // },
+        // {
+        //     "id" : "3",
+        //     "name" : "to be continued",
+        //     "avtr" : "upload/1.jpg",
+        //     "type" : "演示",
+        //     "href" : "/demo/facebook-feed"
+        // },
+        // {
+        //     "id" : "4",
+        //     "name" : "to be continued",
+        //     "avtr" : "upload/1.jpg",
+        //     "type" : "演示",
+        //     "href" : "/demo/infinite-motto"
+        // },
+        // {
+        //     "id" : "5",
+        //     "name" : "to be continued",
+        //     "avtr" : "upload/1.jpg",
+        //     "type" : "演示",
+        //     "href" : "/demo/facebook-feed"
+        // }
     ],
     "components" : [
         {
@@ -114,55 +117,19 @@
             "type" : "模块",
             "href" : "/demo/infinite-motto"
         },
-        {
-            "id" : "2",
-            "name" : "天气预报-带动画的天气预报模块",
-            "avtr" : "upload/1.jpg",
-            "type" : "模块",
-            "href" : "/demo/localtion-weather"
-        }
+        // {
+        //     "id" : "2",
+        //     "name" : "天气预报-带动画的天气预报模块",
+        //     "avtr" : "upload/1.jpg",
+        //     "type" : "模块",
+        //     "href" : "/demo/localtion-weather"
+        // }
     ],
     "developer": [
         {
-            "id" : "1",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "2",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "3",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "4",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "5",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "1",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "1",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
-        },
-        {
-            "id" : "1",
-            "name" : "to be continued",
-            "avtr" : "upload/1.jpg"
+            "id" : "tutorial/twitter",
+            "name" : "教你上手用 30 分钟仿制一个 Twitter 应用",
+            "meta" : "教程"
         }
-
     ]
 }
