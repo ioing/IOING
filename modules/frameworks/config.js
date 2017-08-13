@@ -202,27 +202,31 @@ define([], function (require, module, exports) {
                                 href: "docs-css-units" 
                             },
                             { 
-                                title : "var", 
+                                title : "onload url()", 
+                                href: "docs-css-background-onload" 
+                            },
+                            { 
+                                title : "@var", 
                                 href: "docs-css-var" 
                             },
                             { 
-                                title : "global", 
+                                title : "@global", 
                                 href: "docs-css-global" 
                             },
                             { 
-                                title : "section", 
+                                title : "@section", 
                                 href: "docs-css-section" 
                             },
                             { 
-                                title : "if", 
+                                title : "@if", 
                                 href: "docs-css-if" 
                             },
                             { 
-                                title : "class", 
+                                title : "@class", 
                                 href: "docs-css-class" 
                             },
                             { 
-                                title : "extend", 
+                                title : "@extend", 
                                 href: "docs-css-extend" 
                             }
                         ]

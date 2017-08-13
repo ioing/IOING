@@ -1,0 +1,211 @@
+<style>
+	.touch {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 60dp;
+		height: 60dp;
+		background: rgba(38,39,40,.8);
+		backdrop-filter: blur(20px);
+		border-radius: 14dp;
+		opacity: .5;
+		transition: all .3s ease;
+	}
+	.touch i.pop {
+		position: absolute;
+		width: 42dp;
+		height: 42dp;
+		top: 9dp;
+		left: 9dp;
+		z-index: 999;
+		background: rgba(255,255,255,.3);
+		border-radius: 30dp;
+		opacity: 1;
+	}
+	.touch i.pop::before {
+		content: ' ';
+		position: absolute;
+		top: 4dp;
+		left: 4dp;
+		width: 34dp;
+		height: 34dp;
+		z-index: 1;
+		background: rgba(255,255,255,.4);
+		border-radius: 30dp;
+		box-shadow: 0 0 0 1px rgba(0,0,0,.4);
+	}
+	.touch i.pop::after {
+		content: ' ';
+		position: absolute;
+		top: 8dp;
+		left: 8dp;
+		width: 26dp;
+		height: 26dp;
+		z-index: 2;
+		background: rgba(255,255,255,1);
+		border-radius: 30dp;
+		box-shadow: 0 0 0 1px rgba(0,0,0,.4);
+	}
+
+	.touch.show {
+		width: 80vw;
+		height: 80vw;
+		max-width: 600dp;
+		max-height: 600dp;
+	}
+
+</style>
+
+<div uuid=touch class=touch on-tap="tap(event)" on-event-0="touchmove(event)|touchmove" on-event-1="touchstart(event)|mousedown touchstart" on-event-2="touchend(event)|touchend touchcancel" style="opacity:0">
+	<i uuid=touch-pop class="pop"></i>
+	<if toucher>
+		<include toucher></include>
+	</if>
+</div>
+
+<script>
+	var timeid
+	var touch = node('touch')
+	var touchA = touch.Animate()
+	var touchpop = node('touch-pop')
+	var x, y, s = 0, open
+
+	function openTouch () {
+		var w = device.ui.width
+		var h = device.ui.height
+		var sw = touch.width()
+		var sh = touch.height()
+		var _x, _y, _s
+
+		if ( w > DP(640) ) {
+			_s = DP(600)
+			_x = (w - _s) / 2
+			_y = (h - _s) / 2
+		} else {
+			_s = w*.8
+			_x = w*.1
+			_y = (h - _s) / 2
+		}
+
+		touchpop.style.opacity = 0
+		touchA.origin(0, 0).width(_s).height(_s).to(_x, _y, 0).end()
+		toucherA.scale(1).opacity(1).end()
+		open = true
+	}
+
+	function closeTouch () {
+		touchA.duration(200).width().height().all().to(x, y, 0).end(function () {
+			touchpop.style.opacity = 1
+		})
+		toucherA.scale(0).opacity(0).end()
+		open = false
+		s = 0
+	}
+
+	function tap (e) {
+		if ( !scope.toucher ) {
+			if ( scope.back ) {
+				App.to(-1)
+			} else {
+				App.to("frameworks")
+			}
+			
+			return 
+		}
+
+
+		s = -1
+		if ( open ) {
+			closeTouch()
+		} else {
+			openTouch()
+		}
+	}
+
+	function touchmove (e) {
+		if ( s !== 2 ) return
+
+		var point = e.touches ? e.touches[0] : e
+
+		x = point.pageX
+		y = point.pageY
+
+		x = x - DP(30)
+		y = y - DP(30)
+
+		x = x < 0 ? 0 : x
+		y = y < 0 ? 0 : y
+
+		touchA.duration(0).to(x, y, 0).instant()
+
+		s = 2
+	}
+
+	function touchstart (e) {
+
+		clearTimeout(timeid)
+		touch.css({
+			"opacity": "1",
+			"backdrop-filter": "blur(20px)"
+		})
+		s = 2
+	}
+
+	function touchend (e) {
+		if ( s !== 2 ) return
+
+		s = 0
+
+		var w = device.ui.width
+		var h = device.ui.height
+
+		if ( x <= w/2 - DP(30) && y <= h/2 - DP(30) ) {
+			if ( x < y ) {
+				x = DP(3)
+			} else {
+				y = DP(3)
+			}
+		} else if ( x >= w/2 - DP(30) && y <= h/2 - DP(30) ) {
+			if ( w - x < y ) {
+				x = w - DP(63)
+			} else {
+				y = DP(3)
+			}
+		} else if ( x <= w/2 - DP(30) && y >= h/2 - DP(30) ) {
+			if ( x < h - y ) {
+				x = DP(3)
+			} else {
+				y = h - DP(63)
+			}
+		} else if ( x >= w/2 - DP(30) && y >= h/2 - DP(30) ) {
+			if ( w - x < h - y ) {
+				x = w - DP(63)
+			} else {
+				y = h - DP(63)
+			}
+		}
+
+		touchA.duration(300).to(x, y).end()
+
+		timeid = setTimeout(function () {
+			touch.css({
+				"opacity": ".5",
+				"backdrop-filter": "blur(0px)"
+			})
+		}, 4000)
+	}
+
+	validWindow.on('mousemove', touchmove)
+	validWindow.on('mouseup mousecancel', touchend)
+
+	x = device.ui.width - DP(63)
+	y = device.ui.height*.7
+
+
+	register('showin', function () {
+		touchA.duration(300).to(x, y).end(function () {
+			touch.style.opacity = .4
+		})
+	})
+
+</script>

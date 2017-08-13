@@ -1,0 +1,150 @@
+<template title>
+	Switch
+</template>
+
+<template content>
+	<section>
+        <h2>方案</h2>
+        <p>通过观察我们发现，Twitter 应用主要是由时间轴、搜索、通知和消息等应用模块构成的，而我们在制作这个演示的时候可以有两个方案，第一个方案是把这些功能全部安置在一个应用模块中，第二个方案是将这些功能全部分开模块制作，显然第二个方案更容易一点</p>
+        <scroll class=exp stop-propagation="auto" x=auto y=false>
+            <scrolling style="min-width:{setting.articleWidth}dp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>方案</th>
+                            <th>开发思路</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>模块</td>
+                            <td>使用 tab-switch 来管理功能视图间的切换</td>
+                        </tr>
+                        <tr>
+                            <td>应用</td>
+                            <td>将各个模块功能都拆分为应用模块，然后建立逻辑关系</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </scrolling>
+        </scroll>
+        <blockquote>
+            <h5>注意</h5>
+            <p>我们想要在该文档中引入这个演示，模块是最简单的方式，而我们的方案二并非是一个模块而是一个完整的应用，因此我们需要创建一个新的 IOING 项目来完成它，然后使用模块配置来引入这个模块</p>
+        </blockquote>
+        <p>我们新建一个模块，然后通过配置模块的 source 来引入一个新的应用</p>
+        <code-light type=js>
+            define(function (require, module, exports) {
+                module.exports = {
+                    config : {
+                        level : 8,
+                        absolute : true,
+                        background : "#fff",
+                        source: "modules/demo-app/twitter",   // 引入的新的 IOING 应用
+                        animation : "zoom"
+                    }
+                }
+            })
+        </code-light>
+        <p>设置 source 为 String 类型时，该模块则被视为一个窗口应用，即该模块没有实质内容，而是在该模块窗口中嵌入了另一个应用</p>
+        <h3>主模块内容</h3>
+        <p>创建一个新应用就让整个工作简化了很多，首先我们需要新建一个 IOING 项目，然后将应用的公共部分放置在主模块中（modules/frameworks），如 header 部分</p>
+        <code-light type=html>
+            <style>
+                header {
+                    ...
+                }
+            </style>
+            <header>
+                <nav>
+                    <ul>
+                        <li class="{{s.activeMainNav == 'feed' ? 'active' : ''}}" transform="feed"><a><i class="icon-home"></i></a></li>
+                        <li class="{{s.activeMainNav == 'search' ? 'active' : ''}}" transform="search"><a><i class="icon-search"></i></a></li>
+                        <li class="{{s.activeMainNav == 'notif' ? 'active' : ''}}" transform="notif"><a><i class="icon-notif"></i></a></li>
+                        <li class="{{s.activeMainNav == 'message' ? 'active' : ''}}" transform="message"><a><i class="icon-message"></i></a></li>
+                    </ul>
+                </nav>
+            </header>
+            <script>
+                App.on('transformstart', function (event) {
+                    scope.s.activeMainNav = App.id
+                })
+            </script>
+        </code-light>
+        <h3>时间轴模块</h3>
+        <p>时间轴主要展示了关注着的动态和推文，我们首先要创建一个推文模版，然后通过使用 infinite scroll 来渲染推文模版</p>
+        <code-light type=html>
+            <scroll fullscreen id="scroller" class="feed" finite item-min-size=400 template="feed" data=feed>
+                <pulldown threshold=50>
+                    <pullstart>下拉刷新</pullstart>
+                    <pulling>松手刷新</pulling>
+                    <pullend>
+                        <div class="load6">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                            <div class="bounce4"></div>
+                        </div>
+                    </pullend>
+                    <pullover>没有更多了</pullover>
+                </pulldown>
+                <pullup threshold=50 auto>
+                    <pullstart>上拉加载更多</pullstart>
+                    <pulling>松手加载更多</pulling>
+                    <pullend>
+                        <div class="load6">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                            <div class="bounce4"></div>
+                        </div>
+                    </pullend>
+                    <pullover>没有更多了</pullover>
+                </pullup>
+            </scroll>
+            <!-- 推文模版 -->
+            <template name="feed">
+                <div class="feed-box">
+                    <div class="avt" style="background-image: url('~/test_upload/user/{uid}.jpg')"></div>
+                    <div class="bar">
+                        <time>{time}</time>
+                        <span class="name">{name}</span>
+                        <if certification><span class="certification"></span></if>
+                        <if at><span class="at">{at}</span></if>
+                    </div>
+
+                    <div class="text">{!# text}</div>
+                    <div class="content">
+
+                        <if picture>
+                            <div class="banner-box {{desc ? 'hasdesc' : ''}}">
+                                <div class="banner" style="background-image: url('{picture}')" transform="preview" param="src:{picture|urlSplit},id:{module.id|urlSplit}"></div>
+                                <if desc>
+                                    <div class="desc">
+                                        {!# desc}
+                                        <if link><div class="link">{link}</div></if>
+                                    </div>
+                                </if>
+                            </div>
+                        </if>
+
+                        <if content>
+                            <div class="footerBar">
+                                <div class="interactive">
+                                    <button class="comment" transform=reply param="name:{at}">{content.reply}</button>
+                                    <button class="praise" on-tap="e::reweet()">{content.retweet}</button>
+                                    <button class="like {{liked == 1 ? 'active' : ''}}" on-tap="feed::like(event, this, {_index})">{content.like}</button>
+                                    <button class="msg"> </button>
+                                </div>
+                            </div>
+                        </if><else>
+                            <div transform=im class="im"></div>
+                        </else>
+                    </div>
+                </div>
+            </template>
+        </code-light>
+        <h3>其他模块和交互</h3>
+        <p>Twitter 中最重要的模块当属时间轴了，因此我们主要讲一下时间轴的一些交互方案，比如时间轴的图片点击时进入预览界面，这个过程完全可以通过模块的形式完成。当点击时间轴上的图片时，我们使应用跳转至预览模块且将图片 url 传给预览模块，然后预览模块中使用 map scroll 组件来展示图片。这样我们既可以在两个模块间使用模块动画来进行过渡了</p>
+    </section>
+</template>

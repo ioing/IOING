@@ -23,8 +23,8 @@
                 <scroll class="flow-card components-card" x scrollbars=false y=false>
                     <scrolling style="width:{{discover.components.length * 175 + 15}}dp;">
                         <loop data="discover.components" as value i>
-                            <div class="card-info" style="transform:translate({{i * 175 + 15}}dp, 0px) translateZ(0px)" transform="components-detail" param="{value.href}">
-                                <div class="card-icon" style="background-image: onload url({value.href}/preview.jpg)"></div>
+                            <div class="card-info" style="transform:translate({{i * 175 + 15}}dp, 0px) translateZ(0px)" transform="components-detail" param="{value.href}" tap-highlight="active">
+                                <div class="card-icon" style="background-image: onload url({value.href}/preview-medium.jpg)"></div>
                                 <div class="card-title">{value.name}</div>
                                 <div class="card-type-text">{value.free}</div>
                             </div>
@@ -40,8 +40,8 @@
                 <scroll class="flow-card photo-card" x scrollbars=false y=false>
                     <scrolling style="width:{{discover.module.length * 174 + 15}}dp;">
                         <loop data="discover.module" as value i>
-                            <div class="card-info" style="transform:translate({{i * 174 + 15}}dp, 0px) translateZ(0px)" transform="{value.href}">
-                                <div class="card-banner" style="background-image: onload url({value.href}/preview.jpg)"></div>
+                            <div class="card-info" style="transform:translate({{i * 174 + 15}}dp, 0px) translateZ(0px)" transform="{value.href}" tap-highlight="active">
+                                <div class="card-banner" style="background-image: onload url({value.href}/preview-medium.jpg)"></div>
                                 <div class="card-bar">
                                     <div class="bar-icon" style="background-image: onload url({value.href}/icon.jpg)"></div>
                                     <div class="bar-title">{value.name}</div>
@@ -59,8 +59,8 @@
                 <scroll class="flow-card study-card" x scrollbars=false y=false>
                     <scrolling style="width:{{discover.developer.length * 175 + 15}}dp;">
                         <loop data="discover.developer" as value i>
-                            <div class="card-info" style="transform:translate({{i * 175 + 15}}dp, 0px) translateZ(0px)" transform="tutorial-detail" param="{value.id}" prefetch>
-                                <div class="card-icon" style="background-image: onload url(/{value.id}/preview.jpg)"></div>
+                            <div class="card-info" style="transform:translate({{i * 175 + 15}}dp, 0px) translateZ(0px)" transform="tutorial-detail" param="{value.id}" prefetch tap-highlight="active">
+                                <div class="card-icon" style="background-image: onload url(/{value.id}/preview-medium.jpg)"></div>
                                 <div class="card-title">{value.name}</div>
                                 <div class="card-type-text">{value.meta}</div>
                             </div>
@@ -83,7 +83,7 @@
                     <scrolling style="width:{{discover.imitate.length * flowcard.width + 15}}dp;">
                         <loop data="discover.imitate" as value i>
                             <div class="card-info" style="transform:translate({{i * flowcard.width + 15}}dp, 0px) translateZ(0px)" transform="{value.id}">
-                                <div class="card-icon" style="background-image: onload url({value.id}/icon.jpg)"></div>
+                                <div class="card-icon" style="background-image: onload url({value.id}/icon.png)" tap-highlight="active"></div>
                                 <div class="card-title">{value.name}</div>
                                 <div class="card-type-text">{value.type}</div>
                             </div>

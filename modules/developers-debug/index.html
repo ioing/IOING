@@ -1,0 +1,203 @@
+<style>
+    scroll.exp {
+        border-bottom: 1px solid #e8e8e8;
+    }
+    .console {
+        display: flex;
+        margin: 0;
+        margin-bottom: 8dp;
+    }
+    .console li {
+        margin: 0;
+        padding: 0 10dp;
+        color: #fff;
+        font-size: 13dp;
+        font-weight: bold;
+    }
+    .console.info li.s {
+        background: #0cf;
+    }
+    .console.info li.m {
+        background: #06c;
+    }
+    .console.info li.l {
+        background: #0c0;
+    }
+
+    .console.warn li.s {
+        background: #f60;
+    }
+    .console.warn li.m {
+        background: #f30;
+    }
+    .console.warn li.l {
+        background: #f90;
+    }
+
+    .console.error li.s {
+        background: #f06;
+    }
+    .console.error li.m {
+        background: #903;
+    }
+    .console.error li.l {
+        background: #993;
+    }
+</style>
+
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>
+                    debug
+                    <small>常见控制台信息提示</small>
+                </h2>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann info">
+                            <li class="s">Prefetch</li>
+                            <li class="m">Module [name]</li>
+                            <li class="l">11ms</li>
+                        </ul>
+                        <p>模块资源预加载完毕，耗时 11ms</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann info">
+                            <li class="s">From cache</li>
+                            <li class="m">Data[name]</li>
+                            <li class="l">Frome module</li>
+                        </ul>
+                        <p>提示该条数据源从缓存中读取</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann info">
+                            <li class="s">Rendering time-consuming</li>
+                            <li class="m">Module [name]</li>
+                            <li class="l">0.002s </li>
+                        </ul>
+                        <p>模块模版渲染结束的总耗时为 0.002s </p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Prefetch</li>
+                            <li class="m">Module [name]</li>
+                            <li class="l">config[update == true or cache == 0] cannot prefetch</li>
+                        </ul>
+                        <p>模块 config 配置 update == true 或 cache == 0 时不能预载</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Prefetch</li>
+                            <li class="m">Module [name]</li>
+                            <li class="l">failed</li>
+                        </ul>
+                        <p>模块预载失败</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Config error</li>
+                            <li class="m">cache and update cannot coexist</li>
+                            <li class="l">The cache should be 0</li>
+                        </ul>
+                        <p>模块 config 配置 update 设为 true 时，cache 应设置为 0，否则 cache 无效</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Performance warning</li>
+                            <li class="m">{'<'}body> Consuming too long</li>
+                            <li class="l">0.021s</li>
+                        </ul>
+                        <p>性能提醒:出现性能问题的元素节点（{'<'}body>） 总耗时为0.021秒，超出标准限制时长（标准限制时长为 0.01秒）</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Expire</li>
+                            <li class="m">event: click</li>
+                            <li class="l">be off</li>
+                        </ul>
+                        <p>绑定事件报错或所在模块及上下文失效时，该事件将被自动解绑</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Warning</li>
+                            <li class="m">storage</li>
+                            <li class="l">error</li>
+                        </ul>
+                        <p>警告 storage 读写出错，有可能是浏览器不支持或当前处于隐身模式导致的</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">Config error</li>
+                            <li class="m">resources[type][name]</li>
+                            <li class="l">is not definde</li>
+                        </ul>
+                        <p>配置引用资源没有在资源库中定义</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann warn">
+                            <li class="s">SyntaxError</li>
+                            <li class="m">url[url]</li>
+                            <li class="l">Unexpected token in JSON</li>
+                        </ul>
+                        <p>JSON 格式不标准，但解析正常</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann error">
+                            <li class="s">Fatal error</li>
+                            <li class="m">Module[frameworks]</li>
+                            <li class="l">is necessary</li>
+                        </ul>
+                        <p>应用缺失主模块（frameworks）时的报错</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann error">
+                            <li class="s">SyntaxError</li>
+                            <li class="m">url[url]</li>
+                            <li class="l">Unexpected token in JSON</li>
+                        </ul>
+                        <p>JSON 格式不正确导致解析出错</p>
+                    </scrolling>
+                </scroll>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <ul class="console ann error">
+                            <li class="s">DOMError</li>
+                            <li class="m">{'<'}tag-name attr=?></li>
+                            <li class="l">is not definde</li>
+                        </ul>
+                        <p>DOM 语法错误，可能是缺少必要的 Attr</p>
+                    </scrolling>
+                </scroll>
+                      
+
+            </section>
+            
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

@@ -1,0 +1,145 @@
+<style>
+	.bar {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		padding: 0 7dp;
+		font-size: 12dp;
+		line-height: 20dp;
+		color: rgba(255,255,255,1);
+		font-weight: 400;
+		transform: translate(0, -100%);
+		transition: transform .4s;
+    	font-family: "SF Pro Text","Myriad Set Pro","Helvetica Neue","Helvetica","Arial",sans-serif;
+	}
+	.bar.v {
+		transform: translate(0, 0);
+	}
+	.battery-icon {
+		float: right;
+		min-width: 60dp;
+	}
+	.battery {
+		position: relative;
+		float: right;
+		margin-top: 5dp;
+		width: 23dp;
+		height: 10dp;
+		border: 1dp solid rgba(255,255,255,1);
+		border-radius: 1dp;
+	}
+	.battery::after {
+		content: ' ';
+		width: 2dp;
+		height: 4dp;
+		background: rgba(255,255,255,1);
+		position: absolute;
+		top: 2dp;
+		right: -2dp;
+		border-radius: 1dp;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+	.battery i {
+		position: absolute;
+ 		width: 100%;
+ 		height: 100%;
+ 		border: 1px solid transparent;
+	}
+	.battery i span {
+		content: ' ';
+		background: rgba(255,255,255,1);
+		position: absolute;
+		width: 100%;
+ 		height: 100%;
+	}
+	.battery-level {
+		float: right;
+		padding-right: 4dp;
+	}
+
+	.battery-light {
+		display: none;
+		float: right;
+		margin: 5dp 0 0 4dp;
+		width: 8dp;
+		height: 10dp;
+		background: url(light.svg) no-repeat center;
+		background-size: auto 100%;
+	}
+
+	time {
+		display: block;
+		width: 60dp;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.app-name {
+		float: left;
+	}
+</style>
+
+<script type=scope>
+	scope.battery = {
+		level:100,
+		charging:false
+	}
+	scope.time = 0,
+	scope.helper = {
+		gettime: function () {
+			var myDate = new Date()
+			var h = myDate.getHours()
+			var m = myDate.getMinutes()
+
+			return h + ':' + (m < 10 ? '0' + m : m)
+		} 
+	}
+</script>
+
+<div uuid=bar class=bar>
+	<div class="app-name">{name}</div>
+	<div class=battery-icon>
+		<div class="battery-light" style="display: {{battery.charging ? 'block' : 'none' }}"></div>
+		<div class=battery><i style="width: {battery.level}%"><span style="background: {{battery.charging ? '#44DB5E' : battery.level < 50 ? '#FFCD00' : battery.level < 20 ? 'FE3824' : '' }}"></span></i></div>
+		<span class="battery-level">{battery.level}%</span>
+	</div>
+	<time>{time|gettime}</time>
+</div>
+
+<script>
+
+	if ( navigator.getBattery ) {
+		navigator.getBattery().then(function(battery) {
+			scope.battery.level = parseInt(battery.level*100)
+			scope.battery.charging = battery.charging
+		    battery.addEventListener('chargingchange', function () {
+		        scope.battery.charging = this.charging
+		    })
+		    battery.addEventListener('levelchange', function () {
+		        scope.battery.level = parseInt(this.level*100)
+		    })
+		})
+	}
+
+	setInterval(function () {
+		scope.time++
+	}, 3000)
+
+	register('showin', function () {
+		if ( App.id == null ) node('bar').addClass('v')
+	})
+
+	App.on('transformstart', function (e) {
+		if ( e.modules[0].config.absolute ) {
+			setTimeout(function () {
+				node('bar').removeClass('v')
+			}, 100)
+		}
+	}).on('transformend', function (e) {
+		if ( e.modules[0].id == "frameworks" ) {
+			node('bar').addClass('v')
+		}
+	})
+</script>

@@ -1,0 +1,150 @@
+<style>
+	html, body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+}
+
+#container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.button-group {
+	position: absolute;
+	bottom: 20dp;
+	right: 20dp;
+	font-size: 12dp;
+	padding: 10dp;
+}
+
+.button-group .button {
+	height: 28dp;
+	line-height: 28dp;
+	background-color: #0D9BF2;
+	color: #FFF;
+	border: 0;
+	outline: none;
+	padding-left: 5dp;
+	padding-right: 5dp;
+	border-radius: 3dp;
+	margin-bottom: 4dp;
+	cursor: pointer;
+}
+.button-group .inputtext {
+	height: 26dp;
+	line-height: 26dp;
+	border: 1dp;
+	outline: none;
+	padding-left: 5dp;
+	padding-right: 5dp;
+	border-radius: 3dp;
+	margin-bottom: 4dp;
+	cursor: pointer;
+}
+ /*
+.tip {
+	position: absolute;
+	bottom: 30px;
+	right: 10px;
+	background-color: #FFF;
+	text-align: center;
+	border: 1px solid #ccc;
+	line-height: 30px;
+	border-radius: 3px;
+	padding: 0 5px;
+	font-size: 12px;
+}
+*/
+#tip {
+	background-color: #fff;
+	padding-left: 10dp;
+	padding-right: 10dp;
+	position: absolute;
+	font-size: 12dp;
+	right: 10dp;
+	top: 20dp;
+	border-radius: 3dp;
+	border: 1px solid #ccc;
+	line-height: 30dp;
+}
+
+/*
+#tip input[type='button'] {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background-color: #0D9BF2;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	color: #fff;
+	font-size: 12px;
+	border-radius: 3px;
+	outline: none;
+	border: 0;
+}
+*/
+.amap-info-content {
+	font-size: 12px;
+}
+
+#myPageTop {
+	position: absolute;
+	top: 5dp;
+	right: 10dp;
+	background: #fff none repeat scroll 0 0;
+	border: 1px solid #ccc;
+	margin: 10dp auto;
+	padding:6dp;
+	font-family: "Microsoft Yahei", "微软雅黑", "Pinghei";
+	font-size: 14dp;
+}
+#myPageTop label {
+	margin: 0 20dp 0 0;
+	color: #666666;
+	font-weight: normal;
+}
+#myPageTop input {
+	width: 170dp;
+}
+#myPageTop .column2{
+	padding-left: 25dp;
+}
+
+.amap-container .amap-copyright, .amap-container .amap-logo {
+    display: none !important;
+}
+
+</style>
+
+<div id="container"></div>
+
+<script>
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        zoom:20,
+        mapStyle: 'amap://styles/3a61c109d499b953c2fc110fd8a1b39f'
+    })
+
+    map.plugin(["AMap.ToolBar"], function() {
+		map.addControl(new AMap.ToolBar())
+	})
+
+	AMap.service(["AMap.PlaceSearch"], function() {
+        var placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+            pageSize: 5,
+            pageIndex: 1,
+            city: "010", //城市
+            map: map,
+            panel: "panel"
+        });
+        //关键字查询
+        placeSearch.search('北京大学');
+    });
+</script>

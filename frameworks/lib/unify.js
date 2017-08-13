@@ -22,8 +22,9 @@
 
     document.write('<style>* { margin : 0; padding : 0 } \n'
                         + 'html, body { position: absolute; width: 100%; height: 100%; background: #fff; overflow: hidden } \n'
-                        + 'mask, view { display: block; position: absolute; width: 100%; height: 100%; overflow: hidden } \n'
+                        + 'mask, view { position: absolute; width: 100%; height: 100%; overflow: hidden } \n'
                         + 'module-container[type=module] { display: block; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100% } \n'
+                        + 'iframe[app=true] { width: 100%; height: 100%; border: 0 } \n'
                     + '</style>')
 
     window.CSSBaseStyle = '* { box-sizing: border-box; margin : 0; padding : 0; text-size-adjust: 100%; tap-highlight-color: rgba(0, 0, 0, 0) } \n'
@@ -36,9 +37,6 @@
                         + 'article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block } \n'
                         + 'ol, ul { list-style: none } \n'
                         + 'table { border-collapse: collapse; border-spacing: 0 } \n'
-
-                        // frame
-                        + 'iframe[app] { width: 100%; height: 100%; border: 0 } \n'
 
                         // scroll
                         + 'scroll, scrolling, scrollbar, indicator { display: block; box-sizing: border-box } \n'
@@ -1910,6 +1908,22 @@
                         }
 
                         return this.scrollEvent
+                    })
+
+                    // get attr
+
+                    proto.extendProperty("getAttrSign", function (prop) {
+                        prop = this.getAttribute(prop)
+
+                        if ( ["false", "none", null].consistOf(prop) ) {
+                            prop = false
+                        } else if ( ["", "true"].consistOf(prop)) {
+                            prop = true
+                        } else if ( !isNaN(prop) ) {
+                            prop = Number(prop)
+                        }
+                        
+                        return prop
                     })
 
                     // getOwnerSelection

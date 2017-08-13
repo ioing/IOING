@@ -1,0 +1,147 @@
+<include common></include>
+<style>
+    header {
+        display: none;
+    }
+    .back {
+        position: absolute;
+        padding: @([header-height]/2) 15dp;
+        padding-right: 40dp;
+    }
+    .back .line {
+        width: 16dp;
+        height: 2dp;
+        background: [active-color];
+        transform-origin: left;
+        position: absolute;
+    }
+    .back .line1 {
+        transform: rotate(-45deg);
+    }
+    .back .line2 {
+        margin-top: -1dp;
+        transform: rotate(45deg);
+    }
+    .banner-card {
+        position: relative;
+        margin-bottom: 0;
+        min-height: 150dp;
+        max-height: 250dp;
+        height: 30vw;
+        box-shadow: inset 0 -1px 0 rgba(0,0,0,.1);
+        border: 1dp solid rgba(0,0,0,.1);
+        border-top: 0;
+        border-bottom: 0;
+        border-radius: 0;
+    }
+    .banner-image {
+        width: 100%;
+        height: 100%;
+        background-color: #444;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .banner-footer {
+        min-height: 50dp;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1dp solid rgba(0,0,0,.1);
+        border-top: 0;
+        border-radius: 0 0 5dp 5dp;
+    }
+    section.blank h2 {
+        padding-left: 35dp;
+        border-bottom: 0;
+    }
+    section.blank h2 .back {
+        margin-top: -16dp;
+        margin-left: -35dp;
+    }
+    @media screen and (max-width: [max-width]) {
+        @section (header) {
+            this {
+                display: block;
+                position: absolute;
+                top: 0;
+                width: 100%;
+                z-index: 10000;
+                height: [header-height];
+                background: rgba(255,255,255,.95);
+                background-clip: content-box;
+                border-bottom: 1px solid rgba(0,0,0,.1);
+            }
+
+            @if (device.os.ios) {
+                this {
+                    backdrop-filter: blur(20dp);
+                }
+            }
+
+            h1 {
+                margin: 0;
+                text-align: center;
+                line-height: [header-height];
+                font-weight: 300;
+            }
+        }
+
+        section.blank h2 {
+            display: none;
+        }
+        .banner-card {
+            border: 0;
+        }
+        .banner-footer {
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+        }
+    }
+</style>
+
+<include docs></include>
+
+<header>
+    <div class=back transform=-1>
+        <div class="line line1"></div>
+        <div class="line line2"></div>
+    </div>
+    <h1>教程</h1>
+</header>
+
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section class=blank>
+                <h2 transform=-1>
+                    <div class=back>
+                        <div class="line line1"></div>
+                        <div class="line line2"></div>
+                    </div>
+                    返回
+                </h2>
+                <div class=banner-card>
+                    <div class=banner-image style="background-image: onload url(/tutorial/{module.param.tutorial}/preview.jpg)">
+                    </div>
+                </div>
+                <div class=banner-footer>
+                    <div class="group-actions left">
+                    </div>
+                    <div class="group-actions right">
+                        <a class=btn transform="/tutorial/{module.param.tutorial}" prefetch>
+                            <i style="background-image:url(svg/view.svg)"></i>
+                        </a>
+                        <a class=btn transform="/tutorial/{module.param.tutorial}" prefetch>
+                            <i style="background-image:url(svg/download.svg)"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <include content></include>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

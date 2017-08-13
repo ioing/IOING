@@ -1,0 +1,38 @@
+<div class="feed-box">
+	<div class="avt" style="background-image: url('~/test_upload/user/{uid}.jpg')"></div>
+	<div class="bar">
+		<time>{time}</time>
+		<span class="name">{name}</span>
+		<if certification><span class="certification"></span></if>
+		<if at><span class="at">{at}</span></if>
+	</div>
+
+	<div class="text">{!# text}</div>
+	<div class="content">
+
+		<if picture>
+			<div class="banner-box {{desc ? 'hasdesc' : ''}}">
+				<div class="banner" style="background-image: url('{picture}')" transform="preview" param="src:{picture|urlSplit},id:{module.id|urlSplit}"></div>
+				<if desc>
+					<div class="desc">
+						{!# desc}
+						<if link><div class="link">{link}</div></if>
+					</div>
+				</if>
+			</div>
+		</if>
+
+		<if content>
+			<div class="footerBar">
+				<div class="interactive">
+					<button class="comment" transform=reply param="name:{at}">{content.reply}</button>
+					<button class="praise" on-tap="e::reweet()">{content.retweet}</button>
+					<button class="like {{liked == 1 ? 'active' : ''}}" on-tap="feed::like(event, this, {_index})">{content.like}</button>
+					<button class="msg"> </button>
+				</div>
+			</div>
+		</if><else>
+			<div transform=im class="im"></div>
+		</else>
+	</div>
+</div>

@@ -19,7 +19,6 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
     Template.prototype = {
         init : function (id) {
-            var that = this
 
             // include lib
             
@@ -31,6 +30,13 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             this.module = App.modules[id]
             this.config = this.module.config
             this.target = this.module.elements.container
+
+            // first error
+            
+            this.module.one('failedtoload', function (e) {
+                this.errored(this.module)
+                this.errored = noop
+            }.bind(this))
         },
 
         render : function (id, module, source) {
@@ -79,7 +85,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 },
                 data.data)
             
-            this.css.init(id).setup({
+            this.css.init(id, this.module).setup({
                 data : {
                     module     : this.module,
                     config     : this.config,
@@ -429,6 +435,10 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                     }, 0)
                 }
             }, false)
+
+            frame.onerror = function () {
+                that.errored(module)
+            }
         },
 
         sandbox : function (style, dom) {

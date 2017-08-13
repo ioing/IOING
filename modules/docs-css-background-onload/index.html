@@ -1,0 +1,70 @@
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section>
+                <h2>onload url()</h2>
+                <p>设置该属性可令背景图在加载完毕时显示</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:624dp">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指令</th>
+                                    <th>值</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>background</td>
+                                    <td>onload url()</td>
+                                    <td>当 url 设定的背景图加载完成时展示该背景图</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <blockquote>
+                    <h5>为什么使用 onload 特性？</h5>
+                    <p>使用传统的 CSS 设置背景会在网络不良的情况下让背景呈流式加载，这个过程既不美观而且在执行动画时还会影响 CSS 的性能体验</p>
+                </blockquote>
+                <p>实际在 CSS 文件中的应用</p>
+                <code-light type=css>
+                    .bg {
+                        background: #fff onload url(./bg.png) center no-repeat;
+                    }
+                </code-light>
+                <p><code>onload</code>必须放置在<code>url()</code>之前，如下面这样则是错误的</p>
+                <code-light type=css class="error">
+                    .bg {
+                        background: onload #fff url(./bg.png) center no-repeat;
+                    }
+                </code-light>
+                <p>在 CSS 文件中应尽量避免大面积使用该特性，同时应避免复杂的选择器命名，比如下面是一个不好的规范</p>
+                <code-light type=css class="error">
+                    #grid dl:first-child dd[name=1]::after {
+                        background: onload #fff url(./bg.png) center no-repeat;
+                    }
+                </code-light>
+                <p><code>onload</code>特性应用于大量过于复杂的 CSS 选择器上时将会产生性能影响，应尽量减少 CSS 选择器层级</p>
+                <blockquote>
+                    <h5>有效范围注意!</h5>
+                    <p><code>onload</code>特性设置的有效范围仅局限于模块模版节点，模块节点外元素（html/body）则使用无效</p>
+                    <code-light type=css class="error">
+                        html, body {
+                            background: onload #fff url(./bg.png) center no-repeat;
+                        }
+                    </code-light>
+                </blockquote>
+                <p>若大范围使用该特性或模版图片输出，使用行内 CSS 定义效果更佳</p>
+                <code-light type=html>
+                    <loop list as value key>
+                        <div style="background-image:onload url({value.imageURL})"></div>
+                    </loop>
+                </code-light>
+            </section>
+
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

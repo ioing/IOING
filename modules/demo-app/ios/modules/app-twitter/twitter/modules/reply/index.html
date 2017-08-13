@@ -1,0 +1,139 @@
+<style>
+.ct {
+	padding: 0 10dp;
+}
+.hd {
+	height: 56dp;
+}
+.close {
+	float: left;
+	width: 28dp;
+	height: 56dp;
+	background: url(img/close.svg) no-repeat center;
+	background-size: 100%; 
+}
+.reply {
+	padding: 10dp;
+	float: right;
+}
+.reply .num {
+	color: rgb(101, 119, 134);
+	font-size: 14dp;
+	padding-right: 10dp;
+}
+.reply button {
+	color: #fff;
+    width: 56dp;
+    height: 31dp;
+    background: rgb(29, 161, 242);
+    border-radius: 16dp;
+    opacity: .5;
+}
+
+.reply button span {
+	font-size: 13dp;
+}
+
+scroll[fullscreen] {
+	min-width: auto;
+	max-width: 1600dp;
+	margin: 0 auto;
+}
+
+
+.author {
+	margin-top: 10dp;
+	position: relative;
+	padding-left: 92dp;
+	height: 80dp;
+}
+.avt {
+	position: absolute;
+	left: 10dp;
+	width: 72dp;
+	height: 72dp;
+	background: url(img/avt.jpg) no-repeat center;
+	background-size: cover;
+	border-radius: 36dp;
+}
+.author p {
+	color: #14171a;
+	font-weight: 700;
+	font-size: 16dp;
+}
+.author small {
+	color: #657786;
+	font-size: 16dp;
+}
+
+.rep {
+	font-size: 16dp;
+	color: #657786;
+}
+.rep input {
+	font-size: 20dp;
+	margin-top: 20dp;
+}
+.rep input::placeholder {
+	color: #657786;
+}
+
+.ft {
+	margin-top: 21dp;
+	padding: 21dp 10dp 0;
+	border-top: 1px solid rgb(204, 214, 221);
+}
+.ft .upload {
+	float: left;
+	width: 32dp;
+	height: 32dp;
+	position: relative;
+}
+
+.ft .upload button {
+	width: 32dp;
+	height: 32dp;
+	background: url(img/selt-photo.svg) no-repeat center;
+	background-size: cover;
+}
+
+.ft .upload input {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	z-index: 9;
+}
+
+</style>
+
+<header>
+</header>
+<scroll fullscreen>
+	<scrolling>
+		<div class=ct>
+			<div class=hd>
+				<div class=close transform=-1></div>
+				<div class=reply>
+					<span class="num">140</span>
+					<button><span>回复</span></button>
+				</div>
+			</div>
+			<div class="author">
+				<div class="avt"></div>
+				<p>IOING. Frameworks</p>
+				<small>@ioingroot</small>
+			</div>
+			<div class="rep">
+				<p>回复：<span style="color: #1b95e0;">{module.param.name}</span></p>
+				<input placeholder="发布你的回复">
+			</div>
+			<div class="ft">
+				<div class="upload">
+					<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple="">
+					<button tabindex="-1" role="button" type="button"></button>
+				</div>
+			</div>
+		</div>
+	</scrolling>
+</scroll>

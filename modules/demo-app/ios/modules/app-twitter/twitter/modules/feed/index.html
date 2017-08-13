@@ -1,0 +1,113 @@
+<scroll fullscreen id="scroller" class="feed" finite item-min-size=400 template="feed" data=feed>
+	<pulldown threshold=50>
+        <pullstart>下拉刷新</pullstart>
+        <pulling>松手刷新</pulling>
+        <pullend>
+            <div class="load6">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+                <div class="bounce4"></div>
+            </div>
+        </pullend>
+        <pullover>没有更多了</pullover>
+    </pulldown>
+    <pullup threshold=50 auto>
+        <pullstart>上拉加载更多</pullstart>
+        <pulling>松手加载更多</pulling>
+        <pullend>
+            <div class="load6">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+                <div class="bounce4"></div>
+            </div>
+        </pullend>
+        <pullover>没有更多了</pullover>
+    </pullup>
+</scroll>
+
+<div uuid=tip class="tip-overlay" on-tap="e::reweet(1)">
+	<shadow>
+        <style>
+            .c {
+            	position: absolute;
+            	max-width: 600dp;
+            	width: 96%;
+            	bottom: 0;
+            	left: 50%;
+            	min-height: 10dp;
+            	background-color: #fff;
+            	border-top-left-radius: 4dp;
+            	border-top-right-radius: 4dp;
+            	transform: translate(-50%, 0);
+            }
+
+            ul li {
+            	color: #14171a;
+			    border-bottom: 1px solid #ccd6dd;
+			    cursor: pointer;
+			    padding: 11dp 21dp;
+			    width: 100%;
+			    font-size: 20dp;
+            }
+            ul li.hr {
+            	padding: 5dp;
+            	background-color: #f5f8fa;
+            	border-bottom: 1px solid #ccd6dd;
+            }
+            ul li:last-child {
+            	border-bottom: 0;
+            }
+        </style>
+        <div class="c">
+            <ul>
+            	<li>转推</li>
+            	<li>引用推文</li>
+            	<li class="hr"></li>
+            	<li class=cancel>取消</li>
+            </ul>
+        </div>
+    </shadow>
+</div>
+
+<script name=e>
+	function reweet (x) {
+        if (x) {
+            node('tip').hide()
+        } else {
+            node('tip').show()
+        }
+    }
+</script>
+
+<script name=feed>
+	function like(ev, el, i) {
+		/*
+			// Query 方案
+			if ( el.hasClass('active') ) {
+				el.removeClass('active')
+			} else {
+				el.addClass('active')
+			}
+		*/
+		
+		// 数据驱动方案
+		
+		var scroll = node('scroller').Scroll()
+		var infiniteCache = scroll.infiniteCache
+
+		if ( infiniteCache[i].liked == 1 ) {
+			infiniteCache[i].liked = 0
+			if ( infiniteCache[i].content.like <= 1 ) {
+				infiniteCache[i].content.like = ''
+			} else {
+				infiniteCache[i].content.like--
+			}
+			
+		} else {
+			infiniteCache[i].liked = 1
+			infiniteCache[i].content.like++
+		}
+	}
+</script>

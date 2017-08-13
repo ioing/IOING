@@ -17,6 +17,7 @@ define(function (require, module, exports) {
         config : {
             level : 0,
             absolute : false,
+            preview : 2,
             style : ["common", "docs", "main"],
             script : [],
             source: ["index", "footer"],

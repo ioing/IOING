@@ -234,13 +234,10 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 		},
 
 		addElement : function (name, element) {
-			if ( this.elements[name] instanceof Element ) {
-				if ( this.refreshing ){
-					this.refreshing.push(this.elements[name])
-				} else {
-					this.elements[name].remove()
-				}
+			if ( this.refreshing && this.elements[name] instanceof Element ) {
+				this.refreshing.push(this.elements[name])
 			}
+			
 			// sandbox
 			
 			if ( name === 'sandbox' ) {
@@ -286,11 +283,18 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					render()
 				}
             }, function (render) {
-				this.refreshing.each(function (i, element) {
-					element.remove()
-				})
 
-				this.refreshing = null
+            	if ( this.refreshing ) {
+					this.refreshing.each(function (i, element) {
+						if ( element.localName === 'iframe' ) {
+							element.src = 'about:blank'
+						}
+
+						element.remove()
+					})
+
+					this.refreshing = null
+				}
 
 				if ( readied ) {
 					readied(render)
@@ -709,7 +713,13 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			prefetch[id].each(function (i, params) {
 
-				var startTime = Date.now()
+				// remoteframe
+
+				if ( modules[id].remoteframe ) return
+
+				// startTime
+
+				modules[id].startLoadTime = Date.now()
 
 				// nomal param url
 
@@ -730,10 +740,14 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					// 预取资源
 
 					App.async.prefetch(id, modules[id].config, {}.extend(modules[id].initialparam, that.filterParam(params)[0]), function (sids, suri, data) {
+
+						// endTime
+
+						modules[id].endLoadTime = Date.now()
 						
 						// console
 
-                		that.console.info('Module [' + id + ']', 'Prefetch', (Date.now() - startTime) + 'ms')
+                		that.console.info('Module [' + id + ']', 'Prefetch', (modules[id].endLoadTime - modules[id].startLoadTime) + 'ms')
 
 						/* 
 						 * 预取成功
@@ -971,7 +985,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 	        	}
 	        }
 
-	        id = /(^\[(.*?)(?=\])\])/.exec(route)
+	        id = /(^\%(.*?)(?=\%)\%)/.exec(route)
 	        id = id ? id[2] : false
 	        route = id ? route.slice(id.length) : route
         	route = route.split(/\/|\$|\?|\&|\,|\=|\:/)
@@ -1251,10 +1265,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 						module.Template = App.template('system').prefetch(function (module, callback) {
 							callback()
 						}).then(function (module, callback) {
-							window.trigger('frameworksload')
 							callback()
+							App.trigger('systemload', { module : module })
 						}).get(function (module) {
+							App.trigger('systemloadall', { module : module })
 						}).error(function (module) {
+							App.trigger('systemloaderror', { module : module })
 						})
 					})
 				}

@@ -27,9 +27,9 @@ define(function (require, module, exports) {
             source: ["index"],
             data: ["taobao", "infinite"],
             sandbox : true,
-            cache : 0,
+            cache : 360,
             timeout : 60,
-            animation : true
+            animation : "zoom"
         },
         param : {
           turnover: 0

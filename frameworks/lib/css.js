@@ -8,7 +8,10 @@ define('~/css', [], function (require, module, exports) {
     
     var CLASS = {}
     var GLOBAL = {}
-    var RAF = window.requestAnimationFrame
+
+    // requestAnimationFrame
+
+    var rAF = window.requestAnimationFrame
 
     /*
      * 语法解释 提取
@@ -62,8 +65,9 @@ define('~/css', [], function (require, module, exports) {
     }
 
     CSS.prototype = {
-        init : function (id) {
+        init : function (id, module) {
             this.id = id
+            this.module = module
             this._keyFrame = []
             this.sandbox = application.sandbox
 
@@ -112,7 +116,7 @@ define('~/css', [], function (require, module, exports) {
             for (var i = 0, l = list.length; i < l; i++) {
                 var name = list[i]
 
-                css += this.compile(sids[name], sources[name])
+                css += this.compile(sids[name], sources[name], { root : 0 })
             }
 
             return css
@@ -254,7 +258,7 @@ define('~/css', [], function (require, module, exports) {
             return node
         },
 
-        toCSS : function (node, depth, scope, breaks) {
+        toCSS : function (node, depth, scope, breaks, parent) {
             var cssString = ''
             if ( typeof depth == 'undefined' ) {
                 depth = 0
@@ -270,10 +274,10 @@ define('~/css', [], function (require, module, exports) {
                     var att = node.attributes[i]
                     if ( att instanceof Array ) {
                         for (var j = 0; j < att.length; j++) {
-                            cssString += this._setAttr(i, att[j], depth, scope)
+                            cssString += this._setAttr(i, att[j], depth, scope, parent)
                         }
                     } else {
-                        cssString += this._setAttr(i, att, depth, scope)
+                        cssString += this._setAttr(i, att, depth, scope, parent)
                     }
                 }
             }
@@ -374,15 +378,15 @@ define('~/css', [], function (require, module, exports) {
             return value
         },
 
-        _loadBackgroundImage : function (dom, url, src, call) {
+        _loadBackgroundImage : function (dom, url, src, call, file) {
             var that = this
             var image = document.createElement('IMG')
 
             image.src = src
             image.onload = function () {
 
-                RAF(function () {
-                    dom.style.backgroundImage = url
+                rAF(function () {
+                    dom.style.backgroundImage = file ? '' : url
 
                     // additional style
 
@@ -448,7 +452,7 @@ define('~/css', [], function (require, module, exports) {
 
         // Helpers
 
-        _setAttr : function (name, value, depth, scope) {
+        _setAttr : function (name, value, depth, scope, parent) {
             var that = this
 
             var id = this.id
@@ -499,73 +503,85 @@ define('~/css', [], function (require, module, exports) {
                         if ( value.indexOf('onload') != -1 ) {
                             value = value.replace(REGEXP.onload, function (context, call, url, src) {
 
+                                // css file
+
                                 if ( src ) {
-
-                                    // is loaded
-
-                                    if ( that.sandbox.window.fileCache[src] ) return url
-
                                     var dom = that.element
-                                    var parentFragment = dom.parentFragment
-                                    var previousScroller = dom.previousScroller
-                                    var loadTimeout
+                                    var target = that.opts.target
 
-                                    var load = function (time) {
+                                    if ( dom ) {
+
+                                        // is loaded
+
+                                        if ( that.sandbox.window.fileCache[src] ) return url
+
+                                        var fragment = dom.parentFragment
+                                        var scroller = dom.previousScroller
+                                        var infinite = scroller && scroller.getAttrSign('infinite')
+                                        var delaying
+
+                                        // 延时取得图片
                                         
-                                        loadTimeout = setTimeout(function () {
-                                            that._loadBackgroundImage(dom, url, src, call)
-                                            end()
-                                        }, time || 0)
-                                    }
-
-                                    var end = function () {
-                                        if ( parentFragment ) {
-                                            parentFragment.off('show', show).off('hidden', hidden)
+                                        function fetch (time) {
+                                            delaying = setTimeout(function () {
+                                                that._loadBackgroundImage(dom, url, src, call)
+                                                
+                                                if ( infinite ) {
+                                                    fragment.off('show', show).off('hide', hide)
+                                                }
+                                            }, time || 0)
                                         }
-                                    }
 
-                                    if ( !parentFragment ) {
-                                        load(0)
-                                    } else {
+                                        // 无限循环时对于 show 的元素之行加载
 
-                                        var show = function (e) {
-                                            var scroll
-                                            var timeout = 0
-                                            var maxTimeout = 0
+                                        if ( infinite ) {
 
-                                            if ( previousScroller ) {
-                                                scroll = previousScroller.Scroll()
+                                            // infinite show
+
+                                            var show = function (e) {
+                                                var scroll = scroller.scrollEvent
+                                                var timeout = 0
 
                                                 if ( scroll ) {
-                                                    maxTimeout = scroll.wrapperHeight * device.ui.scale
+                                                    timeout = scroll.wrapperHeight
 
-                                                    timeout = (scroll.speed || 0) < .5 ? 0 : maxTimeout
-                                                    
-                                                    if ( scroll.isScrolling() ) {
-
-                                                        if ( scroll.transitionCountTime - (Date.now() - scroll.transitionStartTime) < 100 ) {
-                                                            timeout = (scroll.speedM || 0) < .5 ? 0 : maxTimeout
-                                                        } else {
-                                                            timeout = maxTimeout
-                                                        }
-                                                    } else {
-                                                        timeout = maxTimeout
+                                                    if ( scroll.acceleration == 0 ) {
+                                                        timeout = Math.min((scroll.speedM || 1) * 500, 2000)
                                                     }
-
                                                 }
+
+                                                fetch(timeout)
                                             }
 
-                                            load(timeout)
+                                            // infinite hide
+
+                                            var hide = function () {
+                                                clearTimeout(delaying)
+                                            }
+
+                                            // fetch
+
+                                            fragment.on('show', show).on('hide', hide)
+
+                                        } else {
+
+                                            // fetch
+
+                                            fetch(0)
                                         }
+                                    } else if ( target ) {
 
-                                        var hidden = function () {
-                                            clearTimeout(loadTimeout)
-                                        }
+                                        // 对于 CSS 文件的 onload 处理
 
-                                        // load
+                                        target.on('ready', function () {
+                                            this.find(parent).each(function () {
+                                                this.style.backgroundImage = 'none'
+                                                that._loadBackgroundImage(this, url, src, call, 1)
+                                            })
+                                        })
 
-                                        parentFragment.on('show', show).on('hidden', hidden)
-                                    }
+                                        return url
+                                    } 
                                 }
 
                                 return ''
@@ -779,7 +795,7 @@ define('~/css', [], function (require, module, exports) {
                 }
 
                 cssString += section ? '' : '\t'.repeat(depth) + name + ' {\n'
-                cssString += this.toCSS(value, depth + 1, scope);
+                cssString += this.toCSS(value, depth + 1, scope, false, name)
                 cssString += section ? '' : '\t'.repeat(depth) + '}\n'
             }
 

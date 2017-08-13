@@ -458,6 +458,7 @@ define('~/dom', [], function (require, module, exports) {
             // append elem to plem
 
             parent.appendChild(child)
+            parent.trigger('ready')
 
             // parallel : {
 
@@ -1316,7 +1317,7 @@ define('~/dom', [], function (require, module, exports) {
                                 if ( fragment ) {
                                     fragment.on('show', function (e) {
                                         fetch()
-                                    }).on('hidden', function () {
+                                    }).on('hide', function () {
                                         clearTimeout(loadTimeout)
                                     })
                                 } else {
@@ -1474,29 +1475,31 @@ define('~/dom', [], function (require, module, exports) {
                 case 'tap-highlight':
 
                     this.mission[root.order].events.push(function (window) {
-                        dom.on('touchstart', function () {
-                            var addTapHightlightTimeout
-                            var cancleTapHightlightTimeout
+                        dom.on('touchstart mousedown', function () {
+                            var startTimeId
+                            var cancleTimeId
 
-                            addTapHightlightTimeout = setTimeout(function () {
+                            startTimeId = setTimeout(function () {
                                 rAF(function () {
                                     dom.addClass(value)
                                 })
-                                cancleTapHightlightTimeout = setTimeout(function () {
+                                cancleTimeId = setTimeout(function () {
                                     rAF(function () {
                                         dom.removeClass(value)
                                     })
                                 }, 3000)
                             }, 120)
 
-                            this.one('touchmove touchend touchcancel', function () {
+                            this.one('touchmove touchend touchcancel mouseup mousecancel', function () {
 
-                                clearTimeout(addTapHightlightTimeout)
-                                clearTimeout(cancleTapHightlightTimeout)
+                                clearTimeout(startTimeId)
+                                clearTimeout(cancleTimeId)
 
-                                rAF(function () {
-                                    dom.removeClass(value)
-                                }) 
+                                setTimeout(function () {
+                                    rAF(function () {
+                                        dom.removeClass(value)
+                                    }) 
+                                }, 200)
                             })
                         })
                     })
@@ -1547,10 +1550,13 @@ define('~/dom', [], function (require, module, exports) {
                             }
                         var scopeFunctionArguments = (/\((.*)\)/.exec(scopeNamedEvent) || [null,''])[1].split(',')
 
-                        switch (scopeEventName) {
+                        switch (scopeEventName.split('-')[0]) {
+                            
                             // on-event = 'events | function(event)'
+
                             case 'event':
                             case 'events':
+
                                 scopeNamedEvent = scopeNamedEvent.split('|')
                                 scopeEventName = scopeNamedEvent[1]
                                 scopeNamedEvent = scopeNamedEvent[0]
@@ -1874,7 +1880,7 @@ define('~/dom', [], function (require, module, exports) {
 
                     // transformstart blur
 
-                    this.module.on('hidden', function () {
+                    this.module.on('hide', function () {
                         dom.blur()
                     })
 
@@ -2367,7 +2373,7 @@ define('~/dom', [], function (require, module, exports) {
 
                                     if ( node ) {
                                         fragment.appendChild(node)
-                                        node.trigger('hidden', { key : key })
+                                        node.trigger('hide', { key : key })
                                     }
                                     
                                 },
@@ -2442,7 +2448,7 @@ define('~/dom', [], function (require, module, exports) {
 
                         // module hidden stop scroll
                         
-                        this.module.on('hidden', dom.scrollEvent.stop)
+                        this.module.on('hide', dom.scrollEvent.stop)
                     })
 
                 break
@@ -2470,6 +2476,7 @@ define('~/dom', [], function (require, module, exports) {
 
                             cssText = that.css.compile(that.module.id, cssText, scope, { 
                                         path : root.path, 
+                                        target : that.DOMS[root.target],
                                         descendant : (root.spacename && !dom.createShadowRoot) 
                                                 ? '.shadow-root-' + root.scopeid.replace(/\./g, '-')
                                                 : false
@@ -2845,8 +2852,14 @@ define('~/dom', [], function (require, module, exports) {
             assign = name === sign
             value = assign ? value : exact ? false : name
             value = value && wrap ? wrap[0] + value + wrap[1] : value
-            value = /^[0-9.]+$/g.test(value) ? Number(value) : value
-            value = boolean ? (["false", "none", "null", "undefined"].consistOf(value) ? false : ["", "true"].consistOf(value) ? true : value) : value
+
+            if ( ["false", "none", null].consistOf(value) ) {
+                value = false
+            } else if ( ["", "true"].consistOf(value)) {
+                value = true
+            } else if ( !isNaN(value) ) {
+                value = Number(value)
+            }
 
             return value
         },

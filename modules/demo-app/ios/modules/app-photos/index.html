@@ -1,0 +1,12 @@
+<scroll fullscreen>
+	<scrolling>
+		<div class="grid">
+			<loop data="list.pic" as value key>
+				<div class="item" transform="photo" param="group:{module.param.id},id={key}" style="background-image: onload url({value.src})"></div>
+			</loop>
+		</div>
+	</scrolling>
+</scroll>
+<section uuid='add-exp' class="add-experience {{setting.experience ? 'show' : ''}}" transform="neditor" param='topicId:{{topicin.id}},id:0' data-event="title:添加经验解答,spm:huati_write.0"><span class="light-icon"></span>
+创建新的活动照片
+</section>

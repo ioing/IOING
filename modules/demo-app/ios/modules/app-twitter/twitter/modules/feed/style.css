@@ -1,0 +1,246 @@
+body {
+	background-color: #fff;
+	font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,sans-serif;
+}
+
+i {
+	display: inline-block;
+	background-repeat: no-repeat;
+}
+
+
+scroll[fullscreen] {
+	top: 48dp;
+	max-width: 1600dp;
+	margin: 0 auto;
+}
+
+scroll[fullscreen] scrolling {
+ width: 100%;
+}
+.feed .feed-box {
+  position: relative;
+  padding: 10dp;
+  padding-left: 63dp;
+  min-height: 110dp;
+  background: #fff;
+  border-bottom: solid rgb(204, 214, 221) 1px;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,sans-serif;
+  word-wrap: break-word;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+  .feed .feed-box .avt {
+    float: left;
+    margin-left: -53dp;
+    margin-top: 10dp;
+    width: 43dp;
+    height: 43dp;
+    background: #eee center no-repeat;
+    background-size: cover;
+    border-radius: 60dp;
+  }
+  .feed .bar {
+    position: relative;
+    padding-top: 5dp;
+  }
+  	.feed .bar .at {
+  	  color: #657786;
+      font-size: 16dp;
+      line-height: 30dp;
+  	}
+  	.feed .bar .certification {
+  		display: inline-block;
+  		height: 19.5dp;
+  		width: 19.5dp;
+  		background: url(img/certification.svg);
+  		background-size: cover;
+  		margin-bottom: -3dp;
+  	}
+    .feed .bar time {
+      float: right;
+      color: #657786;
+      font-size: 16dp;
+      line-height: 30dp;
+    }
+    .feed .bar .name {
+      color: #14171a;
+      font-size: 16dp;
+      font-weight: 700;
+      line-height: 30dp;
+    }
+
+  .feed .text {
+    margin-bottom: 10dp;
+    font-size: 16dp;
+    font-weight: normal;
+  }
+
+  .feed .text a {
+  	color: rgb(27, 149, 224);
+  }
+
+  .feed .msg {
+    font-size: 20dp;
+  }
+    .feed .msg b {
+      color: #ed1c24;
+    }
+
+  .feed .banner-box {
+  	position: relative;
+  	margin-bottom: 10dp;
+  	border-radius: 6dp;
+    border: 1px solid rgb(204, 214, 221);
+  }
+
+  .feed .banner {
+    width: 100%;
+    height: 40vw;
+    max-height: 800dp;
+    box-sizing: content-box;
+    background: #fff center no-repeat;
+    background-size: cover;
+    border-radius: 5dp;
+  }
+
+  .feed .desc {
+  	padding: 10dp;
+  	font-size: 16dp;
+  }
+  .feed .link {
+  	color: #657786;
+  }
+
+  .feed .hasdesc .banner {
+  	border-bottom-left-radius: 0;
+  	border-bottom-right-radius: 0;
+  }
+    .feed .action {
+      margin-bottom: 10dp;
+    }
+      .feed .action button {
+        float: right;
+        background: #ed5f64;
+        padding: 10dp 25dp;
+        color: #fff;
+        font-size: 18dp;
+        line-height: 1;
+        border-radius: 6dp;
+      }
+      .feed .meta {
+        line-height: 37dp;
+        font-size: 14dp;
+        font-weight: bold;
+      }
+
+    .feed .footerBar {
+      margin-bottom: 10dp;
+    } 
+
+    .feed .interactive {
+    	display: flex;
+    }
+
+      .feed .footerBar button {
+        min-width: 90dp;
+        width: 20%;
+        text-align: left;
+        height: 30dp;
+        text-indent: 30dp;
+        font-size: 16dp;
+        color: rgb(101, 119, 134);
+      }
+      .feed .footerBar .praise {
+        background: url('img/retweet.svg') no-repeat center left;
+        background-size: auto 80%;
+      }
+      .feed .footerBar .comment {
+        background: url('img/reply.svg') no-repeat center left;
+        background-size: auto 80%;
+      }
+
+      .feed .footerBar .like {
+        background: url('img/like.svg') no-repeat center left;
+        background-size: auto 80%;
+      }
+      .feed .footerBar .like.active {
+        color: #e0245e;
+        background-image: url('img/like_a.svg')
+      }
+
+      .feed .footerBar .msg {
+        background: url('img/msg.svg') no-repeat center left;
+        background-size: auto 80%;
+      }
+
+.tip-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    background-color: rgba(0,0,0,.5);
+    color: #fff;
+    display: none;
+}
+
+@media screen and (min-width: 600dp) {  
+  	.feed .feed-box .avt {
+  		width: 72dp;
+  		height: 72dp;
+  		margin-left: -83dp;
+  	}
+  	.feed .feed-box {
+  		padding-left: 93dp;
+  	}
+}
+
+@keyframes bouncedelay {
+  0%, 80%, 100% {
+    transform: scale(0.0);
+  } 40% {
+    transform: scale(1.0);
+  }
+}
+.load6 {
+  margin: 0 auto;
+  width: 100dp;
+  text-align: center;
+}
+.load6 > div {
+  width: 10dp;
+  height: 10dp;
+  background-color: rgb(27, 149, 224);
+  border-radius: 10dp;
+  display: inline-block;
+  animation: bouncedelay 1.4s infinite ease-in-out;
+  animation-fill-mode: both;
+}
+.load6 .bounce1 {
+  animation-delay: -0.48s;
+}
+.load6 .bounce2 {
+  animation-delay: -0.32s;
+}
+.load6 .bounce3 {
+  animation-delay: -0.16s;
+}
+pullup, pulldown {
+  bottom: -40dp;
+  width: 100%;
+  padding: 10dp 0;
+  height: 40dp;
+  line-height: 20dp;
+  text-align: center;
+  font-size: 13dp;
+  color: #666;
+  z-index: 99999;
+}
+
+pulldown {
+  bottom: auto;
+  top: -40dp;
+}

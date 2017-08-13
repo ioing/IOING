@@ -12,7 +12,6 @@ header {
 	left: 0;
 	z-index: 999999;
 	width: 100%;
-	padding-top: 20dp;
 	height: 49dp;
 	background: rgba(255, 101, 50, 1);
   	background-size: 100% 100%;
@@ -131,7 +130,7 @@ hr {
 
 #viewport {
 	position: absolute;
-	top: 69dp;
+	top: 49dp;
 	bottom: 0;
 	width: 100%;
 	overflow: hidden;

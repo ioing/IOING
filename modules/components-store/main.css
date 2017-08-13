@@ -82,7 +82,7 @@ scroll.banner-card {
 	.painting {
 		height: 100%;
 		margin: 0;
-		background-color: #333;
+		background-color: #ececec;
 		background-position: center;
 		background-size: cover;
 	}
@@ -159,6 +159,10 @@ section > h3 small .icon-link {
 		position: absolute;
 		z-index: 1;
 		width: 70dp;
+		transition: opacity .2s;
+	}
+	.card-info.active {
+		opacity: .4;
 	}
 
 	.card-icon {
@@ -171,6 +175,11 @@ section > h3 small .icon-link {
 		background-repeat: no-repeat;
 		background-position: center;
 		background-clip: border-box;
+		transition: opacity .2s;
+	}
+
+	.card-icon.active {
+		opacity: .4;
 	}
 
 	.card-title {

@@ -1,0 +1,150 @@
+<style>
+    @media screen and (max-width: [max-width]) {
+        .dev-slogan {
+            padding: 0;
+        }
+    }
+</style>
+<scroll fullscreen>
+    <scrolling>
+        <article>
+            <section class=dev-slogan>
+                <shadow>
+                    <style>
+                        .hwindow {
+                            position: relative;
+                            margin-bottom: 15dp;
+                            background: [active-color];
+                            border-radius: 5dp;
+                        }
+                        .htitle {
+                            height: 90dp;
+                            line-height: 1;
+                            font-size: 68dp;
+                            font-weight: 300;
+                            color: #fff;
+                            text-align: center;
+                        }
+
+                        @section (.hexagon) {
+                            this {
+                                position: relative;
+                                display: block;
+                                margin: 0 auto;
+                                width: 240dp;
+                                height: 248dp;
+                            }
+                            .hexagon-shape {
+                                position: absolute;
+                                top: -180dp;
+                                left: -120dp;
+                                overflow: hidden;
+                                display: inline-block;
+                                margin: 96dp 0;
+                                width: 480dp;
+                                height: 416dp;
+                                transform: rotate(-30deg) skewX(30deg) scale(0.5);
+                                border-radius: 60dp;
+                            }
+                            .hexagon-shape *,
+                            .hexagon-shape *:before {
+                              display: block;
+                              overflow: hidden;
+                              width: inherit;
+                              height: inherit;
+                              border-radius: inherit;
+                            }
+                            .hexagon-shape .hexagon-shape-inner {
+                              transform: skewX(-30deg) rotate(60deg) skewX(30deg);
+                              opacity: 1;
+                            }
+                            .hexagon-shape:first-child .hexagon-shape-inner:before,
+                            .hexagon-shape .hexagon-shape-inner-2 {
+                              transform: skewX(-30deg) rotate(60deg) skewX(30deg);
+                              background: #fff;
+                              transition: all 1s;
+                              content: '';
+                            }
+                            this.hexagon-with-border .hexagon-shape.content-panel {
+                              transform: rotate(-30deg) skewX(30deg) scale(0.46);
+                            }
+                            this.hexagon-with-border .hexagon-shape.content-panel .hexagon-shape-inner-2 {
+                                background: [active-color];
+                            }
+
+                            .x1, .x2 {
+                                position: absolute;
+                                top: 130dp;
+                                width: 300dp;
+                                height: 1px;
+                                margin-left: -30dp;
+                                background-color: #fff;
+                                transform-origin: center;
+                                opacity: .9;
+                            }
+
+                            .x1 {
+                                transform: rotate(-45deg);
+                            }
+
+                            .x2 {
+                                transform: rotate(45deg);
+                            }
+                        }
+
+                        .hexagon-title {
+                            position: absolute;
+                            top: 160dp;
+                            font-size: 30dp;
+                            font-weight: 400;
+                            word-spacing: 5dp;
+                            transform: translate(-10%, 0%);
+                        }
+
+                        .mini-logo {
+                            display: none;
+                        }
+
+                        @media screen and (max-width: [max-width]) {
+                            .hwindow {
+                                border-radius: 0;
+                            }
+                        }
+                    </style>
+                    <div class="hwindow">
+                        <div class="hexagon hexagon-with-border info">
+                            <div class="hexagon-shape">
+                                <div class="hexagon-shape-inner">
+                                    <div class="hexagon-shape-inner-2"></div>
+                                </div>
+                            </div>
+                            <div class="hexagon-shape content-panel">
+                                <div class="hexagon-shape-inner">
+                                    <div class="hexagon-shape-inner-2"></div>
+                                </div>
+                            </div>
+                            <div class=x1></div>
+                            <div class=x2></div>
+                        </div>
+                        <h1 class=htitle>Developers</h1>
+                    </div>
+                </shadow>
+            </section>
+
+            <section>
+                <h2>开发须知</h2>
+                <p>IOING 是一个纯前端引擎，即使在没有工程化的项目中也能够对项目进行很好的管理。在使用之前你需要了解你的项目需求是否适用该产品</p>
+                <p>如果你有以下需求则可以使用 IOING 来创建你的产品</p>
+                <ul>
+                    <li>1. Web App</li>
+                    <li>2. 解决历史回退问题</li>
+                    <li>3. 嵌套使用平滑的滚动</li>
+                    <li>4. 对性能有更高的要求</li>
+                    <li>5. 找不到更简单的技术维护方案</li>
+                </ul>
+            </section>
+            
+            <include footer></include>
+        </article>
+    </scrolling>
+</scroll>

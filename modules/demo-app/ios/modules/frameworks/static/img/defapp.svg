@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="514px" height="514px" viewBox="0 0 514 514" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.1 (35376) - http://www.bohemiancoding.com/sketch -->
+    <title>Untitled 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Background" fill="#FFFFFF" x="1" y="1" width="512" height="512"></rect>
+        <g id="defapp" transform="translate(1.000000, 1.000000)" stroke-width="2" stroke="#444444" opacity="0.5">
+            <g id="Page-1">
+                <g id="Grid">
+                    <path d="M0,0 L512,512 M512,0 L0,512" id="Diagonal"></path>
+                    <path d="M33,0 L33,512 M159,0 L159,512 M256,0 L256,512 M353,0 L353,512 M479,0 L479,512" id="Vertical"></path>
+                    <path d="M0,479 L512,479 M0,353 L512,353 M0,256 L512,256 M0,159 L512,159 M0,33 L512,33" id="Horizontal"></path>
+                    <path d="M256,479 C379.159499,479 479,379.159499 479,256 C479,132.840501 379.159499,33 256,33 C132.840501,33 33,132.840501 33,256 C33,379.159499 132.840501,479 256,479 Z M256,393 C331.663011,393 393,331.663011 393,256 C393,180.336989 331.663011,119 256,119 C180.336989,119 119,180.336989 119,256 C119,331.663011 180.336989,393 256,393 Z M256,353 C309.571621,353 353,309.571621 353,256 C353,202.428379 309.571621,159 256,159 C202.428379,159 159,202.428379 159,256 C159,309.571621 202.428379,353 256,353 Z" id="Rings"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1188,12 +1188,20 @@ define('~/scroll', [], function (require, module, exports) {
 				this.infiniteRearranging = true
 
 				function end (end) {
-					setTimeout(function () {
-						that.infiniteRearranging = false
-					}, 100)
+
+					that.infiniteRearranging = false
+
+					// updateInfinitePos
+					
 					that.updateInfinitePos()
+
+					// callback
+					
 					callback && callback.call(that)
-					end && that._execEvent('infinitecachedend')
+					
+					if ( end ) {
+						that._execEvent('infinitecachedend')
+					}
 				}
 
 				function subStep () {
@@ -3636,11 +3644,9 @@ define('~/scroll', [], function (require, module, exports) {
 
 					// 默认节点不可见
 
-					// this.on('infinitedataloaded', function () {
-					// 	that.rearrangeInfinite(1, function () {
-					// 		this.updateInfinitePos()
-					// 	})
-					// })
+					this.one('infinitedataloaded', function () {
+						that._refresh()
+					})
 
 					// 滚动事件触发排序
 

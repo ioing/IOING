@@ -1,0 +1,105 @@
+<style>
+	.tipbox {
+		display: none;
+		position: fixed;
+		bottom: 12dp;
+		left: 50%;
+		z-index: 9999;
+		margin-left: -120dp;
+		width: 240dp;
+		height: 100dp;
+		background: #fff;
+		border-radius: 6dp;
+		border: 1px solid rgba(0,0,0,.25);
+		box-shadow: 5dp 5dp 8dp rgba(0,0,0,.5);
+	}
+	.tipbox::after {
+		position: absolute;
+		bottom: -10dp;
+		left: 50%;
+		margin-left: -11dp;
+		content: ' ';
+		width:0; 
+	    height:0; 
+	    border-left:11dp solid transparent;
+	    border-right:11dp solid transparent;
+	    border-top:11dp solid #fff;
+	}
+	.tipbox i.icon {
+		display: block;
+		float: left;
+		margin: 20dp 15dp;
+		width: 60dp;
+		height: 60dp;
+		border-radius: 14dp;
+		background: #fff url(../../logo.png) center no-repeat;
+		background-size: cover;
+		border: 1px solid rgba(0,0,0,.2);
+	}
+	.tipbox span.close {
+		position: absolute;
+		right: 8dp;
+		top: 5dp;
+		color: #1DA1F2;
+		font-size: 14dp;
+	}
+	.tipbox .content {
+		font-size: 14dp;
+		padding: 30dp 30dp 10dp;
+	}
+</style>
+
+
+
+<div uuid=tipbox class=tipbox>
+	<i class=icon></i>
+	<div class=content>
+		点击 “添加到主屏幕” 进行更好体验
+	</div>
+	<span class=close on-tap="close(event)">关闭</span>
+</div>
+
+<script>
+	function removeSession () {
+		try {
+			if ( !localStorage ) {
+				throw new Error('localStorage is not defined');
+			}
+
+			localStorage.removeItem("addToHomescreen")
+		} catch (e) {}
+	}
+
+	function addSession () {
+		try {
+			if (!localStorage) {
+				throw new Error('localStorage is not defined');
+			}
+
+			localStorage.setItem("addToHomescreen", 1);
+		} catch (e) {}
+	}
+
+	function getSession () {
+		try {
+			if (!localStorage) {
+				throw new Error('localStorage is not defined');
+			}
+
+			return localStorage.getItem("addToHomescreen");
+		} catch (e) {}
+	}
+
+	function close () {
+		addSession()
+		node('tipbox').style.display = 'none'
+	}
+
+	if ( device.os.mobileSafari ) {
+		var isStandalone = 'standalone' in top.navigator && top.navigator.standalone
+
+		if ( !isStandalone && !getSession() ) {
+			node('tipbox').style.display = 'block'
+		}
+	}
+</script>

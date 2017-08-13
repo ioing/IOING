@@ -199,11 +199,12 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                 var sendTime = Date.now()
             }
 
-            promise.ajax(suri.method, suri.url, suri.param, suri.headers, suri.settings, type).then(function (err, data, xhr) {
+            promise.ajax(suri.method, suri.url, suri.param, suri.headers, suri.settings, type, id).then(function (err, data, xhr) {
                 if ( err ) {
                     App.trigger('sourceerror', {
-                        url: suri.url,
-                        params: suri.param
+                        id : id,
+                        url : suri.url,
+                        params : suri.param
                     })
                     
                     return that.error()

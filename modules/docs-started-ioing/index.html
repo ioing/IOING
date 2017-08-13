@@ -321,7 +321,7 @@
                 </shadow>
             </section>
 
-            <section>
+            <!-- <section style="display: none;">
                 <h2>
                     IOING 能做什么？
                     <small>一个全能前端引擎，开启 HTML 开发新篇章</small>
@@ -425,93 +425,75 @@
                         </div>
                     </scrolling>
                 </scroll>
-                <blockquote>IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案，真正实现用 H5 技术构建大型 web 视图应用</blockquote>
+                <blockquote>
+                    <p>IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案，真正实现用 H5 技术构建大型 web 视图应用</p>
+                </blockquote>
+            </section> -->
+
+            <section>
+                <h2>自动数据绑定</h2>
+                <p>在节点及节点属性上使用数据引用时能够自动将该数据源与该节点进行数据绑定操作，当数据源上的数据发生变更时将同时影响该节点</p>
+                <code-light type=html>
+                    <time>计时：{time} 秒</time>
+                    <div style="transform:scale({{time%60/60}}, 1);border:2dp solid [active-color];transition: transform .2s;"></div>
+                    <script>
+                        setInterval(function () {
+                            scope.time++
+                        }, 1000)
+                    </script>
+                </code-light>
+                <script type=scope>
+                    scope.time = 0
+                </script>
+                <time>计时：{time} 秒</time>
+                <div style="transform:scale({{time%60/60}}, 1);border:2dp solid [active-color];transition: transform .2s;"></div>
+                <script>
+                    setInterval(function () {
+                        scope.time++
+                    }, 1000)
+                </script>
+                <p>提问环节：</p>
+                <blockquote>
+                    <h5>数据绑定需要手动设定吗？</h5>
+                    <p>不需要。所有使用数据引用的节点都能自动建立绑定关系，并且在逻辑性节点中也能自动识别绑定对象</p>
+                    <code-light type=html>
+                        <time>计时：{{time + startTime}} 秒</time>
+                    </code-light>
+                    <p>当数据源 time 或 startTime 任意一个数据源属性发生改变时都会出发节点修改</p>
+                </blockquote>
+                <p><a transform=docs-dom-echo>#了解更多</a></p>
             </section>
 
             <section>
-                <h2>媲美原生应用</h2>
-                <p>为了让使用者感知到一个更棒的 WEB 应用，我们做了很多体验改善工作：</p>
-                <scroll class=exp stop-propagation="auto" x=auto y=false>
-                    <scrolling style="min-width:{setting.articleWidth}dp">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><a transform=docs-css-units param=section/pixel>物理像素</a></td>
-                                    <td>脱离 viewport 限制，物理像素让应用显示更细致</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/sandbox>模块沙盒</a></td>
-                                    <td>使模块独立运作互不干扰</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/animation>模块转场</a></td>
-                                    <td>内置多种模块转场过渡动画，也可自由定制动画</td>
-                                </tr>
-                                <!-- <tr>
-                                    <td><a transform>动画线程控制</a></td>
-                                    <td>使用动画队列来提升动画性能</td>
-                                </tr> -->
-                                <tr>
-                                    <td><a transform=docs-dom-scroll>滚动参数</a></td>
-                                    <td>可对滚动的弹性或惯性等参数进行自定义配置</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-dom-scroll param=section/infnite>无限滚动</a></td>
-                                    <td>统一滚动表现，循环利用 GPU 内存的滚动</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-dom-shadow>DOM 性能</a></td>
-                                    <td>结合 shandbox 和 shadowroot 来提升 DOM 性能</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform>图片背景流</a></td>
-                                    <td>CSS 新增 onload 语法控制背景图显示时机</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-dom-input param=section/keyboardup>软键盘高度</a></td>
-                                    <td>可获取软键盘弹起时的高度</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-dom-input param=section/selectionrangepos>光标位置</a></td>
-                                    <td>可获取光标在输入框中的实际位置</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/mirroring>模块镜像</a></td>
-                                    <td>使用该特性能够使不支持 "backdrop-filter" 的手机获得毛玻璃效果</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/singleflow>路由控制</a></td>
-                                    <td>按照模块等级以历史记录的方式进行单向回退，也可纯粹使用历史记录</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-attr-on>多指操控</a></td>
-                                    <td>支持 20+ 多指手势操控，操作体验更完整</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-components-tags>异步组件</a></td>
-                                    <td>异步载入组件，组件能够独立运作</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform>模块静默刷新</a></td>
-                                    <td>模块刷新时能够避免出现白屏和闪烁，且能保持阅读痕迹</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-resources param=section/cache>资源生命周期</a></td>
-                                    <td>模块的所有资源都可设置单独的有效生命周期</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-module-config param=section/cache>模块生命周期</a></td>
-                                    <td>模块自身可设置有效生命周期</td>
-                                </tr>
-                                <tr>
-                                    <td><a transform=docs-dom-echo>数据驱动视图</a></td>
-                                    <td>通过数据绑定实现数据驱动视图，减少 query 的逻辑操作</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </scrolling>
-                </scroll>
-                <blockquote>传统 WEB 应用和 Native 应用在手持设备上有着明显的差异，这是因为 WEB 应用有其天生的特性和不足，这些特性和不足直接导致使用者认知到这是一个 WEB 应用而非一个 Native 应用</blockquote>
+                <h2>高级标准化的 CSS</h2>
+                <p>可编程 CSS 语言，不需要书写浏览器前缀，支持继承和类等</p>
+                <code-light type=css>
+                    @class coverBackground (color) {
+                        background-color: [color];
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                    }
+                    @if (device.os.ios) {
+                        .demo {
+                            top: [header-height];
+                            height: calc(100vh + 12dp - 1px);
+                            @class: coverBackground(#fff);
+                        }
+                    }
+                </code-light>
+                <p>提问环节：</p>
+                <blockquote>
+                    <h5>项目还需要 SASS、LESS、Stylus 等吗？</h5>
+                    <p>答案肯定是不需要。IOING 是一个纯前端引擎，所有服务都是前端运行的结果</p>
+                    <br>
+                    <h5>运行在前端的 CSS 引擎会不会很慢？</h5>
+                    <p>当然不会。IOING 的 CSS 引擎 是一个非常高效的解释器，一般整个模块的 CSS 文件的编译速度都在 0.002s 内完成</p>
+                    <br>
+                    <h5>为什么采用前端编译？</h5>
+                    <p>前端可编程 CSS 的特点是能根据不同设备环境以及模版数据灵活编译，具有针对性和实效性，减小文件传输提及的同时更减少了日常维护成本</p>
+                </blockquote>
+                <p><a transform=docs-css-scope>#了解更多</a></p>
             </section>
 
             <section>
@@ -539,18 +521,6 @@
                     <range-slider value=50 path=./></range-slider>
                 </code-light>
                 <p><a transform=docs-components-props>#了解更多</a></p>
-            </section>
-
-            <section>
-                <h2>自动数据绑定</h2>
-                <p>在节点及节点属性上使用数据引用时能够自动将该数据源与该节点进行数据绑定操作，当数据源上的数据发生变更时将同时影响该节点。双向数据绑定时，通过控制数据源的改变操作节点比使用 query 的方法更有效。自动绑定功能还能通过分析逻辑片段中的有效数据源引用，并建立绑定关系，而无需手动指定</p>
-                <code-light type=html>
-                    <div class="title {value.class} {{value.active ? 'active' : ''}}">
-                        {title}
-                    </div>
-                </code-light>
-
-                <p><a transform=docs-dom-echo>#了解更多</a></p>
             </section>
 
             <section>
@@ -713,27 +683,27 @@
                             <tbody>
                                 <tr>
                                     <td>tap</td>
-                                    <td>无</td>
+                                    <td>tap</td>
                                 </tr>
                                 <tr>
                                     <td>pan</td>
-                                    <td>panstart panmove panend pancancel panleft panright panup pandown</td>
+                                    <td>pan panstart panmove panend pancancel panleft panright panup pandown</td>
                                 </tr>
                                 <tr>
                                     <td>pinch</td>
-                                    <td>pinchstart pinchmove pinchend pinchcancel pinchcancel pinchout</td>
+                                    <td>pinch pinchstart pinchmove pinchend pinchcancel pinchcancel pinchout</td>
                                 </tr>
                                 <tr>
-                                    <td>pinch</td>
-                                    <td>pressup</td>
+                                    <td>press</td>
+                                    <td>press pressup</td>
                                 </tr>
                                 <tr>
                                     <td>rotate</td>
-                                    <td>rotatestart rotatemove rotateend rotatecancel</td>
+                                    <td>rotate rotatestart rotatemove rotateend rotatecancel</td>
                                 </tr>
                                 <tr>
                                     <td>swipe</td>
-                                    <td>swipeleft swiperight swipeup swipedown</td>
+                                    <td>swipe swipeleft swiperight swipeup swipedown</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -742,6 +712,92 @@
                 <p>
                     <a transform=docs-attr-on>#了解更多</a>
                 </p>
+            </section>
+
+            <section>
+                <h2>媲美原生应用</h2>
+                <p>为了让使用者感知到一个更棒的 WEB 应用，我们做了很多体验改善工作：</p>
+                <scroll class=exp stop-propagation="auto" x=auto y=false>
+                    <scrolling style="min-width:{setting.articleWidth}dp">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><a transform=docs-css-units param=section/pixel>物理像素</a></td>
+                                    <td>脱离 viewport 限制，物理像素让应用显示更细致</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config param=section/sandbox>模块沙盒</a></td>
+                                    <td>使模块独立运作互不干扰</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config param=section/animation>模块转场</a></td>
+                                    <td>内置多种模块转场过渡动画，也可自由定制动画</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td><a transform>动画线程控制</a></td>
+                                    <td>使用动画队列来提升动画性能</td>
+                                </tr> -->
+                                <tr>
+                                    <td><a transform=docs-dom-scroll>滚动参数</a></td>
+                                    <td>可对滚动的弹性或惯性等参数进行自定义配置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-scroll param=section/infnite>无限滚动</a></td>
+                                    <td>统一滚动表现，循环利用 GPU 内存的滚动</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-shadow>DOM 性能</a></td>
+                                    <td>结合 shandbox 和 shadowroot 来提升 DOM 性能</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform>图片背景流</a></td>
+                                    <td>CSS 新增 onload 语法控制背景图显示时机</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-input param=section/keyboardup>软键盘高度</a></td>
+                                    <td>可获取软键盘弹起时的高度</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-input param=section/selectionrangepos>光标位置</a></td>
+                                    <td>可获取光标在输入框中的实际位置</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config param=section/mirroring>模块镜像</a></td>
+                                    <td>使用该特性能够使不支持 "backdrop-filter" 的手机获得毛玻璃效果</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config param=section/singleflow>路由控制</a></td>
+                                    <td>按照模块等级以历史记录的方式进行单向回退，也可纯粹使用历史记录</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-attr-on>多指操控</a></td>
+                                    <td>支持 20+ 多指手势操控，操作体验更完整</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-components-tags>异步组件</a></td>
+                                    <td>异步载入组件，组件能够独立运作</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform>模块静默刷新</a></td>
+                                    <td>模块刷新时能够避免出现白屏和闪烁，且能保持阅读痕迹</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-resources param=section/cache>资源生命周期</a></td>
+                                    <td>模块的所有资源都可设置单独的有效生命周期</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-module-config param=section/cache>模块生命周期</a></td>
+                                    <td>模块自身可设置有效生命周期</td>
+                                </tr>
+                                <tr>
+                                    <td><a transform=docs-dom-echo>数据驱动视图</a></td>
+                                    <td>通过数据绑定实现数据驱动视图，减少 query 的逻辑操作</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </scrolling>
+                </scroll>
+                <blockquote>传统 WEB 应用和 Native 应用在手持设备上有着明显的差异，这是因为 WEB 应用有其天生的特性和不足，这些特性和不足直接导致使用者认知到这是一个 WEB 应用而非一个 Native 应用</blockquote>
             </section>
 
             <section>

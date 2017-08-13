@@ -100,9 +100,9 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
     }
 
 
-    function ajax (method, url, data, headers, settings, type) {
+    function ajax (method, url, data, headers, settings, type, id) {
         if ( method.toUpperCase === 'JSONP' || /=\~/.test(url) ) {
-            return origin(url, data, settings.caller, type)
+            return origin(url, data, settings.caller, type, id)
         }
 
         var p = new Promise()
@@ -180,8 +180,10 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
         function over () {
 
             abort()
-            
-            tryAgain(url, abort, send)
+
+            if ( tryAgain(url, abort, send, id) == false ) {
+                p.done(true, {}, {})
+            }
         }
 
         // timeout
@@ -228,12 +230,12 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
     }
 
     function _ajaxer (method) {
-        return function (url, data, headers, settings, type) {
-            return ajax(method, url, data, headers, settings, type)
+        return function (url, data, headers, settings, type, id) {
+            return ajax(method, url, data, headers, settings, type, id)
         }
     }
 
-    function origin (url, data, caller, type) {
+    function origin (url, data, caller, type, id) {
         var p = new Promise()
         var callbackName = !caller ? '__' + type + '__' + caller : '__call__' + (++_jsonPID)
         var script = sandboxDocument.createElement("script")
@@ -289,7 +291,9 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
 
             abort()
 
-            tryAgain(url, abort, send)
+            if ( tryAgain(url, abort, send, id) == false ) {
+                p.done(true, {}, {})
+            }
         }
 
         // DEBUG
@@ -324,22 +328,21 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
         return p
     }
 
-    function tryAgain (url, abort, send) {
-        var again = _tryAgain[url]
+    function tryAgain (url, abort, send, id) {
+        var again = _tryAgain[url] || 1
 
-        if ( again && again >= promise.TRYAGAIN ) {
-            application.trigger('loadfaile', {
-                url : url,
-                again : again
-            })
+        App.modules[id].trigger('failedtoload', {
+            id : id,
+            url : url,
+            again : again
+        })
 
-            return
-        }
+        if ( again && again >= promise.TRYAGAIN ) return false
 
         // again times++
 
-        _tryAgain[url] = again ? again : 1
-        _tryAgain[url]++
+        again++
+        _tryAgain[url] = again
 
         function regain () {
             abort()
@@ -360,6 +363,8 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
                 send()
             }, 3000)
         }
+
+        return again
     }
 
     var Sandbox = require('~/sandbox').sandbox

@@ -1,0 +1,139 @@
+<style>
+@section (header) {
+    this {
+        position: absolute;
+        background: #fff;
+        box-sizing: border-box;
+        height: 48dp;
+        margin: 0 auto;
+        width: 100%;
+        z-index: 12;
+        box-shadow: 0 0 4dp #657786;
+    }
+
+    nav ul {
+        display: flex;
+        text-align: center;
+        max-width: 1600dp;
+        margin: 0 auto;
+    }
+
+    nav li {
+        flex: 1;
+        font-size: 0;
+        line-height: 0;
+        padding-top: 10dp;
+        height: 48dp;
+        border-bottom: 2dp solid #fff;
+    }
+
+    nav li.active {
+        border-color: #1da1f2;
+    }
+
+    i {
+        display: inline-block;
+        height: 26dp;
+        margin: 0 auto;
+        position: relative;
+        width: 26dp;
+        background-size: cover;
+    }
+
+    i::before {
+        content: ' ';
+        display: none;
+        background-color: #1da1f2;
+        border-radius: 6dp;
+        height: 6dp;
+        position: absolute;
+        right: 2dp;
+        top: -2dp;
+        width: 6dp;
+    }
+
+    li.active i::before{
+        display: block;
+    }
+
+    .icon-home {
+        background-image: url(img/home.svg);
+    }
+    .icon-search {
+        background-image: url(img/search.svg);
+    }
+    .icon-notif {
+        background-image: url(img/notif.svg);
+    }
+    .icon-message {
+        background-image: url(img/message.svg);
+    }
+
+    li.active .icon-home {
+        background-image: url(img/home_a.svg);
+    }
+    li.active .icon-search {
+        background-image: url(img/search_a.svg);
+    }
+    li.active .icon-notif {
+        background-image: url(img/notif_a.svg);
+    }
+    li.active .icon-message {
+        background-image: url(img/message_a.svg);
+    }
+}
+
+.logoshow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: #1da1f2;
+    opacity: 1;
+    /*transition: opacity .2s;*/
+}
+.logoshow i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -400dp;
+    width: 800dp;
+    height: 800dp;
+    background: url(img/logo.png) center no-repeat;
+    background-size: 600dp auto;
+    transform: scale(.15);
+}
+</style>
+
+
+<header>
+    <nav>
+        <ul>
+            <li class="{{s.activeMainNav == 'feed' ? 'active' : ''}}" transform="feed"><a><i class="icon-home"></i></a></li>
+            <li class="{{s.activeMainNav == 'search' ? 'active' : ''}}" transform="search"><a><i class="icon-search"></i></a></li>
+            <li class="{{s.activeMainNav == 'notif' ? 'active' : ''}}" transform="notif"><a><i class="icon-notif"></i></a></li>
+            <li class="{{s.activeMainNav == 'message' ? 'active' : ''}}" transform="message"><a><i class="icon-message"></i></a></li>
+        </ul>
+    </nav>
+</header>
+
+<div uuid=logoshow class=logoshow><i uuid=logo></i></div>
+
+<script>
+    App.on('transformstart', function (event) {
+        scope.s.activeMainNav = App.id
+    })
+
+    setTimeout(function () {
+        node('logo').Animate().duration(0).end(function () {
+            this.duration(800).scale(.13).end(function () {
+                this.duration(900).scale(20).end()
+                node('logoshow').Animate().duration(700).opacity(0).end(function () {
+                        node('logoshow').style.display = "none"
+                    })
+            })
+        })   
+    }, 400)
+</script>

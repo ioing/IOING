@@ -1,0 +1,25 @@
+<assistive-touch id=assistivetouch back></assistive-touch>
+
+<add-to-homescreen></add-to-homescreen>
+
+<script>
+    setTimeout(function () {
+    	node('assistivetouch').showin()
+    }, 1000)
+
+    function toogleTouch (id) {
+    	if ( id.indexOf('/demo/app') == 0 ) {
+    		node('assistivetouch').style.display = "none"
+    	} else {
+    		node('assistivetouch').style.display = ""
+    	}
+    }
+
+    if ( App.id.indexOf('/demo/app') == 0 ) {
+    	toogleTouch(App.id)
+    }
+
+    App.on('transformstart', function (e) {
+    	toogleTouch(e.ids[0])
+    })
+</script>

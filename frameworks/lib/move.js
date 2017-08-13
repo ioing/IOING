@@ -85,6 +85,7 @@ define('~/move', [], function (require, module, exports) {
         if ('string' == typeof el) el = $$(el)[0]
         if (!el) return
         this.el = el
+        this._events = {}
         this._props = {}
         this._rotate = 0
         this._transitionProps = []
@@ -94,10 +95,62 @@ define('~/move', [], function (require, module, exports) {
 
     var proto = Move.prototype
 
+    proto.on = function (types, fn) {
+        var that = this
+
+        types.split(' ').each(function (i, type) {
+            that._events.initial(type, []).push(fn)
+        })
+
+        return this
+    }
+
+    proto.one = function (types, fn) {
+        var that = this
+
+        function once () {
+            fn.apply(this, arguments)
+            this.off(types, once)
+        }
+
+        types.split(' ').each(function (i, type) {
+            that._events.initial(type, []).push(once)
+        })
+
+        return this
+    }
+
+    proto.off = function (types, fn) {
+        var that = this
+
+        types.split(' ').each(function (i, type) {
+            if ( !that._events[type] ) return
+
+            var index = that._events[type].indexOf(fn)
+
+            if ( index > -1 ) {
+                that._events[type].splice(index, 1)
+            }
+        })
+
+        return this
+    }
+
+    proto.trigger = function (type) {
+        var that = this
+        var args = arguments
+        var events = this._events[type]
+
+        if ( !events ) return
+
+        for (var i = events.length - 1; i >= 0; i--) {
+            events[i].apply(that, [].slice.call(args, 1))
+        }
+    }
 
     // once fn
     
-    proto.once = function (fn) {
+    proto._transitionend = function (fn) {
         if ( this._duration == 0 || !hasTransitions ) return fn()
         this.el.one('transitionend', fn)
     }
@@ -144,29 +197,13 @@ define('~/move', [], function (require, module, exports) {
         return this.transform('skewY(' + n + 'deg)')
     }
 
-    proto._pos = {}
-
     proto.translate =
     proto.translate3d =
     proto.to = function (x, y, z) {
-        x = x != undefined ? x : this._pos.x
-        y = y != undefined ? y : this._pos.y
-        z = z != undefined ? z : this._pos.z
 
-        this._pos = {
-            x : x,
-            y : y,
-            z : z
-        }
+        // 3d set
 
-        if ( x != null && y != null && z != null ) {
-            this.transform('translate3d(' + (x ? x + 'px' : 0) + ',' + (y ? y + 'px' : 0) + ',' + (z ? z + 'px' : 0) + ')')
-            return this
-        }
-
-        x && this.x(x)
-        y && this.y(y)
-        z && this.z(z)
+        this.transform('translate3d(' + (x ? x + 'px' : 0) + ',' + (y ? y + 'px' : 0) + ',' + (z ? z + 'px' : 0) + ')')
 
         return this
     }
@@ -333,7 +370,17 @@ define('~/move', [], function (require, module, exports) {
     */
 
     proto.setProperty = function (prop, val) {
-        this._props[prop] = val
+        this._props[prop] = val === undefined ? '' : val
+        return this
+    }
+
+    proto.width = function (val) {
+        this._props.width = val === undefined ? '' : val + 'px'
+        return this
+    }
+
+    proto.height = function (val) {
+        this._props.height = val === undefined ? '' : val + 'px'
         return this
     }
 
@@ -348,7 +395,7 @@ define('~/move', [], function (require, module, exports) {
     */
 
     proto.style = function (prop, val) {
-        this._props[prop] = val
+        this._props[prop] = val === undefined ? '' : val
         return this
     }
 
@@ -411,8 +458,12 @@ define('~/move', [], function (require, module, exports) {
     */
 
     proto.transition = function (prop) {
-        if ( !this._transitionProps.indexOf(prop) ) return this
-        this._transitionProps.push(prop)
+        if ( !this._transitionProps.indexOf(prop) ) this._transitionProps.push(prop)
+        return this
+    }
+
+    proto.all = function () {
+        this._transitionAll = true
         return this
     }
 
@@ -427,14 +478,19 @@ define('~/move', [], function (require, module, exports) {
     proto.applyProperties = function (callback) {
         var that = this
         
-        rAF(function () {
-            that.el.css(that._props)
-            that._props = {}
+        if ( callback ) { 
+            rAF(function () {
+                that.el.css(that._props)
+                that._props = {}
 
-            // callback
-            
-            callback.call(that)
-        })
+                // callback
+                
+                callback.call(that)
+            })
+        } else {
+            this.el.css(that._props)
+            this._props = {}
+        }
         
         return this
     }
@@ -507,10 +563,29 @@ define('~/move', [], function (require, module, exports) {
     */
 
     proto.clear = function () {
-        this.el.style.set('transition-duration', '0ms')
+        this.el.style.set('transition-duration', '')
         this._transforms = {}
 
         return this
+    }
+
+    proto.instant = function (fn) {
+
+        // emit "start" event
+        
+        this.trigger('start')
+
+        // transition properties 检索或设置对象中的参与过渡的属性
+
+        this.setProperty('transition-property', this._transitionAll ? 'all' : this._transitionProps.join(', '))
+
+        // transforms
+
+        this._applyTransform()
+
+        // set properties
+
+        this.applyProperties(fn)
     }
 
     /**
@@ -524,21 +599,11 @@ define('~/move', [], function (require, module, exports) {
     proto.end = function (fn) {
         var that = this
 
-        // transition properties 检索或设置对象中的参与过渡的属性
-
-        this.setProperty('transition-property', this._transitionProps.join(', '))
-
-        // transforms
-
-        this._applyTransform()
-        
-        // set properties
-
-        this.applyProperties(function () {
+        this.instant(function () {
 
             // emit "end" when complete
 
-            that.once(function () {
+            that._transitionend(function () {
                 if (fn) fn.call(that)
                 that.clear()
             })

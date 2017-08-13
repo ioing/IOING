@@ -1,0 +1,35 @@
+<style>
+	scroll[fullscreen] {
+		top: 50dp;
+		min-width: auto;
+		max-width: 1600dp;
+		margin: 0 auto;
+	}
+	ul li {
+		color: #14171a;
+		padding: 10dp;
+		font-size: 20dp;
+		border-bottom: 1px solid #ccd6dd;
+	}
+
+	.serach {
+		background-color: #f5f8fa;
+		border: 1px solid #d6dee3;
+		height: 32dp;
+		border-radius: 16dp;
+		padding: 4dp;
+		text-align: center;
+		color: #657786;
+	}
+</style>
+
+<scroll fullscreen>
+	<scrolling>
+		<ul>
+			<li><div class=serach>搜索 Twitter</div></li>
+			<loop list as v k>
+				<li>{v}</li>
+			</loop>
+		</ul>
+	</scrolling>
+</scroll>
