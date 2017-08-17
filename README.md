@@ -3,6 +3,22 @@ Brand new front-end engine
 ======================
 ![IOING logo](https://raw.githubusercontent.com/ioing/IOING/master/logo.png)
 
+## HI!
+
+这是一个全新的前端引擎，并即将在七月份正式上线。很高兴能在此遇到大家，并由此体验到 IOING 所带来的不同。文档持续更新，网站内容将不断丰富。
+ 
+> This is a brand new front-end engine which is going to be released officially in this July.
+Really grateful to meet you all here and bring the differences of experience to the community within IOING.
+Continuous updating would be guaranteed of Docs and Website.
+
+[DEMO](http://www.ioing.com/#components-store)
+
+## What is IOING?
+IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案。
+
+> IOING is not a simple front-end framework. 
+As a second engine, it provides a complete solution of modularization, componentization, sandbox, memory management and pre loading of contents to improve the differences of HTML5 in comparison with the native App.
+
 ## What can it do？
 
 ### Module animation
@@ -23,23 +39,6 @@ Brand new front-end engine
   </tr>
  </tbody>
 </table>
-
-
-## HI!
-
-这是一个全新的前端引擎，并即将在七月份正式上线。很高兴能在此遇到大家，并由此体验到 IOING 所带来的不同。文档持续更新，网站内容将不断丰富。
- 
-> This is a brand new front-end engine which is going to be released officially in this July.
-Really grateful to meet you all here and bring the differences of experience to the community within IOING.
-Continuous updating would be guaranteed of Docs and Website.
-
-[DEMO](http://www.ioing.com/#components-store)
-
-## What is IOING?
-IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案。
-
-> IOING is not a simple front-end framework. 
-As a second engine, it provides a complete solution of modularization, componentization, sandbox, memory management and pre loading of contents to improve the differences of HTML5 in comparison with the native App.
 
 ## Features of IOING
 - 云组件 Cloud Components
