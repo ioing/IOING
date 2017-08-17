@@ -42,19 +42,19 @@ As a second engine, it provides a complete solution of modularization, component
 
 ## Features of IOING
 - 云组件 Cloud Components
- ```html
-  <switch-slider src=http://www.ioing.com/components></switch-slider>
-  <switch-slider value=on></switch-slider>
- ```
+```html
+<switch-slider src=http://www.ioing.com/components></switch-slider>
+<switch-slider value=on></switch-slider>
+```
 - DOM+：功能标签扩展 DOM Plus: Function Tag Development
 ```html
-  <scroll>
-    <scrolling>
-      <loop colorful as value key>
-        <div style="color:{value}">{value}</div>
-      </loop>
-    </scrolling>
-  </scroll>
+<scroll>
+  <scrolling>
+    <loop colorful as value key>
+      <div style="color:{value}">{value}</div>
+    </loop>
+  </scrolling>
+</scroll>
 ```
 - 自动数据绑定 Automatic Data Binding
 ```html
