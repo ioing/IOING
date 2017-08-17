@@ -6,13 +6,23 @@ Brand new front-end engine
 ## What can it do？
 
 ### Module animation
-<img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/fade.gif?raw=true" width="160" />
-animation = "fade"
-<img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/slide.gif?raw=true" width="160" />
-animation = "slide"
-<img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/zoom.gif?raw=true" width="160" />
-animation = "zoom"
 
+<table>
+ <thead>
+  <tr>
+   <td>animation = "fade"</td>
+   <td>animation = "slide"</td>
+   <td>animation = "zoom"</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/fade.gif?raw=true" width="160" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/slide.gif?raw=true" width="160" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/zoom.gif?raw=true" width="160" /></td>
+  </tr>
+ </tbody>
+</table>
 
 
 ## HI!
