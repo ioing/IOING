@@ -3,6 +3,28 @@ Brand new front-end engine
 ======================
 ![IOING logo](https://raw.githubusercontent.com/ioing/IOING/master/logo.png)
 
+## 支持
+<table>
+ <thead>
+  <tr>
+   <td>IE</td>
+   <td>Edge</td>
+   <td>Firefox</td>
+   <td>Chrome</td>
+   <td>Safari</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>>=9</td>
+   <td>>=15</td>
+   <td>>=54</td>
+   <td>>=59</td>
+   <td>>=8</td>
+  </tr>
+ </tbody>
+</table>
+
 ## HI!
 
 这是一个全新的前端引擎，并即将在七月份正式上线。很高兴能在此遇到大家，并由此体验到 IOING 所带来的不同。文档持续更新，网站内容将不断丰富。
@@ -22,39 +44,39 @@ As a second engine, it provides a complete solution of modularization, component
 ## What can it do？
 
 ### Module animation
-
+为模块配置 animation = [type]
 <table>
  <thead>
   <tr>
-   <td>animation = "fade"</td>
-   <td>animation = "slide"</td>
-   <td>animation = "zoom"</td>
+   <td>fade</td>
+   <td>slide</td>
+   <td>zoom</td>
   </tr>
  </thead>
  <tbody>
   <tr>
-   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/fade.gif?raw=true" width="320" /></td>
-   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/slide.gif?raw=true" width="320" /></td>
-   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/zoom.gif?raw=true" width="320" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/fade.gif?raw=true" width="200" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/slide.gif?raw=true" width="200" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/zoom.gif?raw=true" width="200" /></td>
   </tr>
  </tbody>
 </table>
 
 ## Features of IOING
 - 云组件 Cloud Components
- ```html
-  <switch-slider src=http://www.ioing.com/components></switch-slider>
-  <switch-slider value=on></switch-slider>
- ```
+```html
+<switch-slider src=http://www.ioing.com/components></switch-slider>
+<switch-slider value=on></switch-slider>
+```
 - DOM+：功能标签扩展 DOM Plus: Function Tag Development
 ```html
-  <scroll>
-    <scrolling>
-      <loop colorful as value key>
-        <div style="color:{value}">{value}</div>
-      </loop>
-    </scrolling>
-  </scroll>
+<scroll>
+  <scrolling>
+    <loop colorful as value key>
+      <div style="color:{value}">{value}</div>
+    </loop>
+  </scrolling>
+</scroll>
 ```
 - 自动数据绑定 Automatic Data Binding
 ```html
