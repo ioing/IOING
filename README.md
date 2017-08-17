@@ -44,13 +44,13 @@ As a second engine, it provides a complete solution of modularization, component
 ## What can it do？
 
 ### Module animation
-
+为模块配置 animation = [type]
 <table>
  <thead>
   <tr>
-   <td>animation = "fade"</td>
-   <td>animation = "slide"</td>
-   <td>animation = "zoom"</td>
+   <td>fade</td>
+   <td>slide</td>
+   <td>zoom</td>
   </tr>
  </thead>
  <tbody>
