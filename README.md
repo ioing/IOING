@@ -1,3 +1,8 @@
+
+Brand new front-end engine
+======================
+![alt tag](https://raw.githubusercontent.com/ioing/IOING/master/logo.png)
+
 ## HI!
 
 这是一个全新的前端引擎，并即将在七月份正式上线。很高兴能在此遇到大家，并由此体验到 IOING 所带来的不同。文档持续更新，网站内容将不断丰富。
