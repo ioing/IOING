@@ -1,7 +1,7 @@
 
 Brand new front-end engine
 ======================
-![alt tag](https://raw.githubusercontent.com/ioing/IOING/master/logo.png)
+![IOING logo](https://raw.githubusercontent.com/ioing/IOING/master/logo.png)
 
 ## HI!
 
@@ -18,6 +18,27 @@ IOING 不是一个单纯的前端框架，而是提供了一套完整解决方�
 
 > IOING is not a simple front-end framework. 
 As a second engine, it provides a complete solution of modularization, componentization, sandbox, memory management and pre loading of contents to improve the differences of HTML5 in comparison with the native App.
+
+## What can it do？
+
+### Module animation
+
+<table>
+ <thead>
+  <tr>
+   <td>animation = "fade"</td>
+   <td>animation = "slide"</td>
+   <td>animation = "zoom"</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/fade.gif?raw=true" width="320" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/slide.gif?raw=true" width="320" /></td>
+   <td><img src="https://github.com/ioing/IOING/blob/master/frameworks/readme/zoom.gif?raw=true" width="320" /></td>
+  </tr>
+ </tbody>
+</table>
 
 ## Features of IOING
 - 云组件 Cloud Components
