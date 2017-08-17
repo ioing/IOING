@@ -17,9 +17,9 @@ Brand new front-end engine
  <tbody>
   <tr>
    <td>>=9</td>
-   <td>>=15</td>
-   <td>>=54</td>
-   <td>>=59</td>
+   <td>>=14</td>
+   <td>>=52</td>
+   <td>>=49</td>
    <td>>=8</td>
   </tr>
  </tbody>
