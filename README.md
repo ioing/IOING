@@ -3,6 +3,28 @@ Brand new front-end engine
 ======================
 ![IOING logo](https://raw.githubusercontent.com/ioing/IOING/master/logo.png)
 
+## 支持
+<table>
+ <thead>
+  <tr>
+   <td>IE</td>
+   <td>Edge</td>
+   <td>Firefox</td>
+   <td>Chrome</td>
+   <td>Safari</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>>=9</td>
+   <td>>=15</td>
+   <td>>=54</td>
+   <td>>=59</td>
+   <td>>=8</td>
+  </tr>
+ </tbody>
+</table>
+
 ## HI!
 
 这是一个全新的前端引擎，并即将在七月份正式上线。很高兴能在此遇到大家，并由此体验到 IOING 所带来的不同。文档持续更新，网站内容将不断丰富。
