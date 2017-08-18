@@ -124,6 +124,45 @@ As a second engine, it provides a complete solution of modularization, component
 
 > To learn the latest releases and announcements, welcome to follow the Wechat: ioingroot
 
+## Folder Structure
+文件夹结构如下
+
+> The folder structure should look like
+
+
+    --- frameworks(folder)
+        --- lib(folder)
+            --- application.js
+            --- css.js
+            --- dom.js
+            --- fetch.js
+            --- loader.js
+            --- move.js
+            --- promise.js
+            --- proto.js
+            --- query.js
+            --- sandbox.js
+            --- scroll.js
+            --- template.js
+            --- touch.js
+            --- transform.js
+            --- unify.js
+    --- modules(folder)
+    --- components(folder)
+    
+    
+            
+## Library referred in IOING
+该项目中有使用/借鉴以下仓库，对这项仓库表示感谢
+
+> Thanks for these libraries to provide helpful and reliable references for IOING
+
+1. 转动的 canvas 菊花 loader.js : [CanvasLoader.js](https://github.com/heartcode/CanvasLoader)
+2. 选择器 query.js : [jquery.js](https://github.com/jquery/jquery)
+3. 多手势库 touch.js : [hammer.js](https://github.com/hammerjs/hammer.js)
+4. 动画库 move.js (部分) : [move.js](https://github.com/visionmedia/move.js)
+  
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
