@@ -1,0 +1,69 @@
+<style src="prism.css">
+	/* prism.css 未加在完的预览样式 */
+	:not(pre) > code[class*="language-"],
+	pre[class*="language-"] {
+		width: 100%;
+		min-height: 23dp;
+		background: #f8f8f8;
+	}
+</style>
+
+<if height>
+	<style>
+		scroll {
+			height: [height]dp;
+		}
+	</style>
+</if>
+
+<script import global>
+	// Prism 组件全局lib
+	// var Prism = @import('prism')
+
+	import Prism from 'prism'
+
+
+</script>
+
+<script>
+	var ele = node('code')
+	  , src = ele.attr('src')
+	  , scrollView = node('view-scroll')
+	  , scroller = scrollView.scrollEvent
+
+	// 将函数抛入到组件global script中运行
+
+	global.call(function (src, root, ele, code, lang, components, scrollView, scroller) {
+		var trimstr = /^\s+/.exec(code)[0] || ''
+		var trimlength = trimstr.length
+
+		code = code.replace(/\n\s+/g, function (trims, a, str) {
+			trims = '\n' + trims.substr(trimlength)
+			return trims
+		})
+		code = code.trim()
+		if ( src ) { 
+			Prism.fileHighlight(ele)
+		} else {
+			Prism.highlightCode(ele, code, lang, function () {
+				setTimeout(function () {
+					scrollView.css({
+						// 'height': ele.offsetHeight + 'px',
+						'opacity': 1,
+						'transition': 'opacity .2s linear'
+					})
+					scroller.refresh()
+					components.reflow()
+				},0)
+			})
+		}
+	}, src, root, ele, scope.components.innerHTML, scope.type, components, scrollView, scroller)
+
+</script>
+
+<scroll uuid="view-scroll" class="banner-wrapper {class}" x=auto y="{{y || height ? 'auto' : 'false'}}" stop-propagation="auto">
+	<scrolling>
+		<pre uuid="code" class="language-{type}">
+		</pre>
+	</scrolling>
+</scroll>

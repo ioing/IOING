@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="40px" height="35px" viewBox="0 0 40 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M24.4630648,22.1881449 C26.2209547,18.7254485 28.2370155,15.7721306 30,15.7721306 C34.2608696,15.7721306 40,33.0229492 40,33.0229492 L20,33.0229492" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="17.2508186" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <path d="M14.5,7 C22.4264706,7 29,33.0229492 29,33.0229492 L0,33.0229492 C0,33.0229492 6.57352941,7 14.5,7 Z" id="path-3"></path>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="29" height="26.0229492" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="9-7" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="写经验-已填" transform="translate(-170.000000, -1257.000000)" stroke="#ffffff">
+            <g id="Group-6" transform="translate(170.000000, 1258.000000)">
+                <g id="Group-3">
+                    <use id="Rectangle-13-Copy" mask="url(#mask-2)" stroke-width="4" xlink:href="#path-1"></use>
+                    <use id="Rectangle-13" mask="url(#mask-4)" stroke-width="4" xlink:href="#path-3"></use>
+                    <circle id="Oval" stroke-width="2" cx="29.5" cy="4.5" r="4.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

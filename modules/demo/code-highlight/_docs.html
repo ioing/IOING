@@ -1,0 +1,150 @@
+<template title>
+	代码高亮
+</template>
+
+<template content>
+	<section>
+        <h2>使用</h2>
+        <scroll class=exp stop-propagation="auto" x=auto y=false>
+            <scrolling style="min-width:750dp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>指令</th>
+                            <th>值</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>type</td>
+                            <td>html/xml/mathml/svg/js/css/python/ruby/powershell/bash</td>
+                            <td>设定代码语言类型</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </scrolling>
+        </scroll>
+        <p>本网站中的代码高亮都是通过该组件来展现的，如下展示对不同语言的语法高亮</p>
+        <h4>html</h4>
+        <code-highlight type=html>
+            <code-highlight type=html>
+                <ul>
+                    <li><span>1</span></li>
+                    <li><span>2</span></li>
+                    <li><span>3</span></li>
+                    <li><span>4</span></li>
+                    <li><span>5</span></li>
+                    <li><span>6</span></li>
+                </ul>
+            </code-highlight>
+        </code-highlight>
+        <code-highlight type=html>
+            <ul>
+                <li><span>1</span></li>
+                <li><span>2</span></li>
+                <li><span>3</span></li>
+                <li><span>4</span></li>
+                <li><span>5</span></li>
+                <li><span>6</span></li>
+            </ul>
+        </code-highlight>
+        <h4>css</h4>
+        <code-highlight type=html>
+            <code-highlight type=css>
+                div {
+                    display: flex;
+                    transform: scale([s]);
+                    box-shadow: 0 0 5dp red;
+                    border-radius: 6dp;
+                }
+            </code-highlight>
+        </code-highlight>
+        <code-highlight type=css>
+            div {
+                display: flex;
+                transform: scale([s]);
+                box-shadow: 0 0 5dp red;
+                border-radius: 6dp;
+            }
+        </code-highlight>
+        <h4>js</h4>
+        <code-highlight type=html>
+            <code-highlight type=js>
+                function fn () {
+                    ...
+                }
+            </code-highlight>
+        </code-highlight>
+        <code-highlight type=js>
+            function fn () {
+                ...
+            }
+        </code-highlight>
+        <h4>xml</h4>
+        <code-highlight type=html>
+            <code-highlight type=xml>
+                <Page
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  x:Class="XAMLSample.Page1"
+                 >
+                    <Button Click="HelloWorld" Name="Button1">Click Here</Button>
+                </Page>
+            </code-highlight>
+        </code-highlight>
+        <code-highlight type=xml>
+            <Page
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              x:Class="XAMLSample.Page1"
+             >
+                <Button Click="HelloWorld" Name="Button1">Click Here</Button>
+            </Page>
+        </code-highlight>
+        <h3>限定视窗高度</h3>
+        <scroll class=exp stop-propagation="auto" x=auto y=false>
+            <scrolling style="min-width:{setting.articleWidth}dp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>指令</th>
+                            <th>值</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>height</td>
+                            <td>[Number]</td>
+                            <td>设定代码视窗高度</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </scrolling>
+        </scroll>
+        <code-highlight type=html>
+            <code-highlight type=html height=50>
+                <ul>
+                    <li><span>1</span></li>
+                    <li><span>2</span></li>
+                    <li><span>3</span></li>
+                    <li><span>4</span></li>
+                    <li><span>5</span></li>
+                    <li><span>6</span></li>
+                </ul>
+            </code-highlight>
+        </code-highlight>
+        <code-highlight type=html height=50>
+            <ul>
+                <li><span>1</span></li>
+                <li><span>2</span></li>
+                <li><span>3</span></li>
+                <li><span>4</span></li>
+                <li><span>5</span></li>
+                <li><span>6</span></li>
+            </ul>
+        </code-highlight>
+        <p>该插件使用 Rrism js 库实现语法高亮，如若添加更多语法支持，请访问这里：<a href="http://prismjs.com/" target=_blank>http://prismjs.com/</a></p>
+    </section>
+</template>

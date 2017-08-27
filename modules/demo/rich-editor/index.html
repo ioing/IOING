@@ -1,0 +1,572 @@
+<template text>
+	<div class="text-editor last-editor {{first?'first-editor':''}}" uuid="{{uid}}">
+		<htmlarea class='text-content content' contenteditable='plaintext-only'></htmlarea>
+		<div class='t-emenu-wrapper'>
+			<div class='e-menu-shadow'>
+				<span class='up logo' on-tap='node::up({{uid}})'></span><span class='down logo' on-tap='node::down(event,{{uid}})'></span><span class='del logo' on-tap='node::del(event,{{uid}})'></span>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template image>
+	<div class="image-editor last-editor {{first?'first-editor':''}}" uuid="{{uid}}">
+		<div class='image-content'></div>
+		<span class='image-loading'></span>
+		<div class='i-emenu-wrapper' style='display: none;' uuid='iew_{{uid}}'>
+			<span class='up logo' on-tap='node::up({{uid}})'></span><span class='down logo' on-tap='node::down(event,{{uid}})'></span><span class='del logo' on-tap='node::del(event,{{uid}})'></span>
+		</div>
+	</div>
+</template>
+
+<template emenu>
+	<div class='emenu-wrapper'></div>
+</template>
+
+<scroll fullscreen class='main' uuid='main'>
+	<scrolling uuid='scrolling'>
+		<div class='editor-area' uuid='editor-area'>
+		</div>
+		<div class='no-editor' uuid='no-editor' on-tap='create::addText()'>点击插入文本框</div>
+		<div class='bottom-padding'></div>
+	</scrolling>
+</scroll>
+<div class='bottom-tip' uuid='bottom-tip'>
+	<div class='tip-wrapper'>选择模块可添加文字或图片<span class='close-btip' uuid='close-btip'></span></div>
+</div>
+<div class='bmenu-wrapper' uuid='bmenu'>
+	<div class='add-text' on-tap='create::clickToAddText()'>文字</div>
+	<div class='add-image' on-tap='create::addImage()'>图片<input uuid='file-input' type='file' multiple accept='image/*' style='display: none;'/></div>
+	<span class='submit' uuid='submit' on-tap='event::submit()'>发布</span>
+</div>
+
+<commit uuid='form' method="post" action="{{content.result.data.id ? api.updateContent : api.saveContent}}">
+	<input type="hidden" name="topicId" value="{{module.param.topicId}}">
+	<input type="hidden" name="content" id="target" uuid="a-content">
+	<if is="module.param.id">
+		<input type="hidden" name="id" value="{{module.param.id}}">
+	</if>
+</commit>
+<tip-notes uuid="notetip"></tip-notes>
+
+
+<script>
+	var btip = localStorage.getItem('community/btip/k');
+	if(btip == null){
+		localStorage.setItem('community/btip/k','true');
+		node('bottom-tip').show();
+	}
+
+	if(btip == 'true'){
+		node('bottom-tip').show();
+	}
+
+	node('close-btip').on('click', function(){
+		localStorage.setItem('community/btip/k','false')
+		node('bottom-tip').hide();
+	})
+</script>
+
+<script name='create'>
+	var fileInput = node('file-input'),
+		scroll = node('main'),
+		scroller = scroll.Scroll(),
+		scrolling = node('scrolling'),
+		eArea = node('editor-area'),
+	  	notetip = node('notetip'),
+		submitbtn = node('submit'),
+		url = "/url",
+		uindex = 0,
+		Cambridge = top.Cambridge,
+		target = null;
+
+
+	//编辑经验
+	function initEditor(){
+		var content = scope.content;   // neirong
+
+		if(content && content.length > 0){
+			for (var i = 0; i < content.length; i++) {
+				var obj = content[i]
+				switch(obj.type){
+					case 'text':
+						addText(obj.value);
+					break;
+					case 'image':
+						editorImage(obj.value);
+					break;
+				}
+			}
+		}else {
+			addText();
+		}
+	}
+	setTimeout(function(){
+		initEditor()
+	},10);
+
+
+	function addImage(){
+		localStorage.setItem('community/btip/k','false')
+		node('bottom-tip').hide();
+
+		fileInput.click();
+	}
+
+	function addText(iText){
+		var uid = +new Date + "" + uindex++ +"t";
+
+		resetLast()
+		eArea.appendTemplate('text', {uid: uid,first:isFirst()})
+		node(uid).find('.text-content')[0].attr('contenteditable','plaintext-only')
+
+		var text = node(uid),
+			height = text.offsetHeight + 20 * device.ui.scale;
+
+		var edit_div = text.find('.text-content')[0];
+
+		if(typeof iText == 'string'){
+			edit_div.innerText = iText;
+			edit_div.style.color = '#4E4E44';
+		}else {
+			node('no-editor').hide();
+			edit_div.innerText = '点击输入文本'
+		}
+
+		scrollToElement(text, height);
+
+		edit_div.on('focus', function(e){
+			focus(e);
+		})
+
+		edit_div.on('blur', function(e){
+			blur(e);
+		})
+
+		edit_div.on('paste', function(e){
+			paste(e);
+		})
+
+		edit_div.on('input', function(e){
+			input(e);
+		})
+	}
+
+	function clickToAddText(){
+		localStorage.setItem('community/btip/k','false')
+		node('bottom-tip').hide();
+		addText();
+	}
+
+	//图片编辑框
+	fileInput.onchange = function(){
+		var files = this.files,
+			length = files.length,
+			maxSize = 1024 * 1024 * 8;
+		var curImageLen = eArea.find('.image-content').length;
+
+		if(curImageLen + length > 50){
+			notetip.trigger('open', {
+				tip: "最多上传50张图~"
+			});
+			this.value = ''
+			return;
+		}
+
+		for (var i = 0,length = files.length; i < length; i++) {
+			var file = files[i]
+			if(file.size > maxSize){
+				notetip.trigger('open', {
+					tip: "图片太大啦，裁剪一下，小伙伴们看得更方便~"
+				});
+				return;
+			}
+			uploadImage(file);
+
+		}
+		this.value = '';
+	};
+
+	function uploadImage(file){
+		var xhr = new window.XMLHttpRequest(),
+			formData = new window.FormData(),
+			uid = "";
+
+		formData.append('file', file);
+    	formData.append("uploadId",+new Date())
+		xhr.open('POST', url);
+
+		uid = +new Date + "" + uindex++ + "i";
+		resetLast();
+		eArea.appendTemplate('image', {uid: uid,first:isFirst()});
+		scrollToElement(null, 95 * device.ui.scale);
+
+		node('no-editor').hide();
+
+		xhr.onreadystatechange = function(){
+
+		}
+
+		xhr.onload = function(){
+			var res = JSON.parse(xhr.response),
+				imgUrl = "";
+			if(res.status.code == 200){
+				imgUrl = res.result.url;
+				loadImage(imgUrl, uid);
+				submitbtn.addClass('active');
+			}
+		};
+
+		xhr.upload.onprogress = function(e){
+			// console.log(e.loaded)
+		}
+
+		xhr.onerror = function(e){
+			console.log(e);
+		}
+
+		xhr.send(formData);
+	}
+
+	function loadImage(imgUrl, uid) {
+		var image = new Image();
+		image.src = imgUrl;
+		node(uid).find('.image-content')[0].append(image);
+
+		image.on('load',function(){
+			node(uid).find('span').removeClass('image-loading');
+			image.style.height = 'auto';
+			if (image.offsetHeight < 230){
+				node(uid).find('.image-content')[0].style.set('height','230dp')
+				image.addClass('image-special');
+			} 
+			image.addClass('content');
+			node('iew_' + uid).show();
+			scrollToElement(image);
+		});
+	}
+
+	function scrollToElement(el, uheight){
+		var height = uheight || el.offsetHeight;
+		scroller.refresh()
+		var realDistance;
+		if(scroller.maxScrollY == 0 && scroller.y == 0){
+			realDistance = 0;
+		}else if(scroller.y == 0){
+			realDistance = scroller.maxScrollY - scroller.y
+		}else {
+			realDistance = Math.min(scroller.maxScrollY - scroller.y, -height + 80 * device.ui.scale);
+		}
+		scroller.scrollBy(0, realDistance, 300);
+	}
+
+	function editorImage(imgUrl){
+		var uid = +new Date + "" + uindex++ + "i";
+		resetLast();
+		eArea.appendTemplate('image', {uid: uid, first:isFirst()});
+		loadImage(imgUrl, uid);
+	}
+
+	//文字编辑框
+	function focus(e){
+		target = e.target;
+		checkContentEmpty(e)
+	}
+
+	function blur(e){
+		if(node('submit').attr('waitCommit') == 'true') return;
+		checkContentEmpty(e)
+		checkSubmit();
+		checkTextLength();
+	}
+
+	function paste(e){
+		submitbtn.addClass('active');
+		checkTextLength()
+		setTimeout(function(){
+			e.target.style.height = ''
+            e.target.style.minHeight = ''
+            scroller.wrapper.style.height = ''
+            scroller.refresh()
+		},1000)
+	}
+
+	function input(e){
+		checkSubmit();
+		checkTextLength(e);
+	}
+
+	//各类检查
+	function checkTextLength(e){
+		var textLength = 0,
+			t_length = eArea.find('.text-content').length;
+		for(var i=0;i < t_length;i++){
+			var innerText = eArea.find('.text-content')[i].innerText;
+			if(innerText.replace(/\s+/,'') !== '' && innerText !== '分享你的经验'){
+				textLength += innerText.length;
+			}
+		}
+
+		if(textLength > 10000){
+			notetip.trigger('open', {
+				tip: "字数不能超过一万字"
+			})
+			node('submit').removeClass('active');
+			return;
+		}
+	}
+
+	function checkContentEmpty(e){
+		var target = e.target;
+		if(target.innerText == '分享你的经验'){
+			target.innerText = '';
+			target.style.color = '#4E4E44';
+		}else if(target.innerText.replace(/\s+/,'') == ''){
+			target.innerText = '分享你的经验';
+			target.style.color = '#DDDDDD';
+		}
+	}
+
+	function checkSubmit(){
+		var i_length = eArea.find('.image-content').length,
+			t_length = eArea.find('.text-content').length,
+			hasContent = false;
+		for(var i=0;i < t_length;i++){
+			var innerText = eArea.find('.text-content')[i].innerText;
+			if(innerText.replace(/\s+/,'') !== '' && innerText !== '分享你的经验'){
+				hasContent = true;
+				break;
+			}
+		}
+
+		if(!hasContent && i_length == 0){
+			submitbtn.removeClass('active')
+		}else {
+			submitbtn.addClass('active');
+		}
+	}
+
+	function isFirst(){
+		return !node('editor-area').children.length;
+	}
+
+	function resetLast(){
+		var	disableDown = top.document.querySelector('.last-editor');
+		if(disableDown) disableDown.classList.remove('last-editor');
+	}
+
+	application.on('transformstart',function(){
+		try{
+			if(application.id == 'neditor' && target){
+				target.blur();
+			}
+		}catch(e){}
+	})
+</script>
+
+<script name='node'>
+	var eArea = node('editor-area'),
+		submitbtn = node('submit'),
+		update = module.param.id == 0 ? false : true;
+	function up(event, uid){
+		setTimeout(function(){
+			var target = event.target;
+			var moveTarget = node(uid)
+
+			var prevNode = moveTarget.previousElementSibling;
+
+			if(prevNode === null) return;
+			eArea.insertBefore(moveTarget, prevNode);
+			changeButtonStatus();
+
+			if(update == true){
+				submitbtn.addClass('active');
+				update = false;
+			}
+		},400)
+	}
+
+	function down(event, uid){
+		setTimeout(function(){
+			var target = event.target;
+			var moveTarget = node(uid)
+			var nextNode = moveTarget.nextElementSibling;
+			if(nextNode === null) return;
+			eArea.insertBefore(nextNode, moveTarget);
+
+			changeButtonStatus();
+
+			if(update == true){
+				submitbtn.addClass('active');
+				update = false;
+			}
+		},400)
+	}
+
+	function del(event, uid){
+		var target = event.target;
+		var moveTarget = node(uid)
+
+		var innerText = moveTarget.find('.text-content').length && moveTarget.find('.text-content')[0].innerText;
+
+		if(innerText && innerText.replace(/\s+/,'') !== '' && innerText !== '分享你的经验'){
+			var delConfirm = top.confirm('你确定要删除吗');
+			if(delConfirm){
+				moveTarget.remove();
+			}
+		} else {
+			moveTarget.remove();
+		}
+
+		changeButtonStatus();
+		checkSubmit();
+	}
+
+	function checkSubmit(){
+		var i_length = eArea.find('.image-content').length,
+			t_length = eArea.find('.text-content').length,
+			hasContent = false;
+		for(var i=0;i < t_length;i++){
+			var innerText = eArea.find('.text-content')[i].innerText;
+			if(innerText.replace(/\s+/,'') !== '' && innerText !== '分享你的经验'){
+				hasContent = true;
+				break;
+			}
+		}
+
+		if(i_length === 0 && t_length ===0){
+			node('no-editor').show();
+		}
+
+		if(!hasContent && i_length == 0){
+			submitbtn.removeClass('active');
+		}else {
+			submitbtn.addClass('active');
+		}
+	}
+
+	function changeButtonStatus(){
+		var disableUp = top.document.querySelector('.first-editor'),
+			disableDown = top.document.querySelector('.last-editor');
+
+			disableUp && disableUp.classList.remove('first-editor')
+			disableDown && disableDown.classList.remove('last-editor')
+
+		var children = node('editor-area').children,
+			firstChild = children[0],
+			lastChild = children[children.length - 1];
+
+			if(firstChild) firstChild.classList.add('first-editor');
+			if(lastChild) lastChild.classList.add('last-editor');
+	}
+</script>
+
+<script name='event'>
+	var eArea = node('editor-area')
+	  , notetip = node('notetip')
+	  , contentAll = node('a-content')
+	  , submitbtn = node('submit')
+	  , waitCommit = false;
+
+	function submit(){
+		
+		var iterator = document.createNodeIterator(eArea, NodeFilter.SHOW_ELEMENT, function(node) {
+        		return node.classList.contains('content')? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    		}, false)
+		var currentNode,
+			content = [],
+			length = 0;
+		while (currentNode = iterator.nextNode()) {
+		  	switch(currentNode.nodeName){
+		  		case 'IMG':
+		  			content.push({
+		  				'type':'image',
+		  				'value': currentNode.src.replace('http:|https:','')
+		  			})
+		  		break;
+
+		  		case 'HTMLAREA':
+		  			var text = currentNode.innerText
+		  			if(text.replace(/\s+/, '') == '' || text == '分享你的经验'){
+		  				continue;
+		  			}
+		  			length += text.length;
+		  			content.push({
+		  				'type':'text',
+		  				'value': text
+		  			})
+		  		break;
+		  	}
+		}
+
+		if(length > 10000){
+			notetip.trigger('open', {
+				tip: "字数不能超过一万字"
+			})
+			return;
+		}
+
+		contentAll.value = JSON.stringify(content);
+
+		var active = node('submit').hasClass('active');
+		if(!active || waitCommit){
+			return;
+		}
+
+		waitCommit = true;
+		node('submit').removeClass('active');
+		node('submit').attr('waitCommit', 'true');
+
+		node('form').commit(function(err, data){
+	        if ( data.status.code == 2 ) {
+                top.location.href = top.loginApi() + "?redirect=" + encodeURIComponent(top.location.href)
+                return false
+            }
+		        
+			if ( !err && data.result && data.result.data ) {
+				// application.clearCache('index',false)
+			} else {
+				waitCommit = false;
+				submitbtn.addClass('active')
+				node('submit').attr('waitCommit', 'false');
+
+				var mesage = ''
+
+				switch (data.result.errorCode) {
+					case 1:
+						mesage = '提交失败，提示"参数错误"'
+					break;
+					case 2:
+						mesage = '提交失败，提示"没有数据"'
+					break;
+					case 3:
+						mesage = '提交失败，提示"系统错误"'
+					break;
+					case 4:
+						mesage = '请勿使用' + data.result.errorMsg + '等敏感词汇，警察叔叔会抓人的'
+					break;
+					case 5:
+						mesage = '同个话题下只能发布一条经验噢!'
+					break;
+					case 8:
+					case 10:
+						mesage = '网络错误啦，请复制已写的内容后刷新试试'
+					break;
+					case 7:
+						mesage = '当前账号非作者，无法进行操作噢!'
+					break;
+				}
+
+				if ( !mesage ) return 
+					
+				notetip.trigger('open', {
+					tip: mesage
+				})
+			}
+		})
+	}
+
+	module.on('hidden', function (event) {
+		// to-do
+	})
+</script>

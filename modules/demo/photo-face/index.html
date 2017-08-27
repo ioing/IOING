@@ -1,0 +1,138 @@
+<template comment>
+	<loop data="result.items" as value key>
+		<div class="comment-item" on-tap="event::commentOther(event, {{#value.authorId}}, {{#value.bizId}}, {{#value.commentId}}, {{#value.authorNick}})" tap-highlight="active">
+			<div class="hd">
+				<div class="avt" style="background-image: onload url({{#value.authorHead || '//img.geilicdn.com/u_default.jpg?w=60&h=60&cp=1'}})" transform="space" param="uid:{{#value.authorId}}" data-event="title:经验详情页-评论区-个人信息,spm:jingyan_comment.0"></div>
+				<span class="username">
+					<em transform="space" param="uid:{{#value.authorId}}" data-event="title:经验详情页-评论区-个人信息,spm:jingyan_comment.0">{{value.authorNick}}</em>
+					<if is="value.replyUserNick">
+						<if is="value.replyUserId == authorId">
+							回复 <em class="red" transform="space" param="uid:{{#value.replyUserId}}" data-event="title:经验详情页-评论区-个人信息,spm:spm:jingyan_comment.0">作者</em>
+						</if><else>
+						 回复 <em transform="space" param="uid:{{#value.replyUserId}}" data-event="title:经验详情页-评论区-个人信息,spm:spm:jingyan_comment.0">{{#util.slice(value.replyUserNick, 5)}}</em>
+						</else>
+					</if>
+				</span>
+				<time>{{#value.createTimeForSns}}</time>
+			</div>
+			<div class="ct">{{#value.content}}</div>
+		</div>
+	</loop>
+</template>
+
+<scroll fullscreen class="main" uuid='main'>
+	<scrolling>
+		<title></title>
+		<face-identification image-src="{photo,module.param|getpic}" on-tap="view::imgFullScreen(event, {photo,module.param|getpic})"></face-identification>
+
+		<div uuid="comment-box" class="comment-box"></div>
+
+		<div class="block-bottom"></div>	
+	</scrolling>
+</scroll>
+
+<scroll-to-top bottom="70dp"></scroll-to-top>
+
+
+<div class='commit-shadow' uuid='commit-shadow' on-tap='event::clickCommitShadow()'></div>
+<div class='commit-wrapper' uuid='commit-wrapper'>
+	<textarea class='commit-area' uuid='commit-area' placeholder="写评论"></textarea>
+	<div class='left-counts' uuid='left-counts'></div><div class='commit-button' uuid='commit-button' on-tap='event::clickCommitButton()'>发表</div>
+</div>
+
+<div class='fullimg-shadow' uuid='fullimg-shadow' on-tap='view::hiddenFullImage();'>
+	<img src='' class='fullimg-content' uuid='fullimg-content' />
+</div>
+
+
+
+<script name='view'>
+	let fullimgS = node('fullimg-shadow'),
+		fullimgC = node('fullimg-content')
+
+	let imgFullScreen = (event, src) => {
+		fullimgC.src = src
+		// setTimeout(function(){
+			fullimgS.show()
+		// },500);
+	}
+
+	let hiddenFullImage = () => {
+		fullimgS.hide()
+	}
+</script>
+
+<script name="event">
+	let notetipe = node('notetipe')
+	  , commentbox= node('comment-box')
+	  , commitConfig = {}
+
+	let scroll = commentbox.previousScroller.scrollEvent
+	  , page = 1
+	  , contentEnd = false
+	  , end = false
+	  , noComment = false
+
+
+
+	scroll.on('scroll', function () {
+		if ( this.maxScrollY > this.y-100 ) {
+			getMoreComment()
+		}
+	})
+
+
+
+	var commentwait = false
+
+	function getMoreComment () {
+
+		if ( end || commentwait ) return false
+
+		if ( contentEnd ) {
+			if ( noComment ){
+				node('no-comment-box').appendTemplate("next", scope.nextContent);
+			} else {
+				commentbox.appendTemplate("next", scope.nextContent);
+			}
+			end = true
+			return false
+		}
+
+		commentwait = true
+
+		promise.get('static/modules/demo/photo-face/comment.json',{}).then(function (err, data) {
+			commentbox.appendTemplate("comment", data.extend({authorId: 1, util:scope.util,page: 1,commentCount: 37}))
+
+			if(top.justComment && page == 1){
+				setTimeout(function(){
+					console.log(-node('comment-box').offsetTop)
+					console.log(scroll.maxScrollY)
+					var height = Math.max(-node('comment-box').offsetTop, scroll.maxScrollY)
+					scroll.scrollTo(0,height,300);
+				},350)
+				top.justComment = false;
+			}
+
+			if ( data && data.result && data.result.end ) {
+				contentEnd = true
+
+				if (page == 1 && data.result.items.length == 0) {
+					noComment = true;
+					node('no-comment-box').style.display = ''
+				}
+
+			} else {
+				page++
+			}
+
+			commentwait = false
+			
+		})
+	}
+
+	setTimeout(function () {
+		getMoreComment()
+	}, 10)
+
+</script>
