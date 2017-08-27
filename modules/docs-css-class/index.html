@@ -26,7 +26,7 @@
                 </scroll>
                 <p>使用<code>@class</code>引用类可继承此类中定义属性</p>
                 <p>定义一个名为 commonIcon 的类，并为这个类设定基本描述属性</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @class commonIcon (radius) {
                         border: 1px solid rgba(0,0,0,.15);
                         border-radius: [radius]dp;
@@ -35,17 +35,17 @@
                         background-position: center;
                         background-clip: border-box;
                     }
-                </code-light>
+                </code-highlight>
                 <p>引用类 commonIcon 并传入一个参数</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     .icon {
                         width: 72dp;
                         height: 72dp;
                         @class: commonIcon(6);
                     }
-                </code-light>
+                </code-highlight>
                 <p>经过引擎解释后的结果为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     .icon {
                         width: 72dp;
                         height: 72dp;
@@ -56,7 +56,7 @@
                         background-position: center;
                         background-clip: border-box;
                     }
-                </code-light>
+                </code-highlight>
             </section>
 
             <include footer></include>

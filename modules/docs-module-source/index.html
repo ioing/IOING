@@ -40,48 +40,46 @@
                     </scrolling>
                 </scroll>
                 <p>前面章节中我们讲了如何配置资源库，现在我们就可以把配置好的资源库按照需要配置到模块中来</p>
-                <code-light type=js>
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            // 模块的资源库（对内／对外）
-                            resources: {
-                                // js 资源
-                                script: {
-                                    main: "main.js"
-                                },
-                                // 模版资源
-                                source: {
-                                    index: "index.html",
-                                    footer: "frameworks::footer"
-                                },
-                                // css 资源
-                                style: {
-                                    common: "frameworks::common",
-                                    main: "frameworks::docs",
-                                    style: "css/main.css"
-                                },
-                                // 数据资源
-                                data: { 
-                                    list: "./list.json",
-                                    // 远程数据地址，并且配置参数，参数从模块参数配置中解析
-                                    user: "http://api.ioing.com/getUser|@param(id:id)"
-                                }
+                <code-highlight type=js>
+                    export default {
+                        // 模块的资源库（对内／对外）
+                        resources: {
+                            // js 资源
+                            script: {
+                                main: "main.js"
                             },
-                            // 关于模块特性的配置
-                            config : {
-                                // 模块需要加载的样式
-                                style: ["common", "main", "style"],
-                                // 模块需要加载的脚本
-                                script: ["main"],
-                                // 模块需要加载的模版
-                                source: ["index", "footer"],
-                                // 模块需要加载的数据源
-                                data: ["list", "user"],
-                                ...
+                            // 模版资源
+                            source: {
+                                index: "index.html",
+                                footer: "frameworks::footer"
+                            },
+                            // css 资源
+                            style: {
+                                common: "frameworks::common",
+                                main: "frameworks::docs",
+                                style: "css/main.css"
+                            },
+                            // 数据资源
+                            data: { 
+                                list: "./list.json",
+                                // 远程数据地址，并且配置参数，参数从模块参数配置中解析
+                                user: "http://api.ioing.com/getUser|@param(id:id)"
                             }
+                        },
+                        // 关于模块特性的配置
+                        config : {
+                            // 模块需要加载的样式
+                            style: ["common", "main", "style"],
+                            // 模块需要加载的脚本
+                            script: ["main"],
+                            // 模块需要加载的模版
+                            source: ["index", "footer"],
+                            // 模块需要加载的数据源
+                            data: ["list", "user"],
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>资源配置项是设定在 resources 中的，而引用的配置项是在 config 中的</p>
                 <blockquote>
                     <h5>提示</h5>
@@ -113,19 +111,17 @@
                 <blockquote>
                     <h5>画中画模块应用</h5>
                     <p>若 source 类型为<code>String</code>则该模块为一个窗口模块，即模块没有实质渲染内容，而是在模块窗口中会嵌入另一个 IOING 应用，source 即为这个 IOING 应用的 URL</p>
-                    <code-light type=js>
-                        define(function (require, module, exports) {
-                            module.exports = {
-                                config : {
-                                    level : 8,
-                                    absolute : true,
-                                    background : "#fff",
-                                    source: "modules/demo-app/twitter",   // 引入的新的 IOING 应用
-                                    animation : "zoom"
-                                }
+                    <code-highlight type=js>
+                        export default {
+                            config : {
+                                level : 8,
+                                absolute : true,
+                                background : "#fff",
+                                source: "modules/demo-app/twitter",   // 引入的新的 IOING 应用
+                                animation : "zoom"
                             }
-                        })
-                    </code-light>
+                        }
+                    </code-highlight>
                 </blockquote>
             </section>
 

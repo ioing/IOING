@@ -30,21 +30,21 @@
                     </scrolling>
                 </scroll>
                 <p>当 template 标签第一个指令的值为空时则以该指令名称作为该模版的命名</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <template example>
                         <loop list as value key>
                             <li> {key} : {value} </li>
                         </loop>
                     </template>
-                </code-light>
+                </code-highlight>
                 <p>当 template 标签第一个指令名为 name 且有值时则以该值作为该模版的命名</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <template name=example>
                         <loop list as value key>
                             <li> {key} : {value} </li>
                         </loop>
                     </template>
-                </code-light>
+                </code-highlight>
                 <p>定义一个新模版实际是在模块的模版引用配置中注册的过程，因此模版对于模块是全局的，在模块的任何片段和组件中都是可以对模版进行引用操作的，因此同个模块中不能出现相同命名的模版，但组件内除外，组件中保持闭包原则，即组件可以访问模块模版，而模块不能访问组件模版，组件中模版的命名不会和模块发生冲突。<a transform=>（更多关于组件的特性点这里）</a></p>
                 <blockquote>提要：以上两个示例的写法实际效果等同，但是使用 name 指令命名可以更灵活的给模版进行命名。模版也可以嵌套使用，但尽量请不要这样设计，它会造成很差的可读性。</blockquote>
             </section>

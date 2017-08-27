@@ -104,15 +104,15 @@
                     </scrolling>
                 </scroll>
                 <p>在元素上绑定一个 click 事件我们会使用如下标准写法：</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- 传统写法：在全局中查找和执行 add 函数 -->
                     <div onclick="add()"></div>
-                </code-light>
+                </code-highlight>
                 <p>而在 IOING 中我们应该使用下面的写法：</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- 新的写法：在模块和组件的特定作用域中查找和执行 add 函数 -->
                     <div on-click="add()"></div>
-                </code-light>
+                </code-highlight>
                 <p>使用新的书写语法声明的事件才能够被正确的执行在当前作用域中的函数（或指定命名空间脚本中的函数）<a transform=docs-dom-script param=>#了解 script 命名空间</a></p>
                 <blockquote>手势类型事件包含了后面所属类型事件，即 swipe 事件包含了 swipeleft swiperight swipeup swipedown</blockquote>
             </section>
@@ -120,26 +120,26 @@
             <section>
                 <h2>保持沙盒特性</h2>
                 <p>比如下面是一段组件中的代码，无论外部是否有其它的 add 函数，都不会对执行组件内部的 add 函数造成影响</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div on-tap="add()"></div>
                     <script>
                         function add () {
                             // to do something...
                         }
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>这段代码当你在点按操作时会执行<code>add</code>函数</p>
 
                 <h3>执行指定命名空间的脚本</h3>
                 <p>如果你的模块中只有一个<code>script</code>脚本标签时，你可以不必为执行函数指定命名空间，否则你需要为执行函数指定一个明确的命名空间</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div on-tap="event::add()"></div>
                     <script name=event>
                         function add () {
                             // to do something...
                         }
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>这段代码当你在点按操作时会执行<code>name=event</code>中的<code>add</code>函数</p>
             </section>
 
@@ -168,7 +168,7 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div on-tap="event::add(event, this)"></div>
                     <script name=event>
                         function add (event, ele) {
@@ -177,14 +177,14 @@
                             // to do something...
                         }
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>若未设定任何传参时，默认传递 event 参数</p>
             </section>
 
             <section>
                 <h2>on-event</h2>
                 <p>当多个事件触发同一个函数时可以使用<code>on-event</code>方法</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div on-event="swipeleft tap click|add(event, ele)"></div>
                     <script name=event>
                         function add (event, ele) {
@@ -193,7 +193,7 @@
                             // to do something...
                         }
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>事件和函数通过符号<code>|</code>分隔，多个事件间则使用空格符分隔</p>
             </section>
 

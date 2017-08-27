@@ -581,7 +581,7 @@ define('~/transform', [], function (require, module, exports) {
                 if ( that.modulu ) {
                     that.modulu.loading(1)
                 }
-            }, 600) 
+            }, 1000) 
 
             // preload on event
 

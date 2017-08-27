@@ -422,7 +422,7 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                 this.source(id, param, config, 'style'),
                 this.source(id, param, config, 'source')
             ]).then(
-                function(results) {
+                function (results) {
                     var sids = [],
                         suri = [],
                         source = []

@@ -162,15 +162,15 @@
                     </tbody>
                 </table>
                 <p>下面是一个针对 ios 设备设置样式的例子：</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @if(device.os.ios) {
                         header {
                             backdrop-filter: blur(20dp);
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>如果想要了解每一项的详细属性可以在浏览器开发者的控制台中查看</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     device.ui.dpi               //console.log(dpi)
                     device.os                   //console.log(os)
                     device.feat                 //console.log(feat)
@@ -178,36 +178,36 @@
                     App.module                  //console.log(module)
                     device                      //console.log(device)
                     App.module.config           //console.log(config)
-                </code-light>
+                </code-highlight>
             </section>
             
             <section>
                 <h2>模版变量</h2>
                 <p>配置在模块的数据源对象同样可以在模块 CSS 中使用<a transform=docs-module-source>#了解资源配置</a></p>
                 <p>下面是一个通过用户性别来展示不同背景图的例子：</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @if(user.gender=='male') {
                         div.gender {
                             color: black;
                             background: url(./male.png);
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>或者像下面这样：</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div style="background: url(./[user.gender].png);"></div>
-                </code-light>
+                </code-highlight>
                 <p>在组件模版中使用时要遵循组件数据引用，如下面这个组件</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <loop list as value key>
                         <grid-photo data:pic=value.url></grid-photo>
                     </loop>
-                </code-light>
+                </code-highlight>
                 <p>这个组件中定义了一个新的数据源：<code>pic</code>，同样这条数据源可以在组件中的 CSS 文件里使用：</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- grid-photo 组件内 -->
                     <div style=background:url([pic])></div>
-                </code-light>
+                </code-highlight>
             </section>
 
             <include footer></include>

@@ -45,12 +45,12 @@
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
+        <code-highlight type=html>
         	<snap-scroll path=/demo/banner-slider/ data:list=banner height=200dp></snap-scroll>
-        </code-light>
+        </code-highlight>
         <snap-scroll path=/demo/banner-slider/ data:list=banner height=200dp></snap-scroll>
         <p>该组件需要传入数据<code>list</code>，同时设定了一个高度值。数据<code>list</code>为数组类型，事例如下：</p>
-        <code-light type=js>
+        <code-highlight type=js>
     		[
 		        "../picture/1.jpeg", 
 		        "../picture/2.jpeg", 
@@ -58,7 +58,7 @@
 		        "../picture/4.jpeg", 
 		        "../picture/5.jpeg"
 		    ]
-    	</code-light>
+    	</code-highlight>
     	<include info-path></include>
     	<p>如果想要在 Slider 容器中加入自定义内容，组件支持传入模版的方式来扩展自定义</p>
     	<scroll class=exp stop-propagation="auto" x=auto y=false>
@@ -96,7 +96,7 @@
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
+        <code-highlight type=html>
             <snap-scroll path=/demo/banner-slider/ data:list=banner height=200dp styler=styler content=content preview></snap-scroll>
             <!-- 传入组件的样式模版 -->
             <template styler>
@@ -114,7 +114,7 @@
             <template content>
                 <h2>{key}</h2>
             </template>
-        </code-light>
+        </code-highlight>
         <snap-scroll path=/demo/banner-slider/ data:list=banner height=200dp styler=styler content=content timeout=4000 preview></snap-scroll>
     	<template styler>
 			<style>

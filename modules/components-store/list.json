@@ -3,7 +3,8 @@
         "demo/photo-tilt",
         "demo/date-picker",
         "demo/banner-slider",
-        "demo/code-light",
+        "demo/code-highlight",
+        "demo/face-identification",
         "demo/scroll-to-top"
     ],
     "imitate" : [
@@ -50,23 +51,20 @@
         {
             "id" : "4",
             "name" : "数值滑动条-通过滑动数值取值输入",
-            "avtr" : "upload/1.jpg",
             "free" : "range-slider",
             "href" : "/demo/range-slider"
         },
         {
             "id" : "5",
             "name" : "日期选择控件",
-            "avtr" : "upload/1.jpg",
             "free" : "date-picker",
             "href" : "/demo/date-picker"
         },
         {
             "id" : "3",
             "name" : "代码高亮-支持多种编程语言的代码高亮",
-            "avtr" : "upload/1.jpg",
-            "free" : "code-light",
-            "href" : "/demo/code-light"
+            "free" : "code-highlight",
+            "href" : "/demo/code-highlight"
         },
         {
             "id" : "1",
@@ -83,39 +81,46 @@
         {
             "id" : "3",
             "name" : "滚动到顶部",
-            "avtr" : "upload/1.jpg",
             "free" : "scroll-to-top",
             "href" : "/demo/scroll-to-top"
         },
         {
             "id" : "6",
             "name" : "照片滑动 banner-通过滑动卡片的形式展示",
-            "avtr" : "upload/1.jpg",
             "free" : "banner-slider",
             "href" : "/demo/banner-slider"
+        },
+        {
+            "id" : "7",
+            "name" : "照片人脸识别-标示人脸特征区域",
+            "free" : "banner-slider",
+            "href" : "/demo/face-identification"
         }
     ],
     "module" : [
         {
             "id" : "1",
             "name" : "Twitter-一个由 Finite Scroll 创建的时间轴示范",
-            "avtr" : "upload/1.jpg",
             "type" : "模块",
             "href" : "/demo/twitter-feed"
         },
         {
             "id" : "3",
             "name" : "照片展示",
-            "avtr" : "upload/1.jpg",
             "type" : "模块",
             "href" : "/demo/grid-photo"
         },
         {
             "id" : "4",
             "name" : "循环的格言",
-            "avtr" : "upload/1.jpg",
             "type" : "模块",
             "href" : "/demo/infinite-motto"
+        },
+        {
+            "id" : "5",
+            "name" : "富文本编辑器",
+            "type" : "模块",
+            "href" : "/demo/rich-editor"
         },
         // {
         //     "id" : "2",

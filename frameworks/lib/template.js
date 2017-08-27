@@ -417,7 +417,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                     
                     // set name
                         
-                    this.App = module.id
+                    this.App.name = module.id
 
                     // load
                     

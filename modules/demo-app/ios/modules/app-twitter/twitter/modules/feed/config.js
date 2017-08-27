@@ -1,46 +1,43 @@
-define(function (require, module, exports) {
-
-    module.exports = {
-        resources : {
-            script : {
-            },
-            style : {
-                style: "style.css"
-            },
-            source : {
-                index: "index.html",
-                feed: "feed.html"
-            },
-            data : { 
-                feed: "list.json",
-            }
+export default {
+    resources : {
+        script : {
         },
-        config : {
-            level : 1,
-            absolute : false,
-            background : "#fff",
-            style : ["style"],
-            script : [],
-            source: ["index", "feed"],
-            data: ["feed"],
-            sandbox : true,
-            cache : 360,
-            timeout : 60,
-            preview : true,
-            animation : true
+        style : {
+            style: "style.css"
         },
-        helper : {
-            urlSplit: function (url) {
-                url = url.replace(/\//ig, function () {
-                    return '---'
-                })
-                return url
-            }
+        source : {
+            index: "index.html",
+            feed: "feed.html"
         },
-        controller : {
-            feed: function (res) {
-                return res.sort(function(){ return 0.5 - Math.random() })
-            }
+        data : { 
+            feed: "list.json",
+        }
+    },
+    config : {
+        level : 1,
+        absolute : false,
+        background : "#fff",
+        style : ["style"],
+        script : [],
+        source: ["index", "feed"],
+        data: ["feed"],
+        sandbox : true,
+        cache : 360,
+        timeout : 60,
+        preview : true,
+        animation : true
+    },
+    helper : {
+        urlSplit: function (url) {
+            url = url.replace(/\//ig, function () {
+                return '---'
+            })
+            return url
+        }
+    },
+    controller : {
+        feed: function (res) {
+            return res.sort(function(){ return 0.5 - Math.random() })
         }
     }
-})
+}

@@ -25,18 +25,18 @@
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
+        <code-highlight type=html>
         	<switch-slider></switch-slider>
-        </code-light>
+        </code-highlight>
         <p>Switch 在未设置值时默认为关闭状态</p>
         <p><switch-slider></switch-slider></p>
         <p>通过设定<code>value</code>改变 Switch 的默认状态</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <switch-slider value="on"></switch-slider>
-        </code-light>
+        </code-highlight>
         <switch-slider value="on"></switch-slider>
         <p>通过设定<code>styler</code>注入样式模版，改变组件外观</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <template name=switch-style-1>
                 <style>
                     .switch.active {
@@ -54,7 +54,7 @@
             </template>
             <switch-slider value=on styler=switch-style-1></switch-slider>
             <switch-slider value=on styler=switch-style-2></switch-slider>
-        </code-light>
+        </code-highlight>
 
         <template name=switch-style-1>
             <style>
@@ -94,14 +94,14 @@
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
+        <code-highlight type=html>
             <switch-slider uuid=receive value=on></switch-slider>
             <script>
                 node('receive').on('ready', function () {
                     this.trigger('set', 'off')
                 })
             </script>
-        </code-light>
+        </code-highlight>
         <p>注意：改变组件状态事件要在组件<code>ready</code>之后执行。</p>
     </section>
 </template>

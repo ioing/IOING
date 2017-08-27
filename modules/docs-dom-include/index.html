@@ -30,7 +30,7 @@
                     </scrolling>
                 </scroll>
                 <p>我们来看一个基本实现用例</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <template book>
                         <dl>
                             <dt>
@@ -46,14 +46,14 @@
                     <loop list as val key>
                         <include book></include>
                     </loop>
-                </code-light>
+                </code-highlight>
                 <p>我们看到这里循环引用了一个命名为 book 的模版，因为命名符合 Attr 书写规范所以在这里可以简写，当然也可以使用下面标准的引用方法</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     ...
                     <loop list as val key>
                         <include name=book></include>
                     </loop>
-                </code-light>
+                </code-highlight>
                 <p>在 include 标签中还有第二个指令 data，该指令能够为引入的模版指定引用的数据源，一般这是不必要的，因为 include 本身就能够继承他的父级数据源，自定义引用的目的不在于制定数据源而是通过 <a>#data指令</a>重命名数据源</p>
 
             </section>

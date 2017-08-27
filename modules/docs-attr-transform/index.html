@@ -40,7 +40,7 @@
                     </scrolling>
                 </scroll>
                 <p>通过 tap 事件触发模块跳转</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <nav>
                         <ul>
                             <li transform=home>home</li>
@@ -48,40 +48,40 @@
                             <li transform=dev>dev</li>
                         </ul>
                     </nav>
-                </code-light>
+                </code-highlight>
                 <p>swiperight 右划操作时跳转模块</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <a transform=home|swiperight>home</a>
-                </code-light>
+                </code-highlight>
                 <p>使用 param 进行转场带参</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <a transform=docs param=id/css/section/extend>home</a>
-                </code-light>
+                </code-highlight>
                 <blockquote>
                     <h5>注意</h5>
                     <p>id/css/section/extend 等同 id=css{{'&'}}section=extend 等同 id:css,section:extend，因此下面的写法同样正确</p>
-                    <code-light type=html>
+                    <code-highlight type=html>
                         <a transform=docs param=id=css&section=extend>home</a>
                         <a transform=docs param=id:css,section:extend>home</a>
-                    </code-light>
+                    </code-highlight>
                 </blockquote>
             </section>
 
             <section>
                 <h2>prefetch</h2>
                 <p>设定该指令的节点会在转场前预先取得模块视图构建资源</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <a transform=docs prefetch>home</a>
-                </code-light>
+                </code-highlight>
                 <p>该节点在被点击前将预加载模块 home 的视图构建资源（HTML 模版、CSS、Data）</p>
                 <blockquote>
                     <h5>注意</h5>
                     <p>当你进入一个模块时希望某些存在当前模块的链接模块能够进行速展示时，则可以在元素的转场指令后加上 prefetch 指令。同个模块重复的预载指令只会被执行一次，但是对于同个模块不同带参的情况下依然会执行新的预载入</p>
-                    <code-light type=html>
+                    <code-highlight type=html>
                         <a transform=docs prefetch>home</a>
                         <!-- 下面内容会开启新的预载入 -->
                         <a transform=docs param=id/css prefetch>home</a>
-                    </code-light>
+                    </code-highlight>
                 </blockquote>
                 <p>当你正在浏览一个模块时，该模块中被设定 prefetch 的模块转场链接则会异步进行该模块的资源预载入，若你并没有立刻访问这个模块而是等待了许久才点入该模块，此时模块预载入可能已经失效（或模块中某条数据源发生了超时）<a transform=docs-module-config param=section/cache>#了解缓存超时</a></p>
                 <blockquote>
@@ -93,7 +93,7 @@
             <section>
                 <h2>data-event</h2>
                 <p>事件传递数据，当模块跳转时可通过监听 'transform' 事件捕捉该数据</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <nav>
                         <ul>
                             <loop nav as val key>
@@ -108,7 +108,7 @@
                             // 发送统计数据
                         })
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>通过 data-event 定义的统计数据在事件捕捉时会被转换为对象</p>
             </section>
 

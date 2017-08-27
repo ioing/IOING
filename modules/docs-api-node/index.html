@@ -4,9 +4,9 @@
             <section>
                 <h2>observer</h2>
                 <p>该<code>observer()</code>方法用于监视该节点的修改，当节点被修改时方法的回调函数会异步提供一个有序的修改流。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     document.body.observer(options, callback)
-                </code-light>
+                </code-highlight>
                 <p>options 为空时，其默认配置如下</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:580dp">
@@ -48,22 +48,22 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     document.body.observer(null, function (record) {
                         console.log(record)
                     })
                     document.body.addClass('active')
                     // Record [...]
-                </code-light>
+                </code-highlight>
                 <p>callback 返回值 record 是一个有序的修改流，其类型为数组。</p>
             </section>
 
             <section>
                 <h2>getSelectionRangeInsert</h2>
                 <p>该<code>getSelectionRangeInsert()</code>方法用于向可输入区域（input/textarea/htmlarea）光标位置/内容结尾（没有焦点时）之后插入内容，并返回 Range。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     HTMLInputElement.getSelectionRangeInsert(context)
-                </code-light>
+                </code-highlight>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:{setting.articleWidth}dp">
                         <table>
@@ -84,7 +84,7 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <input uuid=ipt>
                     <script>
                         var input = node('ipt')
@@ -93,15 +93,15 @@
                         console.log(range)
                         // Range {...}
                     </script> 
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>getSelectionRangePosition</h2>
                 <p>该<code>getSelectionRangePosition()</code>方法用于获取可输入区域（input/textarea/htmlarea）光标/指定序列字符的位置，返回位置对象。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     HTMLInputElement.getSelectionRangePosition(pos)
-                </code-light>
+                </code-highlight>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:{setting.articleWidth}dp">
                         <table>
@@ -122,7 +122,7 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <input uuid=ipt>
                     <script>
                         var input = node('ipt')
@@ -135,7 +135,7 @@
                         console.log(position)
                         // { left : 48, top: 0 }
                     </script> 
-                </code-light>
+                </code-highlight>
             </section>
 
             <include footer></include>

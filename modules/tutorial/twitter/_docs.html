@@ -33,7 +33,7 @@
             <p>我们想要在该文档中引入这个演示，模块是最简单的方式，而我们的方案二并非是一个模块而是一个完整的应用，因此我们需要创建一个新的 IOING 项目来完成它，然后使用模块配置来引入这个模块</p>
         </blockquote>
         <p>我们新建一个模块，然后通过配置模块的 source 来引入一个新的应用</p>
-        <code-light type=js>
+        <code-highlight type=js>
             define(function (require, module, exports) {
                 module.exports = {
                     config : {
@@ -45,11 +45,11 @@
                     }
                 }
             })
-        </code-light>
+        </code-highlight>
         <p>设置 source 为 String 类型时，该模块则被视为一个窗口应用，即该模块没有实质内容，而是在该模块窗口中嵌入了另一个应用</p>
         <h3>主模块内容</h3>
         <p>创建一个新应用就让整个工作简化了很多，首先我们需要新建一个 IOING 项目，然后将应用的公共部分放置在主模块中（modules/frameworks），如 header 部分</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <style>
                 header {
                     ...
@@ -70,10 +70,10 @@
                     scope.s.activeMainNav = App.id
                 })
             </script>
-        </code-light>
+        </code-highlight>
         <h3>时间轴模块</h3>
         <p>时间轴主要展示了关注着的动态和推文，我们首先要创建一个推文模版，然后通过使用 infinite scroll 来渲染推文模版</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <scroll fullscreen id="scroller" class="feed" finite item-min-size=400 template="feed" data=feed>
                 <pulldown threshold=50>
                     <pullstart>下拉刷新</pullstart>
@@ -143,7 +143,7 @@
                     </div>
                 </div>
             </template>
-        </code-light>
+        </code-highlight>
         <h3>其他模块和交互</h3>
         <p>Twitter 中最重要的模块当属时间轴了，因此我们主要讲一下时间轴的一些交互方案，比如时间轴的图片点击时进入预览界面，这个过程完全可以通过模块的形式完成。当点击时间轴上的图片时，我们使应用跳转至预览模块且将图片 url 传给预览模块，然后预览模块中使用 map scroll 组件来展示图片。这样我们既可以在两个模块间使用模块动画来进行过渡了</p>
     </section>

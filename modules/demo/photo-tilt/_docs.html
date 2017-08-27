@@ -56,9 +56,9 @@
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
+        <code-highlight type=html>
         	<photo-tilt path=/demo/photo-tilt url:image=./picture/b.jpg url:preview=../picture/m.jpg></photo-tilt>
-        </code-light>
+        </code-highlight>
         <template styler>
             <style>
                 .container {
@@ -72,7 +72,7 @@
             </style>
         </template>
         <p>通过组件提供的 styler 配置，能通过增加样式改变组件视图</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <style>
                 .container {
                     position: relative;
@@ -84,7 +84,7 @@
                 }
             </style>
             <photo-tilt path=/demo/photo-tilt url:image=/demo/photo-tilt/picture/b.jpg url:preview=/demo/photo-tilt/picture/m.jpg styler=styler></photo-tilt>
-        </code-light>
+        </code-highlight>
         <photo-tilt path=/demo/photo-tilt url:image=/demo/photo-tilt/picture/b.jpg url:preview=/demo/photo-tilt/picture/m.jpg styler=styler></photo-tilt>
         <p>该组件默认为全屏展示，通过注入样式后变为区块展示。(需要在支持陀螺仪的设备上浏览效果)</p>
     </section>

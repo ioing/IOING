@@ -35,7 +35,7 @@
                     </scrolling>
                 </scroll>
                 <p>指令值为直接的<a>#JavaScript 表达式</a></p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- 直接判断数据源是否存在 -->
                     <if list>
                         <include topic></include>
@@ -52,9 +52,9 @@
                     <if is="list ? true : false">
                         <include topic></include>
                     </if>
-                </code-light>
+                </code-highlight>
                 <p>若使用了单（双）花括号表达式，其结果值将仍被作为表达式执行，一般花括号的结果值应为<span>Boolen</span>类型</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- 使用花括号表达式判断 -->
                     <if is="{{list ? true : false}}">
                         <include topic></include>
@@ -63,14 +63,14 @@
                     <if is="{list|isObject}">
                         <include topic></include>
                     </if>
-                </code-light>
+                </code-highlight>
                 <p>本例通过单花括号的表达式来判断 list 是否是一个 object, 其返回值为 Boolen 类型，输出结果为 true 或 false</p>
             </section>
 
             <section uuid=if>
                 <h2>if</h2>
                 <p>若数据源<code>list</code>存在则执行包含语句，以下两种方法等同</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- 正常指令的写法 -->
                     <if is=list>
                         <h1>列表：</h1>
@@ -85,9 +85,9 @@
                             <include example></include>
                         </loop>
                     </if>
-                </code-light>
+                </code-highlight>
                 <p>若数据源<code>list</code>不存在则执行包含语句，以下两种方法等同</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- 使用表达式判断 -->
                     <if is=!list>
                         <span>暂无内容</span>
@@ -96,14 +96,14 @@
                     <if not=list>
                         <span>暂无内容</span>
                     </if>
-                </code-light>
+                </code-highlight>
                 <p>第一个方法使用了表达式判断，第二个方法则通过<code>not</code>指令来判断，相对而言使用指令在性能上更优</p>
             </section>
 
             <section uuid=else>
                 <h2>else、elseif</h2>
                 <p>与<code>if</code>语句同样，<code>else</code>、<code>elseif</code>兼具<code>is/not</code>指令，但是它们不能单独使用，<span>必须要紧随 if 之后</span>使用</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <if not=list> 
                         <span>暂无内容</span>
                     </if><elseif is=list.length===0> 
@@ -114,9 +114,9 @@
                             <include example></include>
                         </loop>
                     </else>
-                </code-light>
+                </code-highlight>
                 <p>下面是一个错误的写法</p>
-                <code-light type=html class=error>
+                <code-highlight type=html class=error>
                     <if not=list> 
                         <span>暂无内容</span>
                     </if>
@@ -131,7 +131,7 @@
                             <include example></include>
                         </loop>
                     </else>
-                </code-light>
+                </code-highlight>
                 <p>被隔断的连续条件语句将不能结合上一条语句进行正确的逻辑判断</p>
             </section>
 

@@ -330,12 +330,15 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
 
     function tryAgain (url, abort, send, id) {
         var again = _tryAgain[url] || 1
+        var module = App.modules[id]
 
-        App.modules[id].trigger('failedtoload', {
-            id : id,
-            url : url,
-            again : again
-        })
+        if ( module ) {
+            module.trigger('failedtoload', {
+                id : id,
+                url : url,
+                again : again
+            })
+        }
 
         if ( again && again >= promise.TRYAGAIN ) return false
 

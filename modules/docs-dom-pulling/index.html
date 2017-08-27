@@ -102,7 +102,7 @@
                 </scroll>
                 <p>在拉动过程中上面状态对应的事件将会依次发生，丛 pullstart 状态改变到 pulling 状态时有一个关键参数，即<code>threshold</code>属性</p>
                 <p>我们来看一个简单的示例</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <scroll finite data="testscrolllist" style="height:500dp;" stop-propagation="true">
                         <scrolling>
                             <!-- 该 finite 没有设定 template，因为 scrolling 内容被识别为 template， 请参考 scroll 中的说明 -->
@@ -125,7 +125,7 @@
                             <pullover>没有更多了</pullover>
                         </pullup>
                     </scroll>
-                </code-light>
+                </code-highlight>
                 <p>下面这个 demo 如果你正在 PC 机上观看，请使用鼠标点击拖拽</p>
                 <style>
                     @keyframes bouncedelay {

@@ -4,69 +4,69 @@
             <section>
                 <h2>node</h2>
                 <p>该<code>node()</code>方法返回指定 uuid 的 DOM 元素</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     node(uuid)
-                </code-light>
+                </code-highlight>
                 <p>该方法的查询速度在所有查询方法中性能最优</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div uuid=test></div>
                     <script>
                         var test = node('test')
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>该方法只能在模块和组件中使用，当在组件中时，会优先查找组件中匹配元素，如果无匹配则会在引用当前组件的模块中进行匹配。</p>
             </section>
 
             <section>
                 <h2>$$</h2>
                 <p>该<code>$$()</code>方法通过执行 css 选择器，包装 dom 节点，或者通过一个 html 字符串创建多个元素 来创建一个类数组 Query 集合对象。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     $$(selector, [context])     ⇒ collection
                     $$([Query collection])      ⇒ same collection
                     $$([DOM nodes])             ⇒ collection
                     $$(htmlString)              ⇒ collection
                     $$(htmlString, attributes)  ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>Query 集合是一个类数组对象，它能使用链式方法来操作它集合内的 DOM 节点</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     $$('div')       // 所有页面中得div元素
                     $$('#foo')       // ID 为 "foo" 的元素
 
                     // 创建元素:
                     $$("<p id=greeting style=color:darkblue>Hello</p>")
                     // <p id=greeting style="color:darkblue">Hello</p>
-                </code-light>
+                </code-highlight>
                 <p>该方法不能查询设定为<a transform=docs-module-config param=sandbox>sandbox</a> 和 <a transform=docs-module-config param=shadowbox>shadowbox</a> 类型的模块中的元素以及使用了<a transform=docs-dom-shadow>shadowroot</a>特性的元素内元素（即在模块外部或组件外部无法查询到内部元素）</p>
             </section>
 
             <section>
                 <h2>map</h2>
                 <p>该<code>map()</code>方法通过遍历集合中的元素，返回通过迭代函数的全部结果</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     document.body.map(function (index, element) { 
                         console.log(index, element)
                         // [0, body]
                     })
                     // return $Query {length: 0}
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>each</h2>
                 <p>该<code>each()</code>方法遍历数组元素或以key-value值对方式遍历对象。回调函数返回 false 时停止遍历。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     document.body.each(function (index, element) { 
                         console.log(index, element)
                         // [0, body]
                     })
                     // return $Query {length: 0}
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>ready</h2>
                 <p>该<code>ready()</code>方法添加一个事件侦听器，当页面 DOM 加载完毕 “DOMContentLoaded” 事件触发时触发。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     document.body.ready(function (){
                         ... 
                     })
@@ -74,67 +74,67 @@
                     document.on('ready', function () {
                         ...
                     })
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>find</h2>
                 <p>该<code>find()</code>方法在当对象前集合内查找符合 CSS 选择器的每个元素的后代元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     find(selector)   ⇒ collection
                     find(collection)   ⇒ collection
                     find(element)   ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>如果给定 Query 对象集合或者元素，过滤它们，只有当它们在当前 Query 集合对象中时，才回被返回。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var form = node('myform')
                     form.find('input, select')
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>html</h2>
                 <p>该<code>html()</code>方法获取或设置对象集合中元素的 HTML 内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     html()                       ⇒ string
                     html(content)                ⇒ self
                     html(content, cleanup)       ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>当没有给定 content 参数时，返回对象集合中第一个元素的 innerHtml。当给定 content 参数时，用其替换对象集合中每个元素的内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     div.html()
                     // = div.innerHTML
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>text</h2>
                 <p>该<code>text()</code>方法获取或者设置所有对象集合中元素的文本内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     text()                  ⇒ string
                     text(content)           ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>当没有给定 content 参数时，返回当前对象集合中第一个元素的文本内容（包含子节点中的文本内容）。当给定 content 参数时，使用它替换对象集合中所有元素的文本内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     div.text('abcde')
                     // div.innerText = 'abcde'
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>css</h2>
                 <p>该<code>css()</code>方法读取或设置 DOM 元素的 css 属性。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     css(property)                                       ⇒ value
                     css([property1, property2, ...])                    ⇒ object
                     css(property, value)                                ⇒ self
                     css({ property: value, property2: value2, ... })    ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>当 value 参数不存在的时候，返回对象集合中第一个元素的 css 属性。当 value 参数存在时，设置对象集合中每一个元素的对应 css 属性。</p>
                 <p>当value为空(空字符串，null 或 undefined)，那个css属性将会被移出。当value参数为一个无单位的数字，如果该css属性需要单位，“px”将会自动添加到该属性上。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var elem = node('test')
                     elem.css('background-color')          // read property
                     elem.css('background-color', '#369')  // set property
@@ -145,14 +145,14 @@
 
                     // read multiple properties:
                     elem.css(['backgroundColor', 'fontSize'])['fontSize']
-                </code-light>
+                </code-highlight>
                 <blockquote>该方法符合 CSS 引擎中的书写标准，即 CSS 将自动根据当前设备进行适配。</blockquote>
             </section>
 
             <section>
                 <h2>computedStyle</h2>
                 <p>该<code>computedStyle()</code>方法获取该 DOM 元素的指定属性的样式计算结果。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     div.css({
                         "height": "100px",
@@ -160,44 +160,44 @@
                     })
                     div.computedStyle('height')
                     // 150px
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>empty</h2>
                 <p>该<code>empty()</code>方法用于清空对象集合中每个元素的 DOM 内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     div.html('abcde')
                     div.empty()
                     // null
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>hide</h2>
                 <p>该<code>hide()</code>方法通过设置 CSS 属性 display 为 none 来隐藏此集合中的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     div.hide()
                     // 设置为不可见
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>show</h2>
                 <p>该<code>show()</code>方法通过设置 CSS 属性 display 为 block 来显示此集合中的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     div.show()
                     // 设置为可见
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>toggle</h2>
                 <p>该<code>toggle()</code>方法通过设置 CSS 属性 display 为 block/none 来显示/隐藏此集合中的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var div = node('test')
                     var show = true
                     div.toggle(show)
@@ -205,29 +205,29 @@
                     var elem = $$('.item')
                     elem.toggle()
                     // 切换显示／隐藏
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>val</h2>
                 <p>该<code>val()</code>方法获取或设置匹配元素的值。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     val()       ⇒ string
                     val(value)  ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>当没有给定value参数，返回第一个元素的值。当给定value参数，那么将设置所有元素的值。</p>
             </section>
 
             <section>
                 <h2>attr</h2>
                 <p>该<code>attr()</code>方法读取或设置 dom 的属性。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     attr(name)                                  ⇒ string
                     attr(name, value)                           ⇒ self
                     attr({ name: value, name2: value2, ... })   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>如果没有给定 value 参数，则读取对象集合中第一个元素的属性值。当给定了 value 参数。则设置对象集合中所有元素的该属性的值。当 value 参数为 null，那么这个属性将被移除，多个属性可以通过对象键值对的方式进行设置。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var form = node('form')
                     form.attr('action')             // 读取值
                     form.attr('action', '/create')  // 设置值
@@ -237,167 +237,167 @@
                       action: '/create',
                       method: 'post'
                     })
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>removeAttr</h2>
                 <p>该<code>removeAttr()</code>方法移除当前对象集合中所有元素的指定属性。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     removeAttr(name)   ⇒ self
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var form = node('form')
                     form.attr('action', '/create')  // 设置值
                     form.removeAttr('action')       // 移除属性
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>prop</h2>
                 <p>该<code>prop()</code>方法获取或设置 dom 元素的属性值。它在读取属性值的情况下优先于 attr，因为这些属性值会因为用户的交互发生改变，如checked 和 selected。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     prop(name)          ⇒ value
                     prop(name, value)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>简写或小写名称，比如for, class, readonly及类似的属性，将被映射到实际的属性上，比如htmlFor, className, readOnly, 等等。</p>
             </section>
 
             <section>
                 <h2>removeProp</h2>
                 <p>该<code>removeProp()</code>方法从集合的每个 dom 节点中删除一个属性。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     removeProp(name)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>该方法使用 JavaScript 的 delete 操作符完成。值得注意的是如果尝试删除 DOM 的一些内置属性，如 className 或 maxLength，将不会有任何效果，因为浏览器禁止删除这些属性。</p>
             </section>
 
             <section>
                 <h2>remove</h2>
                 <p>该<code>remove()</code>方法用于从其父节点中删除当前集合中的元素，有效的从 dom 中移除。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     remove()   ⇒ self
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var form = node('form')
                     form.remove(name)
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>addClass</h2>
                 <p>该<code>addClass()</code>方法用于为每个匹配的元素添加指定的 class 类名。多个 class 类名使用空格分隔。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     addClass(name)   ⇒ self
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var elem = $$('.test')
                     elem.addClass('test1 test2 test3')
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>removeClass</h2>
                 <p>该<code>removeClass()</code>方法用于移除当前对象集合中所有元素的指定class。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     removeClass([name])   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>如果没有指定 name 参数，将移出所有的 class。多个 class 参数名称可以利用空格分隔。</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div class="a b c" uuid="test">
                     <script>
                         var test = node('test')
                         test.removeClass('a b')
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>toggleClass</h2>
                 <p>该<code>toggleClass()</code>方法用于在匹配的元素集合中的每个元素上添加或删除一个或多个样式类。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     toggleClass(names, [setting])   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>如果 class 的名称存在则删除它，如果不存在，就添加它。如果 setting 的值为真，这个功能类似于 addClass，如果为假，这个功能类似与 removeClass。</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div class="a b c" uuid="test">
                     <script>
                         var test = node('test')
                         test.toggleClass('active')
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>replaceClass</h2>
                 <p>该<code>replaceClass()</code>方法用于将匹配的元素的指定 class 替换为一个新的 class。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     replaceClass(name, newName)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>该方法类似先使用 removeClass 然后 addClass</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <div class="a b c" uuid="test">
                     <script>
                         var test = node('test')
                         test.toggleClass('active')
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>hasClass</h2>
                 <p>该<code>hasClass()</code>方法用于检查对象集合中是否有元素含有指定的 class。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     hasClass(name)   ⇒ boolean
-                </code-light>
-                <code-light type=html>
+                </code-highlight>
+                <code-highlight type=html>
                     <div uuid=test class="a b c"></div>
                     <script>
                         node('test').hasClass("a c");
                         // true
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>append</h2>
                 <p>该<code>append()</code>方法用于在每个匹配的元素内部的末端插入内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     append(content)   ⇒ self
-                </code-light>
-                <code-light type=html>
+                </code-highlight>
+                <code-highlight type=html>
                     <ul uuid=test></ul>
                     <script>
                         node('test').append('<li>new list item</li>')
                         // <ul uuid=test><li>new list item</li></ul>
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>appendTo</h2>
                 <p>该<code>appendTo()</code>方法用于将匹配的元素插入到目标元素内部的末端。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     appendTo(content)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>该方法是 append 方法的倒装句法</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <ul uuid=test></ul>
                     <script>
                         $$('<li>new list item</li>').appendTo(node('test'))
                         // <ul uuid=test><li>new list item</li></ul>
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>prependTo</h2>
                 <p>该<code>prependTo()</code>方法用于将匹配的元素集合插入到目标元素内部的首端。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     prependTo(target)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>该方法和 appendTo 方法的区别在于一个是插入首端，一个是插入在末端</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <ul uuid=test>
                         <li>old list item</li>
                     </ul>
@@ -405,17 +405,17 @@
                         $$('<li>new list item</li>').prependTo(node('test'))
                         // <ul uuid=test><li>new list item</li><li>old list item</li></ul>
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>prepend</h2>
                 <p>该<code>prepend()</code>方法将参数内容插入到每个匹配元素内部的首端。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     prepend(content)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>该方法是 prependTo 方法的倒装句法</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <ul uuid=test>
                         <li>old list item</li>
                     </ul>
@@ -423,218 +423,218 @@
                         node('test').prepend('<li>first list item</li>')
                         // <ul uuid=test><li>new list item</li><li>old list item</li></ul>
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>before</h2>
                 <p>该<code>before()</code>方法在匹配每个元素内部的首端插入内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     before(content)   ⇒ self
-                </code-light>
-                <code-light type=html>
+                </code-highlight>
+                <code-highlight type=html>
                     <p uuid=test>abc</p>
                     <script>
                         node('test').before('<p>See the following table:</p>')
                         // <p>See the following table:</p><p uuid=test>abc</p>
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>after</h2>
                 <p>该<code>after()</code>方法在匹配每个元素内部的末端插入内容。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     after(content)   ⇒ self
-                </code-light>
-                <code-light type=html>
+                </code-highlight>
+                <code-highlight type=html>
                     <p uuid=test>abc</p>
                     <script>
                         node('test').after('<p>A note below the label</p>')
                         // <p uuid=test>abc</p><p>A note below the label</p>
                     </script>
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>get</h2>
                 <p>该<code>get()</code>方法从当前对象集合中获取所有元素或单个元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     get()        ⇒ array
                     get(index)   ⇒ DOM node
-                </code-light>
+                </code-highlight>
                 <p>当 index 参数不存在的时，以普通数组的方式返回所有的元素。当指定 index 时，只返回该置的元素。这点与eq不同，该方法返回的是DOM节点，不是 Query 对象集合。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var elements = $$('div')
                     elements.get()        // get all headings as an array
                     elements.get(0)       // get first heading node
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>position</h2>
                 <p>该<code>position()</code>方法获取对象集合中第一个元素的位置。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     position()   ⇒ object
-                </code-light>
+                </code-highlight>
                 <p>相对于 offsetParent，当绝对定位的一个元素靠近另一个元素的时候，这个方法是有用的。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var pos = element.position()
                     // { top: 0, left: 0 }
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>offsetParent</h2>
                 <p>该<code>offsetParent()</code>方法用于找到第一个定位过的祖先元素，意味着它的 css 中的 position 属性值为 "relative", "absolute" or "fixed"。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     offsetParent()   ⇒ collection
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var pos = element.position()
                     // { top: 0, left: 0 }
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>offset</h2>
                 <p>该<code>offset()</code>方法用于获得当前元素相对于 document 的位置。返回一个对象含有：top, left, width 和 height，当给定一个含有 left 和 top 属性对象时，使用这些值来对集合中每一个元素进行相对于 document 的定位。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     offset()                ⇒ object
                     offset(coordinates)     ⇒ self
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var pos = element.offset()
                     // { top: 0, left: 0, width: 0, height: 0 }
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>height</h2>
                 <p>该<code>height()</code>方法用于获取对象集合中第一个元素的高度，或者设置对象集合中所有元素的高度。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     height()        ⇒ number
                     height(value)   ⇒ self
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var test = node('test')
                     test.height()     // 获取元素高
                     test.height(100)  // 设置元素高
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>width</h2>
                 <p>该<code>width()</code>方法用于获取对象集合中第一个元素的宽度，或者设置对象集合中所有元素的宽度。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     width()        ⇒ number
                     width(value)   ⇒ self
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var test = node('test')
                     test.width()     // 获取元素宽
                     test.width(100)  // 设置元素宽
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>parent</h2>
                 <p>该<code>parent()</code>方法用于获取对象集合中每个元素的直接父元素。如果 css 选择器参数给出，过滤出符合条件的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     parent([selector])   ⇒ collection
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var test = node('test')
                     test.parent()     // 获取父元素
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>parents</h2>
                 <p>该<code>parent()</code>方法用于获取对象集合每个元素所有的祖先元素。如果 css 选择器参数给出，过滤出符合条件的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     parents([selector])   ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>如果想获取直接父级元素，使用 parent。如果只想获取到第一个符合 css 选择器的元素，使用 closest。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var allDiv = $$('div')
                     allDiv.parents()     // [parentNode, parentNode, ...]
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>children</h2>
                 <p>该<code>children()</code>方法用于获得每个匹配元素集合元素的直接子元素，如果给定 selector，那么返回的结果中只包含符合 css 选择器的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     children([selector])   ⇒ collection
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     $$('ol').children('*:nth-child(2n)')
                     // every other list item from every ordered list
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>siblings</h2>
                 <p>该<code>siblings()</code>方法用于获取对象集合中所有元素的兄弟节点。如果给定 css 选择器参数，过滤出符合选择器的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     siblings([selector])   ⇒ collection
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     node('test').siblings()
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>closest</h2>
                 <p>该<code>closest()</code>方法用于从元素本身开始，逐级向上级元素匹配，并返回最先匹配 selector 的元素。如果给定 context 节点参数，那么只匹配该节点的后代元素。这个方法与 parents(selector)有点相像，但它只返回最先匹配的祖先元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     closest(selector, [context])    ⇒ collection
                     closest(collection)             ⇒ collection
                     closest(element)                ⇒ collection
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     var input = $$('input[type=text]')
                     input.closest('form')
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>filter</h2>
                 <p>该<code>closest()</code>方法用于过滤对象集合，返回对象集合中满足 css 选择器的项。如果参数为一个函数，函数返回有实际值得时候，元素才会被返回。在函数中，this 关键字指向当前的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     filter(selector)                  ⇒ collection
                     filter(function(index){ ... })    ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>与此相反的功能为 not</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var allDiv = $$('div')
                     allDiv.filter('.a')
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>not</h2>
                 <p>该<code>not()</code>方法用于过滤当前对象集合，获取一个新的对象集合，它里面的元素不能匹配 css 选择器。如果另一个参数为 Query 对象集合，那么返回的新 Query 对象中的元素都不包含在该参数对象中。如果参数是一个函数。仅仅包含函数执行为 false 值得时候的元素，函数的 this 关键字指向当前循环元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     not(selector)   ⇒ collection
                     not(collection)   ⇒ collection
                     not(function(index){ ... })   ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>与此相反的功能为 filter</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var allDiv = $$('div')
                     allDiv.not('.b')
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>data</h2>
                 <p>该<code>data()</code>方法用于读取或写入 dom 的 data-* 属性。行为有点像 attr，但是属性名称前面加上 data-。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     data(name)          ⇒ value
                     data(name, value)   ⇒ self
-                </code-light>
+                </code-highlight>
                 <p>当读取属性值时，会有下列转换：</p>
                 <ul>
                     <li>"true", "false", "null" 被转换为相应的类型</li>
@@ -642,97 +642,97 @@
                     <li>JSON值将会被解析，如果它是有效的JSON</li>
                     <li>其它的一切作为字符串返回</li>
                 </ul>
-                <code-light type=js>
+                <code-highlight type=js>
                     var test = node('test')
                     test.data('index', 5)
                     test.data('index')     // 5
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>clone</h2>
                 <p>该<code>clone()</code>方法用于通过深度克隆来复制集合中的所有元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     clone([deep])   ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>deep 默认为 true，即克隆所有元素</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var test = node('test')
                     var clone = test.clone()
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>size</h2>
                 <p>该<code>size()</code>方法用于获取对象集合中元素的数量。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     size()   ⇒ number
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     $$('div').size()  // 7
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>serialize</h2>
                 <p>该<code>serialize()</code>方法用于通过序列化表单值，创建 URL 编码文本字符串。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     serialize()   ⇒ string
-                </code-light>
+                </code-highlight>
                 <p>您可以选择一个或多个表单元素（比如 input 及/或 文本框），或者 form 元素本身。序列化的值可在生成 AJAX 请求时用于 URL 查询字符串中。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var form = node('form')
                     form.serialize()
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>eq</h2>
                 <p>该<code>eq()</code>方法用于从当前对象集合中获取给定索引值的元素。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     eq(index)   ⇒ collection
-                </code-light>
+                </code-highlight>
                 <p>索引值以 0 为基数</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     $$('li').eq(0)   //=> only the first list item
                     $$('li').eq(-1)  //=> only the last list item
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>index</h2>
                 <p>该<code>eq()</code>方法用于获取一个元素的索引值。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     index([element])   ⇒ number
-                </code-light>
+                </code-highlight>
                 <p>索引值以 0 为基数，当elemen参数没有给出时，返回当前元素在兄弟节点中的位置。当 element 参数给出时，返回它在当前对象集合中的位置。如果没有找到该元素，则返回 -1</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     $$('li:nth-child(2)').index()  // 1
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>is</h2>
                 <p>该<code>is()</code>方法用于判断当前元素集合中的第一个元素是否符 css 选择器。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     index([element])   ⇒ number
-                </code-light>
+                </code-highlight>
                 
-                <code-light type=js>
+                <code-highlight type=js>
                     $$('div').is('.a')
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>getCssMatrix</h2>
                 <p>该<code>getCssMatrix()</code>方法用于获取 css 矩阵。</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     getCssMatrix([element])   ⇒ object
-                </code-light>
-                <code-light type=js>
+                </code-highlight>
+                <code-highlight type=js>
                     node('test').getCssMatrix()
                     // { a:0, b:0, c:0, e:0, f:0 }
-                </code-light>
+                </code-highlight>
             </section>
 
             <include footer></include>

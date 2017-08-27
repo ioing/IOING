@@ -30,22 +30,22 @@
                     </scrolling>
                 </scroll>
                 <p>指令<code>case</code>的值会被作为<a>#JavaScript 表达式</a>解释</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <switch case=id>
                         <case value=img>我是一个图片类型</case>
                         <case value=audio>我是一个音频类型</case>
                         <case value=video>我是一个视频类型</case>
                     </switch>
-                </code-light>
+                </code-highlight>
                 <p>若使用了单（双）花括号表达式，其结果值将仍被作为表达式执行</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <!-- {code} 结果为字符 id，id 将被再次解释 -->
                     <switch case={code}>
                         <case value=img>我是一个图片类型</case>
                         <case value=audio>我是一个音频类型</case>
                         <case value=video>我是一个视频类型</case>
                     </switch>
-                </code-light>
+                </code-highlight>
                 <p>当 case 指令被设定为 true 或不设定时代表为<span>条件匹配模式</span>，此时 case 标签应以指令<code>is</code>作为匹配条件</p>
             </section>
 
@@ -78,23 +78,23 @@
                     </scrolling>
                 </scroll>
                 <p>如果你的常量值符合<span>Attr 书写规范</span>，你还可以使用下面的简写方式</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <switch case=id>
                         <case img>我是一个图片类型</case>
                         <case audio>我是一个音频类型</case>
                         <case video>我是一个视频类型</case>
                     </switch>
-                </code-light>
+                </code-highlight>
                 <p>标签 case 上的指令<code>value</code>接收的值是一个字符串，但该值仍然可用<a transform=docs-dom-echo>#花括号表达式</a>来动态输出值</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <switch case=id>
                         <case value={0|getType}>我是一个图片类型</case>
                         <case value={1|getType}>我是一个音频类型</case>
                         <case value={2|getType}>我是一个视频类型</case>
                     </switch>
-                </code-light>
+                </code-highlight>
                 <p>有时我们希望能够直接在 case 标签上直接设置条件表达式（类似 <a transform=docs-dom-if param=section:if>#if 标签语句</a>那样），我们完成下面的这个完整例子，首先在 <a transform=docs-module-route param=section:config>#模块配置</a> 中配置据源为</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     define(function (require, module, exports) {
                         module.exports = {
                             resources: {
@@ -109,9 +109,9 @@
                             }
                         }
                     })
-                </code-light>
+                </code-highlight>
                 <p>然后我们在模块的模版中书写如下语句</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <switch case=true>
                         <case is="typeid < 5">
                             <h1>我是一张 {types[typeid]} 图片</h1>
@@ -126,19 +126,19 @@
                             <video src={src}></video>
                         </case>
                     </switch>
-                </code-light>
+                </code-highlight>
             </section>
             <section>
                 <h2>default</h2>
                 <p>当 case 匹配条件不成立时，默认值性 default 标签语句</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <switch case=id>
                         <case img>我是一个图片类型</case>
                         <case audio>我是一个音频类型</case>
                         <case video>我是一个视频类型</case>
                         <default>我是一个未知类型</default>
                     </switch>
-                </code-light>
+                </code-highlight>
             </section>
 
             <include footer></include>

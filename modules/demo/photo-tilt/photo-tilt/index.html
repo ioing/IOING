@@ -68,7 +68,7 @@
 
 <script global>
 	
-    var PhotoTilt = @import('photoTilt')
+	import PhotoTilt from 'photoTilt'
 
 </script>
 
@@ -82,7 +82,6 @@
 	    }
 
 	global.call(function (opt) {
-		console.log(opt)
 		new PhotoTilt(opt)
 	}, opt)
 

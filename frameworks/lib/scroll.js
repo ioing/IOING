@@ -481,7 +481,7 @@ define('~/scroll', [], function (require, module, exports) {
 			 */
 			this.uuid = 'scroll::' + (App.name || 'top') + ':' + App.id + ':' + (el.id || el.uuid)
 			this.wrapper = el
-			this.scroller = el.scrolling
+			this.scroller = this.scrolling = el.scrolling
 
 			this.pullup = el.pullup
 			this.pulldown = el.pulldown
@@ -1581,8 +1581,8 @@ define('~/scroll', [], function (require, module, exports) {
 						this.scrollerWidth	= Math.round(scrollerRect.width * this.scale)
 						this.scrollerHeight	= Math.round(scrollerRect.height * this.scale)
 
-						this.minScrollX = 0
-						this.minScrollY = 0
+						this.minScrollX = this.options.minScrollX || 0
+						this.minScrollY = this.options.minScrollY || 0
 					}
 
 					// 最大滚动范围

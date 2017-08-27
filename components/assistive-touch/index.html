@@ -1,15 +1,28 @@
 <style>
-	.touch {
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 998;
+		display: none;
+	}
+	.touch-box {
 		position: absolute;
 		top: 0;
 		left: 0;
+		z-index: 999;
+		opacity: .5;
+		transition: all .3s ease;
+		transform-origin: top left;
+	}
+	.touch {
 		width: 60dp;
 		height: 60dp;
 		background: rgba(38,39,40,.8);
 		backdrop-filter: blur(20px);
 		border-radius: 14dp;
-		opacity: .5;
-		transition: all .3s ease;
 	}
 	.touch i.pop {
 		position: absolute;
@@ -47,83 +60,105 @@
 		box-shadow: 0 0 0 1px rgba(0,0,0,.4);
 	}
 
-	.touch.show {
-		width: 80vw;
-		height: 80vw;
-		max-width: 600dp;
-		max-height: 600dp;
+	.touch-show {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 999;
+		width: 300dp;
+		height: 300dp;
+		background: rgba(38,39,40,.85);
+		backdrop-filter: blur(20px);
+		border-radius: 30dp;
+		opacity: 0;
 	}
 
 </style>
 
-<div uuid=touch class=touch on-tap="tap(event)" on-event-0="touchmove(event)|touchmove" on-event-1="touchstart(event)|mousedown touchstart" on-event-2="touchend(event)|touchend touchcancel" style="opacity:0">
-	<i uuid=touch-pop class="pop"></i>
+<div uuid=overlay class=overlay></div>
+<div uuid=touch class=touch-box on-tap="tap(event)" on-event-0="touchmove(event)|touchmove" on-event-1="touchstart(event)|mousedown touchstart" on-event-2="touchend(event)|touchend touchcancel" style="opacity:0">
+	<div uuid="toucher" class=touch>
+		<i uuid=touch-pop class="pop"></i>		
+	</div>
+
+	<div uuid=touch-show class=touch-show>
+	</div>
+
 	<if toucher>
 		<include toucher></include>
 	</if>
 </div>
 
 <script>
-	var timeid
+	var timeid, overid
 	var touch = node('touch')
 	var touchA = touch.Animate()
+	var toucher = node('toucher')
+	var toucherA = toucher.Animate()
 	var touchpop = node('touch-pop')
+	var touchshow = node('touch-show')
+	var touchshowA = touchshow.Animate()
+	var overlay = node('overlay')
 	var x, y, s = 0, open
+	var scale = 1
 
 	function openTouch () {
 		var w = device.ui.width
 		var h = device.ui.height
 		var sw = touch.width()
 		var sh = touch.height()
-		var _x, _y, _s
+		var _x, _y
 
-		if ( w > DP(640) ) {
-			_s = DP(600)
-			_x = (w - _s) / 2
-			_y = (h - _s) / 2
-		} else {
-			_s = w*.8
-			_x = w*.1
-			_y = (h - _s) / 2
-		}
+		_x = (w - DP(300)) / 2
+		_y = (h - DP(300)) / 2
 
 		touchpop.style.opacity = 0
-		touchA.origin(0, 0).width(_s).height(_s).to(_x, _y, 0).end()
-		toucherA.scale(1).opacity(1).end()
+		touchA.duration(300).origin(0, 0).all().to(_x, _y, 0).end()
+		toucherA.duration(0).opacity(0).end()
+		touchshowA.duration(0).scale(.2).end(function () {
+			touchshowA.duration(300).opacity(1).scale(1).end()
+		})
+
 		open = true
+		s = -2
 	}
 
 	function closeTouch () {
-		touchA.duration(200).width().height().all().to(x, y, 0).end(function () {
-			touchpop.style.opacity = 1
+		touchshowA.duration(240).origin(x, y).scale(.2).end(function () {
+			toucherA.duration(60).opacity(1).end()
+			touchshowA.duration(60).scale(0).end()
 		})
-		toucherA.scale(0).opacity(0).end()
-		open = false
-		s = 0
+		touchA.duration(300).origin(x, y).scale(scale).all().to(x, y, 0).end(function () {
+			touchpop.style.opacity = 1
+
+			s = 0
+			open = false
+		})
 	}
 
 	function tap (e) {
-		if ( !scope.toucher ) {
-			if ( scope.back ) {
-				App.to(-1)
-			} else {
-				App.to("frameworks")
-			}
+		// if ( !scope.toucher ) {
+		// 	if ( scope.back ) {
+		// 		App.to(-1)
+		// 	} else {
+		// 		App.to("frameworks")
+		// 	}
 			
-			return 
-		}
+		// 	return 
+		// }
 
-
-		s = -1
 		if ( open ) {
 			closeTouch()
+			App.to(-1)
 		} else {
 			openTouch()
 		}
 	}
 
 	function touchmove (e) {
-		if ( s !== 2 ) return
+		if ( s !== 2 || open == true ) return
+
+		clearTimeout(overid)
 
 		var point = e.touches ? e.touches[0] : e
 
@@ -136,12 +171,19 @@
 		x = x < 0 ? 0 : x
 		y = y < 0 ? 0 : y
 
-		touchA.duration(0).to(x, y, 0).instant()
+		touchA.duration(0).to(x, y, 0).origin(0, 0).scale(scale).instant()
+
+		overlay.style.display = "block"
+
+		overid = setTimeout(function () {
+			overlay.style.display = "none"
+		}, 300)
 
 		s = 2
 	}
 
 	function touchstart (e) {
+		if ( s == -2 || open == true ) return
 
 		clearTimeout(timeid)
 		touch.css({
@@ -152,7 +194,7 @@
 	}
 
 	function touchend (e) {
-		if ( s !== 2 ) return
+		if ( s !== 2 || open == true ) return
 
 		s = 0
 
@@ -185,7 +227,7 @@
 			}
 		}
 
-		touchA.duration(300).to(x, y).end()
+		touchA.duration(300).to(x, y, 0).origin(0, 0).scale(scale).end()
 
 		timeid = setTimeout(function () {
 			touch.css({
@@ -195,15 +237,17 @@
 		}, 4000)
 	}
 
-	validWindow.on('mousemove', touchmove)
-	validWindow.on('mouseup mousecancel', touchend)
+	if ( !device.os.supportsTouch ) {
+		validWindow.on('mousemove', touchmove)
+		validWindow.on('mouseup mousecancel', touchend)
+	}
 
 	x = device.ui.width - DP(63)
 	y = device.ui.height*.7
 
 
 	register('showin', function () {
-		touchA.duration(300).to(x, y).end(function () {
+		touchA.duration(300).to(x, y).scale(scale).end(function () {
 			touch.style.opacity = .4
 		})
 	})

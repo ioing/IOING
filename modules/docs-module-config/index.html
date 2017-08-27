@@ -24,19 +24,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // frameworks/config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                index: "home",  // 默认进入 home 模块
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            index: "home",  // 默认进入 home 模块
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>在 URL 无指定进入模块时默认进入的模块设置</p>
                 <blockquote>
                     <h5>注意</h5>
@@ -66,19 +64,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // frameworks/config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                nofind: "return-to-homepage",
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            nofind: "return-to-homepage",
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>未设定首页模块或者被访问模块不存在（或无法访问）时则会进入该配置项设定的（本例中为 return-to-homepage）模块</p>
                 <blockquote>
                     <h5>关于 404 模块</h5>
@@ -109,19 +105,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // frameworks/config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                singleflow: true,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            singleflow: true,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>当设置该配置项为 true 时，浏览器的历史返回将按照模块的 leve（leve --> 0）进行趋近于零的单向返回模式</p>
                 <blockquote>
                     <h5>模拟场景</h5>
@@ -151,19 +145,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // frameworks/config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                singlelocking: true,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            singlelocking: true,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>设置该项后，通过 url 首次进入应用的任何模块都会默认在该模块前插入一条首页的历史记录，且预加载首页配置文件</p>
                 <blockquote>
                     <h5>说明</h5>
@@ -193,19 +185,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // frameworks/config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                limit: 60,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            limit: 60,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>该配置项设定的最小值为 10，当该值小时 10 时将被设置为 10<p>
                 <blockquote>
                     <h5>说明</h5>
@@ -235,19 +225,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                level: 15,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            level: 15,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>层级可以在一些交互关系上起到作用，如根据层级来设定动画前后关系（相同级别的模块转换会忽略动画），以及限制历史回退路径</p>
                 <blockquote>
                     <p>一般来说程序主 Tab 上的模块 level 都是 0 级，比如“微信”底部导航栏上的模块，而从“发现”进入到“朋友圈”则是 1 级模块</p>
@@ -277,19 +265,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                background: "#fff",
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            background: "#fff",
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <blockquote>
                     <h5>注意</h5>
                     <p>未设置此项时，若模块执行动画期间未完成内容展示，则该模块以透明的形式进行动画，因此将会产生不完整的动画表现</p>
@@ -319,20 +305,18 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                // 将模块定义为复合型
-                                absolute: false,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            // 将模块定义为复合型
+                            absolute: false,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>默认所有模块都是独立型模块，如果你需要做嵌合式界面请设置此选项为 false</p>
                 <blockquote>
                     <h5>到底复合型模块是怎样的模块？</h5>
@@ -364,19 +348,17 @@
                     </scrolling>
                 </scroll>
                 <p>启用了沙盒化的模块类似于在浏览器中打开新窗口运行来模块内容，模块中的 javascript 变量、CSS Tree、DOM Tree 都被隔离在一个<code>独立的执行环境</code>下，因此沙盒模块能隔离外部的环境干扰，它的好处是不会污染全局变量，不会覆盖 CSS 样式，同时由于模块间 DOM Tree 的隔离不会造成 DOM Tree 提及越来越庞大的问题，从而在 DOM 操作及视图渲染时能有效控制<code>性能的提升</code></p>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                sandbox: true,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            sandbox: true,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>被沙盒化的模块被卸载时能够非常<code>彻底的释放内存</code>，不会给整个 App 遗留干扰事件。比如没有沙箱机制的模块执行了一堆定时器后，通过简单的删除模块 DOM 结构只能从视图层面删除该模块，而该模块操作的各种痕迹还将在程序中产生后续影响，成为单页面应用最大的<code>安全隐患</code></p>
                 <blockquote>
                     <h5>注意</h5>
@@ -407,19 +389,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                shadowbox: true,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            shadowbox: true,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>影子盒子即使用 shadowroot 特性建立的文档，它和沙盒非常类似，不过影子盒子和沙盒相比受到的限制更少。影子盒子中的 DOM Tree 同样是独立于主 DOM Tree 的，但是影子盒子中的视图不被限制在模块中，其能够更好的和主视图进行融合和产生交互</p>
                 <blockquote>
                     <h5>关于降级</h5>
@@ -450,19 +430,17 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                cache: 0,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            cache: 0,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>当你打开模块A进行浏览了一段时间，然后有从模块 A 中打开了模块 B，此时当你浏览完模块 B 返回模块 A 时会检测这个模块 cache 的有效期是否失效，如果失效则重新载入该模块，如果还在有效期内则不做任何修改直接返回该模块</p>
                 <blockquote>
                     <p>设置 cache 为 0 时，每次进入该模块都会更新该模块的数据</p>
@@ -492,19 +470,17 @@
                         </table>
                     </scrolling>
                 </scroll>  
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                timeout: 0,
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            timeout: 0,
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>如果你需要离线应用方案可以结合此项，比如结合 Appcache/Service Workers 开发离线应用，在 App 第二次启动的时候会优先读取之前的本地存储数据，如果距离上一次启动时间大于设定超时时间则会自动进行模块数据的更新操作，且刷新模块视图，如果前后进行刷新当前页面的时间小于当前设定超时时间则不会进行模块的数据更新操作也不会进行模块的更新</p>
                 <blockquote>
                     <p>注意：如果你不需要一个离线访问应用请不要设置此选项</p>
@@ -539,24 +515,22 @@
                     <img src="img/mirroring.jpg">
                 </div>
                 <p>镜像是实现毛玻璃的一个基础，同样此项配置也作为毛玻璃的基本配置，镜像将被模糊处理，然后通过裁剪主视图可见区域，当主视图被裁剪后就可以直接透视到下方被模糊处理的镜像，这样就实现了毛玻璃效果</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                mirroring: {
-                                    // 裁剪镜像视图
-                                    clip: [60, 0, 60, 0],
-                                    // 裁剪部分增加滤镜
-                                    filter: "blur(20px)"
-                                },
-                                ...
-                            }
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            mirroring: {
+                                // 裁剪镜像视图
+                                clip: [60, 0, 60, 0],
+                                // 裁剪部分增加滤镜
+                                filter: "blur(20px)"
+                            },
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
                 <p>mirroring 的配置项有三个属性设置：target、clip、filter</code></p>
 
                 <h3>target:</h3>
@@ -672,59 +646,55 @@
                     </scrolling>
                 </scroll>
                 <p>分别定义进入和移出的动画函数</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                animation : [
-                                    function (e) {
-                                        e.in.duration(0).to(0, 0, 0).opacity(0).end(function () {
-                                            e.in.duration(400).opacity(1).end(function () {
-                                                e.callback(false)
-                                            })
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            animation : [
+                                function (e) {
+                                    e.in.duration(0).to(0, 0, 0).opacity(0).end(function () {
+                                        e.in.duration(400).opacity(1).end(function () {
+                                            e.callback(false)
                                         })
-                                    },
-                                    function (e) {
-                                        e.in.duration(0).to(0, 0, 0).opacity(1).end(function () {
-                                            e.out.duration(400).opacity(0).end(function () {
-                                                e.callback(false)
-                                            })
-                                        })
-                                    }
-                                ],
-                                ...
-                            }
-                        }
-                    })
-                </code-light>
-                <p>使用函数的方式定义一个动画函数</p>
-                <code-light type=js>
-                    // config.js
-                    define(function (require, module, exports) {
-                        module.exports = {
-                            resources: { ...resources },
-                            config: {
-                                ...
-                                animation : function (e) {
-                                    e.in.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*e.direction).end(function () {
-                                        e.out.duration(400).perspective(1000).rotate3d(0, 1, 0, -90*e.direction).end(function () {
-                                            e.out.duration(0).opacity(0).end()
-                                            e.in.duration(0).opacity(1).end(function () {
-                                                e.in.duration(400).rotate3d(0, 1, 0, 0).end(function () {
-                                                    e.callback(false)
-                                                })
-                                            })
+                                    })
+                                },
+                                function (e) {
+                                    e.in.duration(0).to(0, 0, 0).opacity(1).end(function () {
+                                        e.out.duration(400).opacity(0).end(function () {
+                                            e.callback(false)
                                         })
                                     })
                                 }
-                                ...
-                            }
+                            ],
+                            ...
                         }
-                    })
-                </code-light>
+                    }
+                </code-highlight>
+                <p>使用函数的方式定义一个动画函数</p>
+                <code-highlight type=js>
+                    // config.js
+                    export default {
+                        resources: { ...resources },
+                        config: {
+                            ...
+                            animation : function (e) {
+                                e.in.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*e.direction).end(function () {
+                                    e.out.duration(400).perspective(1000).rotate3d(0, 1, 0, -90*e.direction).end(function () {
+                                        e.out.duration(0).opacity(0).end()
+                                        e.in.duration(0).opacity(1).end(function () {
+                                            e.in.duration(400).rotate3d(0, 1, 0, 0).end(function () {
+                                                e.callback(false)
+                                            })
+                                        })
+                                    })
+                                })
+                            }
+                            ...
+                        }
+                    }
+                </code-highlight>
                 <p>动画函数的入参为一个 Object 对象，该对象描述了一组与转场动画相关的信息</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
                     <scrolling style="min-width:959dp">

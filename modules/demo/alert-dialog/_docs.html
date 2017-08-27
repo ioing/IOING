@@ -45,10 +45,10 @@
                 </table>
             </scrolling>
         </scroll>
-        <code-light type=html>
+        <code-highlight type=html>
         	<alert-dialog title="Title" desc="Notifications may include alerts,
 sounds and icon badges. These can be configured in Settings." type="2"></alert-dialog>
-        </code-light>
+        </code-highlight>
         <p>演示：<a on-tap="test1::open()">Alert Open</a></p>
         <script name=test1>
             function open (argument) {
@@ -56,10 +56,10 @@ sounds and icon badges. These can be configured in Settings." type="2"></alert-d
             }
         </script>
         <p>如果你只想告知用户一些信息，可以这样做</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <alert-dialog title="“AppName” Would Like to
 Send You Notifications" type="1"></alert-dialog>
-        </code-light>
+        </code-highlight>
         <p>演示：<a on-tap="test2::open()">Alert Open</a></p>
         <script name=test2>
             function open (argument) {
@@ -67,19 +67,19 @@ Send You Notifications" type="1"></alert-dialog>
             }
         </script>
         <p>如果你想替换默认按钮文案可以使用<code>ok</code>和<code>ok</code>来定义</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <alert-dialog title="“AppName” Would Like to
 Send You Notifications" ok="确认" cancel="取消" type="1"></alert-dialog>
-        </code-light>
+        </code-highlight>
         <p>如果你想展示自定义信息，可以通过<code>content</code>来定义一个展示模版</p>
-        <code-light type=html>
+        <code-highlight type=html>
             <template msg>
                 <h3>input</h3>
                 <p>Prompt description.</p>
                 <input normal value="something">
             </template>
             <alert-dialog content=msg type="1"></alert-dialog>
-        </code-light>
+        </code-highlight>
         <p>演示：<a on-tap="test3::open()">Alert Open</a></p>
         <script name=test3>
             function open (argument) {
@@ -87,12 +87,12 @@ Send You Notifications" ok="确认" cancel="取消" type="1"></alert-dialog>
             }
         </script>
         <p>如果你想展示自定义按钮，则可以通过设置<code>action</code></p>
-        <code-light type=html>
+        <code-highlight type=html>
             <var action>
                 ["Rate AppName", "Remind Me Later", "No, Thanks"]
             </var>
             <alert-dialog data:action="action" title="Rate AppName" desc="If you enjoy using AppName, would you mind taking a moment to rate it? Thanks for your support!"></alert-dialog>
-        </code-light>
+        </code-highlight>
         <p>演示：<a on-tap="test4::open()">Alert Open</a></p>
         <script name=test4>
             function open (argument) {
@@ -100,21 +100,21 @@ Send You Notifications" ok="确认" cancel="取消" type="1"></alert-dialog>
             }
         </script>
         <p>通过 trigger<code>open</code>事件来打开提示框，通过 trigger<code>close</code>事件来关闭提示框</p>
-        <code-light type=js>
+        <code-highlight type=js>
             $$('alert-dialog').triggrt('open')
-        </code-light>
+        </code-highlight>
         <p>通过监听组件的<code>ok</code>或<code>cancel</code>来得到用户的反馈（当 type 等于 1 或 2 时）</p>
-        <code-light type=js>
+        <code-highlight type=js>
             $$('alert-dialog').on('cancel', function () {
                 App.to(-1)    // 当用户点击 cancel 时返回上一个模块
             })
-        </code-light>
+        </code-highlight>
         <p>当组件设定了<code>action</code>时，组件的响应事件变为事件的序列</p>
-        <code-light type=js>
+        <code-highlight type=js>
             $$('alert-dialog').on('3', function () {
                 // 用户点击了第三条
             })
-        </code-light>
+        </code-highlight>
     </section>
 </template>
 

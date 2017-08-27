@@ -24,7 +24,7 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <ul>
                         <loop list as val i>
                             <li uuid=index-{i}>{val.text}</li>
@@ -35,7 +35,7 @@
                             console.log(node('index-' + i))
                         })
                     </script>
-                </code-light>
+                </code-highlight>
                 <blockquote>
                     在不支持 shadowroot 特性的设备上 IOING 依然能够进行降级处理，但我们建议更多的使用 uuid 代替使用 id
                 </blockquote>

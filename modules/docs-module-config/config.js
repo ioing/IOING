@@ -1,35 +1,32 @@
-define(function (require, module, exports) {
-
-    module.exports = {
-        resources : {
-            script : {
-            },
-            source : {
-                index: "index.html",
-                footer: "frameworks::footer"
-            },
-            style : {
-                common: "frameworks::common",
-                main: "frameworks::docs"
-            },
-            data : { 
-            }
+export default {
+    resources : {
+        script : {
         },
-        config : {
-            level : 0,
-            absolute : false,
-            style : ["common", "main"],
-            script : [],
-            source: ["index", "footer"],
-            sandbox : true,
-            cache : 360,
-            timeout : 60,
-            data: [],
-            animation : true
+        source : {
+            index: "index.html",
+            footer: "frameworks::footer"
         },
-        filter : function(res, name) {
+        style : {
+            common: "frameworks::common",
+            main: "frameworks::docs"
         },
-        param : {
+        data : { 
         }
+    },
+    config : {
+        level : 0,
+        absolute : false,
+        style : ["common", "main"],
+        script : [],
+        source: ["index", "footer"],
+        sandbox : true,
+        cache : 360,
+        timeout : 60,
+        data: [],
+        animation : true
+    },
+    filter : function(res, name) {
+    },
+    param : {
     }
-})
+}

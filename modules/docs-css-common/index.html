@@ -30,7 +30,7 @@
                     </scrolling>
                 </scroll>
                 <p>以往我们要兼容各主流浏览器需要这么做</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @-o-keyframes shake {
                         0%, 100% {
                             -o-transform: translate3d(0, 0, 0);
@@ -123,9 +123,9 @@
                         -webkit-animation-name: shake;
                                 animation-name: shake;
                     }
-                </code-light>
+                </code-highlight>
                 <p>而现在我们只需要这样做</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @keyframes shake {
                         0%, 100% {
                             transform: translate3d(0, 0, 0);
@@ -140,7 +140,7 @@
                     .shake {
                         animation-name: shake;
                     }
-                </code-light>
+                </code-highlight>
                 <p>标准化后的代码体积缩小了约10倍，避免了不必要的网络传输浪费</p>
                 <blockquote>
                     <h5>为什么 CSS 解释器是在浏览器工作的？</h5>

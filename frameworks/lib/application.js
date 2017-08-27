@@ -4,15 +4,15 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 	// templates & trans viewport
 	
-	var Async = require('~/fetch')
-	var Template = require('~/template')
-	var Transform = require('~/transform')
+	let Async = require('~/fetch')
+	let Template = require('~/template')
+	let Transform = require('~/transform')
 
 	// Immunity
 
-	var IMMUNITY = []
+	let IMMUNITY = []
 
-	function DNA (element, remove) {
+	let DNA = (element, remove) => {
 		if ( remove ) {
 			var i = IMMUNITY.indexOf(element)
 			if ( i >= 0 ) {
@@ -25,102 +25,96 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 	// Module
 
-	function Module (id) {
+	class Module {
 
-		// initial
+		constructor (id) {
+			// initial
 
-		this.id = id
-		this.param = {}
-		this.status = {}
-		this.helper = {}
-		this.elements = {}
-		this.prefetch = {}
-		this.dimension = null
-		this.controller = {}
-		this.updatetime = {}
-		this.remoteframe = false
-		this.storagemaps = []
-		this.initialparam = {}
-		this.initialconfig = {}
+			this.id = id
+			this.param = {}
+			this.status = {}
+			this.helper = {}
+			this.elements = {}
+			this.prefetch = {}
+			this.dimension = null
+			this.controller = {}
+			this.updatetime = {}
+			this.remoteframe = false
+			this.storagemaps = []
+			this.initialparam = {}
+			this.initialconfig = {}
 
-		// _
-		this.events = {}
-		this._events = {}
-	}
+			// _
+			this.events = {}
+			this._events = {}
+		}
 
-	Module.prototype = {
-		init : function () {
+		init () {
 			this.update = true
 			this._events = {}
 
 			this.rsetParam()
 
 			return this
-		},
+		}
 
-		on : function (types, fn) {
-			var that = this
-
-            types.split(' ').each(function (i, type) {
-            	that._events.initial(type, []).push(fn)
+		on (types, fn) {
+            types.split(' ').each((i, type) => {
+            	this._events.initial(type, []).push(fn)
             })
 
             return this
-        },
+        }
 
-        one : function (types, fn) {
-        	var that = this
-
-        	function once () {
+        one (types, fn) {
+        	let once = () => {
         		fn.apply(this, arguments)
         		this.off(types, once)
         	}
 
-        	types.split(' ').each(function (i, type) {
-        		that._events.initial(type, []).push(once)
+        	types.split(' ').each((i, type) => {
+        		this._events.initial(type, []).push(once)
         	})
 
         	return this
-        },
+        }
 
-        off : function (types, fn) {
-        	var that = this
+        off (types, fn) {
+            types.split(' ').each((i, type) => {
+            	if ( !this._events[type] ) return
 
-            types.split(' ').each(function (i, type) {
-            	if ( !that._events[type] ) return
-
-            	var index = that._events[type].indexOf(fn)
+            	let index = this._events[type].indexOf(fn)
 
             	if ( index > -1 ) {
-                    that._events[type].splice(index, 1)
+                    this._events[type].splice(index, 1)
                 }
             })
-        },
+        }
 
-        origin : function (sids, callback) {
-            var geter = new promise.Promise()
+        origin (sids, callback) {
+            let geter = new promise.Promise()
 
             App.async.async(this.id, this.param, sids, 'data', geter)
 
-            promise.join([geter]).then(function (data) {
+            promise.join([geter]).then((data) => {
                 callback(data[0][3], data)
             })
-        },
+        }
 
-        turnover : function (options, callback) {
-        	var id = options.id
-        	var data = options.data
-        	var start = options.start
-        	var limit = options.limit
-        	var linker = options.linker
-        	var origins = options.origins
-        	var endflag = options.endflag
-        	var turnover = options.turnover
+        turnover (options, callback) {
+        	let id = options.id
+        	let data = options.data
+        	let start = options.start
+        	let limit = options.limit
+        	let linker = options.linker
+        	let origins = options.origins
+        	let endflag = options.endflag
+        	let turnover = options.turnover
 
-        	function filter (data) {
-                var row = []
-                var ext = {}
-                var end = true
+        	let filter = (data) => {
+                let row = []
+                let ext = {}
+                let end = true
 
                 row = linker ? data.getValueByRoute(linker) : data
 
@@ -136,7 +130,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
                 // 附加源
 
-                row.map(function (v, i) { return v.__proto__ = data })
+                row.map((v, i) => { return v.__proto__ = data })
                 
                 // 回调给滚动组件
                 
@@ -145,50 +139,49 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
             // set module param
 
-            this.setParam((function () {
+            this.setParam(((param) => {
+                param.page = param._page = param.$page = Math.ceil(start / limit)
+                param.start = param._start = param.$start = start
+                param.limit = param._limit = param.$limit = limit
+                param.turnover = param._turnover = param.$turnover = turnover
 
-                this.page = this._page = this.$page = Math.ceil(start / limit)
-                this.start = this._start = this.$start = start
-                this.limit = this._limit = this.$limit = limit
-                this.turnover = this._turnover = this.$turnover = turnover
-
-                return this
-            }).call({}))
+                return param
+            })({}))
 
             data ? filter(data) : this.origin(origins, filter)
-        },
+        }
 
-        trigger : function (type) {
-        	var that = this
-        	var args = arguments
-        	var events = this._events[type]
+        trigger (type) {
+        	let that = this
+        	let args = arguments
+        	let events = this._events[type]
 
         	if ( !events ) return
 
-        	for (var i = events.length - 1; i >= 0; i--) {
+        	for (let i = events.length - 1; i >= 0; i--) {
         		events[i].apply(that, [].slice.call(args, 1))
         	}
-        },
+        }
 
-		setParam : function (param, initial) {
+		setParam (param, initial) {
 			App.setParam(this.id, param, initial)
 
 			return this
-		},
+		}
 
-		rsetParam : function () {
+		rsetParam () {
 			this.param = this.initialparam.clone()
 
 			return this
-        },
+        }
 
-		clearCache : function (dimension, storage) {
+		clearCache (dimension, storage) {
 			App.clearCache(this.id, dimension, storage)
 
 			return this
-		},
+		}
 
-		cloneAsNew : function (id) {
+		cloneAsNew (id) {
 			return {}.extend(this, new Module(this.id), { 
 				id : id, 
 				config : {}.extend(this.config), 
@@ -196,11 +189,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				elements : {},
 				initialparam : this.initialparam 
 			})
-		},
+		}
 
-		clipView : function (clip) {
-			var mask = this.elements.mask
-			var view = this.elements.view
+		clipView (clip) {
+			let mask = this.elements.mask
+			let view = this.elements.view
 			
 			if ( !clip || !mask || !view ) return
 
@@ -231,9 +224,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
                 "bottom"    : "-" + clip[2] + 'dp',
                 "left"      : "-" + clip[3] + 'dp'
             })
-		},
+		}
 
-		addElement : function (name, element) {
+		addElement (name, element) {
 			if ( this.refreshing && this.elements[name] instanceof Element ) {
 				this.refreshing.push(this.elements[name])
 			}
@@ -245,13 +238,13 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			}
 
 			this.elements[name] = element
-		},
+		}
 
-		loading : function (display) {
+		loading (display) {
 			App.transform.loading(this.id, display)
-		},
+		}
 
-		refresh : function (dimension, prefetch, readied) {
+		refresh (dimension, prefetch, readied) {
 
 			// refreshstart
 			
@@ -276,16 +269,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
             // prefetch this module resources
 
-            App.transform.update(this.id, dimension, function (render) {
+            App.transform.update(this.id, dimension, (render) => {
             	if ( prefetch ) {
 					prefetch(render)
 				} else {
 					render()
 				}
-            }, function (render) {
+            }, (render) => {
 
             	if ( this.refreshing ) {
-					this.refreshing.each(function (i, element) {
+					this.refreshing.each((i, element) => {
 						if ( element.localName === 'iframe' ) {
 							element.src = 'about:blank'
 						}
@@ -304,17 +297,17 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				App.trigger('refreshend', this.id)
 
-			}.bind(this))
+			})
 
             return this
-		},
+		}
 
-		destroy : function (type) {
-			var sandbox = this.elements.sandbox
+		destroy (type) {
+			let sandbox = this.elements.sandbox
 
 			if ( sandbox ) {
 
-				var swindow = sandbox.window
+				let swindow = sandbox.window
 
 				sandbox.iframe.src = 'about:blank'
 				swindow.location.reload()
@@ -329,7 +322,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				// clear window
 
-				for ( var i in swindow ) { 
+				for ( let i in swindow ) { 
 					try {
 						delete swindow[i]
 					} catch (e) {}
@@ -370,16 +363,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 	// define Application
 
-	function Application () {
-		if ( !(this instanceof Application) ) {
-            return new Application()
-        }
+	class Application {
+		constructor () {
+			if ( !(this instanceof Application) ) {
+	            return new Application()
+	        }
 
-		this.init()
-	}
+			this.init()
+		}
 
-	Application.prototype = {
-		init : function () {
+		init () {
 			this._error = {}
 			this._events = {}
 			this._prefetchs = {}
@@ -398,11 +391,42 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			this.modules = {}
 			this.config = {}
 
-			this.setting()
+			this.setting(App.config)
 
-			// console version
+			// console
 
-			this.name = App
+			this.console = {
+	        	echo : (type, pre, mid, suf) => {
+	        		console[type](
+						"%c " 
+						+ (pre[0] ? pre[0] + ' ' : '') 
+						+ "%c " + (mid[0] ? mid[0] + ' ' : '')
+						+ "%c " + (suf[0] ? suf[0] + ' ' : ''), 
+						"color: #ffffff; background:" + pre[1],
+						"color: #ffffff; background:" + mid[1],
+						"color: #ffffff; background:" + (suf[0] ? suf[1] : mid[1])
+					)
+	        	},
+	        	log : (message, title, description) => {
+	        		this.console.echo('log', [title, '#999'], [message, '#333'], [description, '#666'])
+	        	},
+	        	info : (message, title, description) => {
+	        		this.console.echo('info', [title, '#0cf'], [message, '#06c'], [description, '#0c0'])
+	        	},
+	        	warn : (message, title, description) => {
+	        		this.console.echo('warn', [title, '#f60'], [message, '#f30'], [description, '#f90'])
+	        	},
+	        	error : (message, title, description) => {
+	        		this.console.echo('warn', [title, '#f06'], [message, '#903'], [description, '#993'])
+	        	},
+	        	dir : (message) => {
+	        		console.dir.apply(console, message)
+	        	}
+	        }
+
+	        // console version
+
+			this.name = App.name || 'top'
 			this.version = '3.0.1'
 			this.console.log(this.version, 'Version', 'ioing.com')
 
@@ -414,23 +438,19 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				}
 	        }, false)
 	        window.addEventListener('touchmove', preventDefaultEvent, false)
-		},
+		}
 
-		setting : function (opts) {
-			opts = opts || {
-				root : ''
-			}
-
+		setting (opts) {
 			this.config.extend(opts)
-		},
+		}
 
-		check : function () {
+		check () {
 			
-			function check () {
+			let check = () => {
 				return applicationCache.status == applicationCache.UPDATEREADY
 			}
 
-			function updateready () {
+			let updateready = () => {
 				// Browser downloaded a new app cache.
 				 
 		      	// Swap it in and reload the page to get the new hotness.
@@ -465,68 +485,61 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				}, false)
 			}
 		
-		},
+		}
 
-		on : function (types, fn) {
-			var that = this
-
-            types.split(' ').each(function (i, type) {
-            	that._events.initial(type, []).push(fn)
+		on (types, fn) {
+            types.split(' ').each((i, type) => {
+            	this._events.initial(type, []).push(fn)
             })
 
             return this
-        },
+        }
 
-        one : function (types, fn) {
-        	var that = this
-
-        	function once () {
+        one (types, fn) {
+        	let once = () => {
         		fn.apply(this, arguments)
         		this.off(types, once)
         	}
 
-        	types.split(' ').each(function (i, type) {
-        		that._events.initial(type, []).push(once)
+        	types.split(' ').each((i, type) => {
+        		this._events.initial(type, []).push(once)
         	})
 
         	return this
-        },
+        }
 
-        off : function (types, fn) {
-        	var that = this
+        off (types, fn) {
+            types.split(' ').each((i, type) => {
+            	if ( !this._events[type] ) return
 
-            types.split(' ').each(function (i, type) {
-            	if ( !that._events[type] ) return
-
-            	var index = that._events[type].indexOf(fn)
+            	let index = this._events[type].indexOf(fn)
 
             	if ( index > -1 ) {
-                    that._events[type].splice(index, 1)
+                    this._events[type].splice(index, 1)
                 }
             })
-        },
+        }
 
-        trigger : function (type) {
-        	var that = this
-        	var args = arguments
+        trigger (type) {
+        	let args = arguments
 
             if ( !this._events[type] ) return
 
-            this._events[type].each(function (i, fn) {
+            this._events[type].each((i, fn) => {
             	try {
-            		fn.apply(that, [].slice.call(args, 1))
+            		fn.apply(this, [].slice.call(args, 1))
             	} catch (e) {
-            		that.off(type, fn)
-            		that.console.warn('event:' + type, 'Expire', 'be off')
+            		this.off(type, fn)
+            		this.console.warn('event:' + type, 'Expire', 'be off')
             	}
             })
-        },
+        }
 
-        to : function () {
+        to () {
         	return App.transform.to.apply(App.transform, arguments)
-        },
+        }
 
-		get : function (id, callback, failed) {
+		get (id, callback, failed) {
 
 			if ( !id ) return
 			if ( this._error[id] ) return failed && failed()
@@ -534,13 +547,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			// 主依赖
 			
 			if ( id !== 'frameworks' && this.modules.frameworks === undefined ) {
-				return this.get('frameworks', function () {
+				return this.get('frameworks', () => {
 					App.get(id, callback, failed)
 				})
 			}
 
-			var that = this
-			var modules = this.modules
+			let modules = this.modules
 
 			id = decodeURIComponent(id).split('^')[0]
 
@@ -558,7 +570,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				// require module config
 
-				this.fetch(id, function (uri) {
+				this.fetch(id, (uri) => {
 
 					// 异步回调重新检测模块是否存在
 
@@ -567,7 +579,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 						// filter
 
-						that.filter(id)
+						this.filter(id)
 
 						// setup
 						
@@ -576,16 +588,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 						// callback
 
-						that._callbacks[id].each(function (i, callback) {
-							callback.apply(that, [modules[id]])
+						this._callbacks[id].each((i, callback) => {
+							callback.apply(this, [modules[id]])
 						})
 
 						// del callback list
 
-						delete that._callbacks[id]
+						delete this._callbacks[id]
 					}
-				}, function () {
-					that._error[id] = true
+				}, () => {
+					this._error[id] = true
 					failed && failed()
 				})
 			} else {
@@ -594,11 +606,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				return modules[id]
 			}
 
-		},
+		}
 
-		origin : function (id) {
-			var remote = id.match(/^\w+\:/) === null ? false : true
-			var repath = remote ? id.split('/').shift() : null
+		origin (id) {
+			let remote = id.match(/^\w+\:/) === null ? false : true
+			let repath = remote ? id.split('/').shift() : null
 
 			// proto module id
 
@@ -608,9 +620,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             	root : repath ? repath : this.config.root + 'modules',
             	path : remote ? id : this.config.root + 'modules/' + id
         	}
-		},
+		}
 
-		realpath : function (id, sid, url, path) {
+		realpath (id, sid, url, path) {
 
 			// removeQuotes
 
@@ -621,12 +633,14 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
             // indexOf keyWord
 
-            if ( url.match(/^\w+\:/) === null && url.indexOf('//') != 0 ) {
+            if ( url.match(/^\w+\:/) === null && url.indexOf('//') !== 0 ) {
 
-            	var origin = this.origin(id)
-            	var root = origin.root
-            	var modpath = origin.path
-            	var prepath = path ? this.config.root + path : sid ? root + '/' + sid : modpath
+            	if ( path == true ) return this.config.root + url
+
+            	let origin = this.origin(id)
+            	let root = origin.root
+            	let modpath = origin.path
+            	let prepath = path ? path : sid ? root + '/' + sid : modpath
 
                 if ( url.indexOf('/') === 0 ) {
                     url = root + url
@@ -642,17 +656,17 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             }
 
             return url
-		},
+		}
 
-		template : function (id) {
+		template (id) {
 			return new Template(id, DNA)
-		},
+		}
 
-		fetch : function (id, callback, failed) {
-			var uri = ''
-			var frame = this.frameworks 
-			var config = frame ? frame.config : {}
-			var origins = config.origins
+		fetch (id, callback, failed) {
+			let uri = ''
+			let frame = this.frameworks 
+			let config = frame ? frame.config : {}
+			let origins = config.origins
 
 			if ( !id ) return
 
@@ -677,15 +691,14 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			}, function () {
 				failed && failed()
 			})
-		},
+		}
 
-		prefetch : function (id, param, callback) {
+		prefetch (id, param, callback) {
 			
 			if ( !id ) return
 
-			var that = this
-			var modules = this.modules
-			var prefetch = this._prefetchs
+			let modules = this.modules
+			let prefetch = this._prefetchs
 
 			id = id.split('^')[0]
 			callback = callback || noop
@@ -700,8 +713,8 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			prefetch.initial(id, []).push(param)
 			
 			if ( modules[id] === undefined || prefetch[id] === undefined ) {
-				return  that.get(id, function () {
-							that.prefetch(id, param)
+				return  this.get(id, () => {
+							this.prefetch(id, param)
 						})
 			}
 
@@ -711,7 +724,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			 * 通过extend模块参数获取新的数据
 			 */
 
-			prefetch[id].each(function (i, params) {
+			prefetch[id].each((i, params) => {
 
 				// remoteframe
 
@@ -723,7 +736,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				// nomal param url
 
-				params = that.getParam(params)
+				params = this.getParam(params)
 
 				if ( modules[id].prefetch[params] === undefined ) {
 
@@ -734,12 +747,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					// 标记为update模块预取无效
 
 					if ( modules[id].config.update === true || modules[id].config.cache === 0 ) {
-						return that.console.warn('Modules[' + id + ']', 'Prefetch', 'config[update == true or cache == 0] cannot prefetch')
+						return this.console.warn('Modules[' + id + ']', 'Prefetch', 'config[update == true or cache == 0] cannot prefetch')
 					}
 
 					// 预取资源
 
-					App.async.prefetch(id, modules[id].config, {}.extend(modules[id].initialparam, that.filterParam(params)[0]), function (sids, suri, data) {
+					App.async.prefetch(id, modules[id].config, {}.extend(modules[id].initialparam, this.filterParam(params)[0]), (...args) => {
 
 						// endTime
 
@@ -747,19 +760,19 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 						
 						// console
 
-                		that.console.info('Module [' + id + ']', 'Prefetch', (modules[id].endLoadTime - modules[id].startLoadTime) + 'ms')
+                		App.console.info('Module [' + id + ']', 'Prefetch', (modules[id].endLoadTime - modules[id].startLoadTime) + 'ms')
 
 						/* 
 						 * 预取成功
 						 * 以参数为key存储预取状态
 						 */
 
-						modules[id].prefetch[params] = arguments
+						modules[id].prefetch[params] = args
 						modules[id].updatetime[params] = Date.now()
 
 						// timeout
 
-						setTimeout(function () {
+						setTimeout(() => {
 							if ( modules[id] ) {
 								modules[id].prefetch[params] = null
 								modules[id].updatetime[params] = null
@@ -775,65 +788,64 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 						delete modules[id].prefetch[params]
 
-						that.console.error('Module [' + id + ']', 'Prefetch', 'failed')
+						App.console.error('Module [' + id + ']', 'Prefetch', 'failed')
 					})
 				}
 			})
 
 			delete prefetch[id]
-		},
+		}
 
-		refresh : function () {
-			var that = this
+		refresh () {
 
 			this.clearSessionStorage()
 
 			// remove module element
 
-			this.modules.each(function (id, module) {
+			this.modules.each((id, module) => {
 
 				if ( id !== 'frameworks' ) {
 					if ( module.elements ) {
 						module.elements.container.remove()
 					}
 					
-					delete that.modules[id]
+					delete this.modules[id]
 				}
 				
 			})
-		},
+		}
 
-		clearSessionStorage : function (key) {
+		clearSessionStorage (key) {
 			try {
 				if ( key ) {				
-					(typeof key == 'string' ? [key] : key).each(function (i, key) {
+					(typeof key == 'string' ? [key] : key).each((i, key) => {
 						sessionStorage.removeItem(key)
 					})
 				} else {
-					for (var i = sessionStorage.length; i >= 0; i--) {
+					for (let i = sessionStorage.length; i >= 0; i--) {
 						sessionStorage.removeItem(sessionStorage.key(i))
 					}
 				}
 			} catch (e) {}
-		},
+		}
 
-		clearLocalStorage : function (key) {
+		clearLocalStorage (key) {
 			try {
 				if ( key ) {
-					(typeof key == 'string' ? [key] : key).each(function (i, key) {
+					(typeof key == 'string' ? [key] : key).each((i, key) => {
 						localStorage.removeItem(key)
 					})
 				} else {
-					for (var i = localStorage.length; i >= 0; i--) {
+					for (let i = localStorage.length; i >= 0; i--) {
 						localStorage.removeItem(localStorage.key(i))
 					}
 				}
 			} catch (e) {}
-		},
+		}
 
-		checkLocalStorage : function (time) {
+		checkLocalStorage (time) {
 			try {
-				var expires = localStorage.getItem('EXPIRES')
+				let expires = localStorage.getItem('EXPIRES')
 
 				if ( expires ) {
 					if ( Date.now() - expires > time ) {
@@ -847,11 +859,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				this.expires = expires
 
 			} catch (e) {}
-		},
+		}
 
-		clearCache : function (id, dimension, storage) {
+		clearCache (id, dimension, storage) {
 			
-			var module = this.modules[id]
+			let module = this.modules[id]
 
 			if ( !module ) return
 
@@ -878,15 +890,15 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			delete module.dimension
 			
-		},
+		}
 
-		getParam : function (param) {
+		getParam (param) {
 			return param ? this.route('/' + param).param : null
-		},
+		}
 
-		setParam : function (id, param, initial) {
-            var module = this.modules[id]
-            var params = this.filterParam(param)
+		setParam (id, param, initial) {
+            let module = this.modules[id]
+            let params = this.filterParam(param)
 
             // if this module cache param != param ? update = ture
             
@@ -902,11 +914,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             } else {
             	module.param.extend(params[0])
             }
-        },
+        }
 
-		filterParam : function (param) {
-			var config = {}
-			var params = (typeof param === 'string' ? param.paramsToObject() : param) || {}
+		filterParam (param) {
+			let config = {}
+			let params = (typeof param === 'string' ? param.paramsToObject() : param) || {}
 
 			// filter config param
 
@@ -927,16 +939,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             })
 
             return [params, config]
-		},
+		}
 
-		equalsParam : function (a, b) {
+		equalsParam (a, b) {
         	a = typeof a === 'string' ? a.paramsToObject() : a
         	b = typeof b === 'string' ? b.paramsToObject() : b
 
         	return Object.equals(a, b)
-        },
+        }
 
-        exists : function (push) {
+        exists (push) {
         	try {
 
         		if ( push ) {
@@ -949,17 +961,17 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				this.console.warn('storage', 'Warn', 'error')
 				return false
 			}
-        },
+        }
 
-        defend : function (element, clear) {
+        defend (element, clear) {
 
         	if ( clear ) element.innerHTML = null
 
         	element.observer(
 	        	{ childList: true },
-	        	function (records) {
-					records.each(function (i, record) {
-						var garbages = record.addedNodes
+	        	(records) => {
+					records.each((i, record) => {
+						let garbages = record.addedNodes
 						garbages.each(function (i, garbage) {
 							if ( IMMUNITY.indexOf(garbage) == -1 ) {
 								if ( garbage.nodeName !== 'SCRIPT' ) garbage.remove()
@@ -968,10 +980,10 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					})
 				}
 			)
-        },
+        }
 
-        route : function (route) {
-        	var id, param
+        route (route) {
+        	let id, param
 
         	if ( !route ) {
 	        	if ( this.config.hash == false && this.config.root ) {
@@ -996,7 +1008,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         		id : id ? decodeURIComponent(id) : null,
         		param : param ? decodeURIComponent(param) : null
         	}
-        },
+        }
 
         /**
 		 * 组织默认行为的元素过滤
@@ -1004,9 +1016,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 		 * @param  {Object} exceptions
 		 * @return {Boolean}
 		 */
-		preventDefaultException : function (e, exceptions) {
-			var target = e.target
-			var origin = e.path ? e.path[0] : null
+		preventDefaultException (e, exceptions) {
+			let target = e.target
+			let origin = e.path ? e.path[0] : null
 
 			// shadow dom 中无法捕捉源
 
@@ -1019,8 +1031,8 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			// 比对
 			
-			for ( var i in exceptions ) {
-				var exc = exceptions[i]
+			for ( let i in exceptions ) {
+				let exc = exceptions[i]
 				
 				if ( exc.test(target[i]) || exc.test(origin[i]) ) {
 					return true
@@ -1028,11 +1040,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			}
 
 			return false
-		},
+		}
 
-        filter : function (id) {
-        	var module = this.modules[id]
-        	var config = module.config
+        filter (id) {
+        	let module = this.modules[id]
+        	let config = module.config
 
         	// 主模块禁止卸载
         	
@@ -1055,14 +1067,8 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         	
         	if ( typeof config.source === 'string' ) {
         		module.remoteframe = true
+        		config.source = this.realpath(null, null, config.source, true)
         	}
-
-
-        	// iframe input blur bug
-
-            // if ( device.feat.iframeInputBlurBug ) {
-            // 	this.console.warn('There iframe input focus bug in your browser sandbox > been config sandbox = false')
-            // }
 
             // shadowRoot
 
@@ -1121,35 +1127,6 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         	if ( typeof this.modules.frameworks.filter == 'function' ) {
         		this.modules.frameworks.filter(id, config)
         	}
-        },
-
-        console : {
-        	echo : function (type, pre, mid, suf) {
-        		console[type](
-					"%c " 
-					+ (pre[0] ? pre[0] + ' ' : '') 
-					+ "%c " + (mid[0] ? mid[0] + ' ' : '')
-					+ "%c " + (suf[0] ? suf[0] + ' ' : ''), 
-					"color: #ffffff; background:" + pre[1],
-					"color: #ffffff; background:" + mid[1],
-					"color: #ffffff; background:" + (suf[0] ? suf[1] : mid[1])
-				)
-        	},
-        	log : function (message, title, description) {
-        		this.echo('log', [title, '#999'], [message, '#333'], [description, '#666'])
-        	},
-        	info : function (message, title, description) {
-        		this.echo('info', [title, '#0cf'], [message, '#06c'], [description, '#0c0'])
-        	},
-        	warn : function (message, title, description) {
-        		this.echo('warn', [title, '#f60'], [message, '#f30'], [description, '#f90'])
-        	},
-        	error : function (message, title, description) {
-        		this.echo('warn', [title, '#f06'], [message, '#903'], [description, '#993'])
-        	},
-        	dir : function (message) {
-        		console.dir.apply(console, message)
-        	}
         }
 	}
 
@@ -1173,11 +1150,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 	document.ready(function () {
 
-		var route = App.route()
-		var id = route.id
-		var od = id
-		var param = route.param
-		var exists = App.exists()
+		let route = App.route()
+		let id = route.id
+		let od = id
+		let param = route.param
+		let exists = App.exists()
 
 		// async get current page config 
 
@@ -1189,9 +1166,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			this.frameworks = module
 
-			var mainc = module.config
-			var index = mainc.index
-			var system = mainc.system
+			let mainc = module.config
+			let index = mainc.index
+			let system = mainc.system
 
 			// current page
 

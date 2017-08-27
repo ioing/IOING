@@ -28,7 +28,7 @@
                     @if 中的逻辑表达式符合<a transform=docs-css-common>#标准-逻辑运算</a>中的定义
                 </blockquote>
                 <p>根据满足条件渲染 CSS，以自定义 CSS 变量为例</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @var {
                         max-width: 25dp;
                         common-color: blue;
@@ -40,9 +40,9 @@
                             border-top: solid [max-width] red;
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>根据不同设备操作系统实现不同样式输出</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @if ( device.os.ios ) {
                         header {
                             position: fixed;
@@ -56,15 +56,15 @@
                             backdrop-filter: blur(20dp);
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>根据模版数据源做逻辑判断</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @if ( result.length ) {
                         .gird {
                             width: [result.length]%;
                         }
                     }
-                </code-light>
+                </code-highlight>
             </section>
             
             <include footer></include>

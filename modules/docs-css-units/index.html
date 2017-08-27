@@ -134,23 +134,23 @@
                     <p>大家都知道移动端设备屏幕尺寸非常多，碎片化严重。尤其是 Android，你会听到很多种分辨率：480×800, 480×854, 540×960, 720×1280, 1080×1920 等。而我们听到的这些分辨率指的都是物理分辨率，假设你 iPhone 的物理分辨率为 640×960，而你的浏览器分辨率则可能为 320×480，此时浏览器呈现的分辨率即是逻辑分辨率。通俗点讲物理分辨率是硬件所支持的，逻辑分辨率是软件可以达到的</p>
                 </blockquote>
                 <p>使用单位<code>dp</code>代替<code>px</code>描述元素尺寸</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     div {
                         width: 100dp;
                         height: 100dp;
                         font-size: 14dp;
                     }
-                </code-light>
+                </code-highlight>
                 <p>如果你的设备的<code>devicePixelRatio</code>值为2，则 1dp=2px，这段代码的实际结果为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     div {
                         width: 200px;
                         height: 200px;
                         font-size: 28px;
                     }
-                </code-light>
+                </code-highlight>
                 <p>只有当你真正需要表示物理像素大小的时候才使用<code>px</code>，如下有两条 1px 的线，一条是在 vieport 中逻辑像素中呈现的一像素线，另一条是物理像素下呈现的一像素线</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <style>
                         /*模拟兼容横向1物理像素*/
                         @class pixeborder () {
@@ -175,7 +175,7 @@
                     </style>
                     <div class="viewpixeline"></div>
                     <div class="realpixeline"></div>
-                </code-light>
+                </code-highlight>
                 <shadow>
                     <style>
                         .viewpixeline {
@@ -203,11 +203,11 @@
             <section>
                 <h2>calc 计算 <small>对于不支持该特性的浏览器，引擎可进行自动降级兼容</small></h2>
                 <p>使用 calc 做不同单位间的运算</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     body {
                         height: calc(100vh + 3dp - 1px)
                     }
-                </code-light>
+                </code-highlight>
                 <p>calc 为 W3c 标准 API，当浏览器不支持时引擎会代为浏览器支持运算</p>
                 <blockquote>注意：在做四则运算时，运算符与值之间需要保持空格，这符合 W3C 制定的规范，当浏览器不支持运算属性 calc 时，引擎将会把<code>calc</code>转为<code>@ 逻辑运算</code>，如果你需要在不支持 calc 的设备上进行响应运算，请结合使用<code>@media</code>辅助完成</blockquote>
             </section>
@@ -215,11 +215,11 @@
             <section>
                 <h2>@ 逻辑运算</h2>
                 <p>该特性能够让你在 CSS 中执行简单的 JS 逻辑运算</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     body {
                         height: @(h ? h + 30 : 100)px
                     }
-                </code-light>
+                </code-highlight>
                 <p>进行逻辑运算时，运算上下文中可以直接引用模版变量和 CSS 中的定义变量，函数运算能够完成比 calc 更复杂的计算，但逻辑运算不支持响应式计算，而 calc 能够支持响应运算，比如当运算中涉及<code>vw/vh/vm等</code>响应单位时，当窗口宽度或高度发生改变时该单位大小将发生改变，此时应该对该数学式进行重新计算</p>
                 <blockquote>注意：在 CSS中 大批量的使用逻辑运算时，可能会引起由于 JS 逻辑表达式不合理而产生性能问题</blockquote>
             </section>
@@ -227,7 +227,7 @@
             <section>
                 <h2>变量输出 <small>把变量输出是动态 CSS 的核心部分</small></h2>
                 <p>通过<code>[key]</code>获取<code>@var</code>/<code>@global</code>定义的变量或<code>系统基础变量</code>。（<a transform=docs-css-scope>#了解基础变量</a>）</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @var {
                         max-width: 1000dp;
                         header-height: 60dp;
@@ -244,9 +244,9 @@
                         height: [header-height];
                         font-size: 14dp;
                     }
-                </code-light>
+                </code-highlight>
                 <p>上例中在浏览器中的实际输出结果为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     header {
                         height: 60dp;
                         max-width: 1000px;
@@ -257,7 +257,7 @@
                         height: 60px;
                         font-size: 14px;
                     }
-                </code-light>
+                </code-highlight>
                 <p>通过<code>[key]</code>输出变量只能输出直接变量，在本例中 a 和 b 为直接变量。当然通过@逻辑运算也可以完成输出变量，但在使用上如果不需要做逻辑运算而只是为了输出变量的话显而易见的使用<code>[key]</code>的书写方式上更方便</p>
             </section>
 

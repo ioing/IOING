@@ -26,7 +26,7 @@
                 </scroll>
                 <blockquote>继承能力能够使高度耦的属性进行重复使用，极高的提升开发速度，对便于后期管理维护具有重要意义，该方法和 <a transform=docs-css-class># @class</a> 类似</blockquote>
                 <p>类 .btn 描述一个按钮的基本外观，在需要基于这个外观进行定制个性化按钮的类中可通过 @extend 来继承这个基本外观属性</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     .btn {
                         padding: 4dp 20dp;
                         min-height: 32dp;
@@ -38,9 +38,9 @@
                         @extend: .btn;
                         background: blue;
                     }
-                </code-light>
+                </code-highlight>
                 <p>.btn-blue 类经过解释后变为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     .btn-blue {
                         padding: 4px 20px;
                         min-height: 32px;
@@ -48,7 +48,7 @@
                         border-radius: 6px;
                         background: blue;
                     }
-                </code-light>
+                </code-highlight>
                 <p>以往我们在进行 CSS 描述抽象化的时候都会使用在一个 DOM 节点上增加 N 多个类名的方法将 CSS 拆分，这样的后果是 DOM 结构被侵入变得难以维护，而通过动态继承则能够更好的专注维护 CSS 样式表的构建</p>
             </section>
 

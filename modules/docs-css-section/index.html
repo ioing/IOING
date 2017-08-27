@@ -21,7 +21,7 @@
                     </tbody>
                 </table>
                 <p>对 header 节点下样式设定一个命名空间</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @section ( header ) {
                         h1 {
                             margin: 15dp 0;
@@ -36,9 +36,9 @@
                             width: 50%;
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>这段代码实际在浏览器解析前被转换为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     header h1 {...style}
                     header .a,
                     header .b,
@@ -50,9 +50,9 @@
                     header .n {
                         width: 50%;
                     }
-                </code-light>
+                </code-highlight>
                 <p>通过关键字<code>this</code>设定 section 自身样式</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @section ( .link ) {
                         this {
                             color: #000;
@@ -65,9 +65,9 @@
                             color: green;
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>这段代码实际在浏览器解析前被转换为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     .link {
                         color: #000;
                         font-size: 12dp;
@@ -78,9 +78,9 @@
                     .link.green {
                         color: green;
                     }
-                </code-light>
+                </code-highlight>
                 <p>在一个 section 块中创建子 section</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @section ( header ) {
                         h1 {...style1}
                         @section (.nav) {
@@ -89,14 +89,14 @@
                             nav ul li {...style4}
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>这段代码实际在浏览器解析前被转换为</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     header h1 {...style}
                     header .nav nav ul {...style}
                     header .nav {...style}
                     header .nav nav ul li {...style}
-                </code-light>
+                </code-highlight>
                 <p>嵌套使用是被允许的，但我们并不建议这样规划你的样式表</p>
             </section>
 

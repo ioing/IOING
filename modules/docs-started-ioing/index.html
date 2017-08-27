@@ -332,10 +332,10 @@
                             <div class=card-related>
                                 <div class=card-inner>
                                     <div class="title">云组件/云模块</div>
-                                    <code-light type=html>
+                                    <code-highlight type=html>
                                         <switch-slider></switch-slider>
                                         <switch-slider value=on></switch-slider>
-                                    </code-light>
+                                    </code-highlight>
                                     <switch-slider></switch-slider>
                                     <switch-slider value=on></switch-slider>
                                     <p>未来互联网下组件共享成为趋势，第三方组件为构建超大型互联网应用提供可能</p>
@@ -345,7 +345,7 @@
                             <div class=card-related>
                                 <div class=card-inner>
                                     <div class="title">DOM+ 功能标签扩展</div>
-                                    <code-light type=html>
+                                    <code-highlight type=html>
                                         <scroll x scrollbar=false>
                                             <scrolling>
                                                 <loop list as value key>
@@ -353,7 +353,7 @@
                                                 </loop>
                                             </scrolling>
                                         </scroll>
-                                    </code-light>
+                                    </code-highlight>
                                     <p>新增特性标签，如 <code>if</code><code>loop</code><code>scroll</code><code>include</code><code>shadow</code><code>htmlarea</code>等</p>
                                     <a class=more transform=docs-dom-if>了解更多</a>
                                 </div>
@@ -361,14 +361,14 @@
                             <div class=card-related>
                                 <div class=card-inner>
                                     <div class="title">CSS 标准化</div>
-                                    <code-light type=css>
+                                    <code-highlight type=css>
                                         @class ibox (s) {
                                             display: flex;
                                             transform: scale([s]);
                                             box-shadow: 0 0 5dp red;
                                             border-radius: 6dp;
                                         }
-                                    </code-light>
+                                    </code-highlight>
                                     <p>无需后端预处理也能够在浏览器中使用标准 CSS 代码，从此摆脱各种浏览器兼容前缀，更有效的减小 CSS 传输体积</p>
                                     <a class=more transform=docs-css-common>了解更多</a>
                                 </div>
@@ -376,7 +376,7 @@
                             <div class=card-related>
                                 <div class=card-inner>
                                     <div class="title">CSS+ 功能扩展</div>
-                                    <code-light type=css>
+                                    <code-highlight type=css>
                                         @if (device.os.ios) {
                                             .demo {
                                                 top: [header-height];
@@ -385,7 +385,7 @@
                                                 @class: icon(6);
                                             }
                                         }
-                                    </code-light>
+                                    </code-highlight>
                                     <p>让浏览器支持丰富的 CSS+ 语法，更简洁有效的维护你的 CSS 代码</p>
                                     <a class=more transform=docs-css-if>了解更多</a>
                                 </div>
@@ -393,14 +393,14 @@
                             <div class=card-related>
                                 <div class=card-inner>
                                     <div class="title">shadowroot 隔离</div>
-                                    <code-light type=html>
+                                    <code-highlight type=html>
                                         <style> a { color: red; } </style>
                                         <shadow>
                                             <style> a { color: blue; } </style>
                                             <a>blue</a>
                                         </shadow>
                                         <a>red</a>
-                                    </code-light>
+                                    </code-highlight>
                                     <p>使用 shadow 标签封装子节点为 shadow dom，使其脱离外部 DOM Tree 节点，内部 CSS 命名能有效减少样式覆盖率</p>
                                     <a class=more transform=docs-dom-shadow>了解更多</a>
                                 </div>
@@ -408,7 +408,7 @@
                             <div class=card-related>
                                 <div class=card-inner>
                                     <div class="title">自动数据绑定</div>
-                                    <code-light type=html>
+                                    <code-highlight type=html>
                                         <if is="list.length > 0">
                                             <p>{{user.name || user.nick || user.phone}}</p>
                                             <p>{user.slogan}</p>
@@ -417,7 +417,7 @@
                                             scope.user.name = null
                                             scope.user.nick = "test"
                                         </script>
-                                    </code-light>
+                                    </code-highlight>
                                     <p>建立数据驱动型视图，自动拆解和绑定模版中的所有有效数据引用</p>
                                     <a class=more transform=docs-dom-echo>了解更多</a>
                                 </div>
@@ -431,18 +431,37 @@
             </section> -->
 
             <section>
+                <h2>安装</h2>
+                <p>克隆项目到本地</p>
+                <code-highlight type=bash>
+                    git clone https://github.com/ioing/IOING
+                </code-highlight>
+                <p>运行项目</p>
+                <code-highlight type=bash>
+                    cd [项目目录]
+                    sudo npm install
+                    gulp dev
+                </code-highlight>
+                <p>创建新模块</p>
+                <code-highlight type=bash>
+                    gulp new --module [模块名]
+                </code-highlight>
+                <p><a transform=docs-started-step>#了解更多</a></p>
+            </section>
+
+            <section>
                 <h2>自动数据绑定</h2>
                 <p>在节点及节点属性上使用数据引用时能够自动将该数据源与该节点进行数据绑定操作，当数据源上的数据发生变更时将同时影响该节点</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <time>计时：{time} 秒</time>
                     <div style="transform:scale({{time%60/60}}, 1);border:2dp solid [active-color];transition: transform .2s;"></div>
-                    <script>
+                    <script es6>
                         setInterval(function () {
                             scope.time++
                         }, 1000)
                     </script>
-                </code-light>
-                <script type=scope>
+                </code-highlight>
+                <script sync>
                     scope.time = 0
                 </script>
                 <time>计时：{time} 秒</time>
@@ -456,18 +475,18 @@
                 <blockquote>
                     <h5>数据绑定需要手动设定吗？</h5>
                     <p>不需要。所有使用数据引用的节点都能自动建立绑定关系，并且在逻辑性节点中也能自动识别绑定对象</p>
-                    <code-light type=html>
+                    <code-highlight type=html>
                         <time>计时：{{time + startTime}} 秒</time>
-                    </code-light>
-                    <p>当数据源 time 或 startTime 任意一个数据源属性发生改变时都会出发节点修改</p>
+                    </code-highlight>
+                    <p>当数据源 time 或 startTime 任意一个数据源属性发生改变时都会触发节点修改</p>
                 </blockquote>
                 <p><a transform=docs-dom-echo>#了解更多</a></p>
             </section>
 
             <section>
-                <h2>高级标准化的 CSS</h2>
-                <p>可编程 CSS 语言，不需要书写浏览器前缀，支持继承和类等</p>
-                <code-light type=css>
+                <h2>可编程的 CSS</h2>
+                <p>可编程 CSS 语言，支持继承和类等，规范书写，无需书写适配前缀</p>
+                <code-highlight type=css>
                     @class coverBackground (color) {
                         background-color: [color];
                         background-position: center;
@@ -481,7 +500,7 @@
                             @class: coverBackground(#fff);
                         }
                     }
-                </code-light>
+                </code-highlight>
                 <p>提问环节：</p>
                 <blockquote>
                     <h5>项目还需要 SASS、LESS、Stylus 等吗？</h5>
@@ -497,14 +516,34 @@
             </section>
 
             <section>
+                <h2>量子态 DOM+ 模版引擎</h2>
+                <p>量子态的 DOM 节点，在数据发生改变时以最小变动更新</p>
+                <code-highlight type=html>
+                    <if list>
+                        <loop list as value key>
+                            <include item></include>
+                        </loop>
+                    </if><else>
+                        <p>暂无内容</p>
+                    </else>
+                </code-highlight>
+                <p>提问环节：</p>
+                <blockquote>
+                    <h5>模版数据变更时是如何进行局部更新的？</h5>
+                    <p>引擎在编译输出前就已经把每个节点及其节点上的引用数据建立了点对点的绑定关系，当数据变更时引擎能立刻针对关联节点进行更新操作，这就像是一个量子态，数据发生改变同时也会体现在 DOM 上</p>
+                </blockquote>
+                <p><a transform=docs-dom-if>#了解更多</a></p>
+            </section>
+
+            <section>
                 <h2>云组件</h2>
                 <p>开发者可自由对组件分装为文件，封装后可直接使用组件标签来使用该组件</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <switch-slider></switch-slider>
                     <switch-slider value="on"></switch-slider>
                     <range-slider value=50></range-slider>
                     <range-slider value=80 bubble></range-slider>
-                </code-light>
+                </code-highlight>
                 <template range-slider-style>
                     <style>
                         .light { background-color: [active-color] }
@@ -517,14 +556,14 @@
                 <p></p>
                 <range-slider value=80 bubble styler=range-slider-style></range-slider>
                 <p>组件默认存放在项目根目录的<code>components</code>目录下，当然一些非通用组件也可以放在模块下面，只需加一个<code>path</code>指令即可</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <range-slider value=50 path=./></range-slider>
-                </code-light>
+                </code-highlight>
                 <p><a transform=docs-components-props>#了解更多</a></p>
             </section>
 
             <section>
-                <h2>沙盒技术</h2>
+                <h2>沙盒化</h2>
                 <p>HTML 的设计之初是为了传递和共享信息，因而它已开始更偏向于构建内容而非构建应用。当文档要传递的内容过多时则无法通过一个文档来显示所有内容，我们需要使用多个文档协作展示，即通过链接跳转的方式展示更多内容，但这种方式会导致文档脱离了原有的历史关系，同时在你的窗口运行环境中的数据也将一并随之丢失，后来我们开始流行使用 Ajax 技术在同一个页面中展示更多数据</p>
                 <shadow>
                     <style>
@@ -715,6 +754,115 @@
             </section>
 
             <section>
+                <h2>自定义滚动控件</h2>
+                <div class=demo>
+                    <style>
+                        @keyframes bouncedelay {
+                          0%, 80%, 100% {
+                            transform: scale(0.0);
+                          } 40% {
+                            transform: scale(1.0);
+                          }
+                        }
+                        .load6 {
+                          margin: 0 auto;
+                          width: 100dp;
+                          text-align: center;
+                        }
+                        .load6 > div {
+                          width: 10dp;
+                          height: 10dp;
+                          background-color: #fe5a4c;
+                          border-radius: 10dp;
+                          display: inline-block;
+                          animation: bouncedelay 1.4s infinite ease-in-out;
+                          animation-fill-mode: both;
+                        }
+                        .load6 .bounce1 {
+                          animation-delay: -0.48s;
+                        }
+                        .load6 .bounce2 {
+                          animation-delay: -0.32s;
+                        }
+                        .load6 .bounce3 {
+                          animation-delay: -0.16s;
+                        }
+                        pullup, pulldown {
+                          bottom: -40dp;
+                          width: 100%;
+                          padding: 10dp 0;
+                          height: 40dp;
+                          line-height: 20dp;
+                          text-align: center;
+                          font-size: 13dp;
+                          color: #666;
+                          z-index: 99999;
+                        }
+
+                        pulldown {
+                          bottom: auto;
+                          top: -40dp;
+                        }
+                    </style>
+                    <scroll finite data="testscrolllist" style="height:320dp;" stop-propagation="true">
+                        <scrolling>
+                            <div style="margin-bottom:4dp;height:60dp;line-height:60dp;background:{colorful[i]};color:#fff;text-indent:20dp; border-radius:10dp">{scroll.index}. {colorful[i]}</div>
+                        </scrolling>
+                        <pulldown threshold=50>
+                            <pullstart>下拉刷新</pullstart>
+                            <pulling>松手刷新</pulling>
+                            <pullend>
+                                <div class="load6">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                    <div class="bounce4"></div>
+                                </div>
+                            </pullend>
+                            <pullover>没有更多了</pullover>
+                        </pulldown>
+                        <pullup threshold=50 auto>
+                            <pullstart>上拉加载更多</pullstart>
+                            <pulling>松手加载更多</pulling>
+                            <pullend>
+                                <div class="load6">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                    <div class="bounce4"></div>
+                                </div>
+                            </pullend>
+                            <pullover>没有更多了</pullover>
+                        </pullup>
+                    </scroll>
+                </div>
+                <p>完成一个复杂的下拉刷新功能，仅需要下面一段主要代码</p>
+                <div class=code>
+                    <code-highlight type=html>
+                        <scroll finite data="testscrolllist" style="height:500dp;" stop-propagation="true">
+                            <scrolling>
+                                <!-- 该 finite 没有设定 template，因此这里 scrolling 内容被识别为 template，详细请参考 scroll 中的说明 -->
+                                <div style="background:{colorful[i]}">{finite.index}. {colorful[i]}</div>
+                            </scrolling>
+                            <pulldown threshold=50 event-target=scroll>
+                                <pullstart>下拉刷新</pullstart>
+                                <pulling>松手刷新</pulling>
+                                <pullend><!-- ... loading 动画放这里 --></pullend>
+                                <pullover>没有更多了</pullover>
+                            </pulldown>
+                            <pullup threshold=50 auto>
+                                <pullstart>上拉加载更多</pullstart>
+                                <pulling>松手加载更多</pulling>
+                                <pullend><!-- ... loading 动画放这里 --></pullend>
+                                <pullover>没有更多了</pullover>
+                            </pullup>
+                        </scroll>
+                    </code-highlight>
+                </div>
+                <p><a transform=docs-dom-scroll>#了解更多</a></p>
+            </section>
+
+            <!-- <section>
                 <h2>媲美原生应用</h2>
                 <p>为了让使用者感知到一个更棒的 WEB 应用，我们做了很多体验改善工作：</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
@@ -733,10 +881,10 @@
                                     <td><a transform=docs-module-config param=section/animation>模块转场</a></td>
                                     <td>内置多种模块转场过渡动画，也可自由定制动画</td>
                                 </tr>
-                                <!-- <tr>
+                                <tr>
                                     <td><a transform>动画线程控制</a></td>
                                     <td>使用动画队列来提升动画性能</td>
-                                </tr> -->
+                                </tr>
                                 <tr>
                                     <td><a transform=docs-dom-scroll>滚动参数</a></td>
                                     <td>可对滚动的弹性或惯性等参数进行自定义配置</td>
@@ -798,116 +946,7 @@
                     </scrolling>
                 </scroll>
                 <blockquote>传统 WEB 应用和 Native 应用在手持设备上有着明显的差异，这是因为 WEB 应用有其天生的特性和不足，这些特性和不足直接导致使用者认知到这是一个 WEB 应用而非一个 Native 应用</blockquote>
-            </section>
-
-            <section>
-                <h2>滚动控件示例</h2>
-                <div class=demo>
-                    <style>
-                        @keyframes bouncedelay {
-                          0%, 80%, 100% {
-                            transform: scale(0.0);
-                          } 40% {
-                            transform: scale(1.0);
-                          }
-                        }
-                        .load6 {
-                          margin: 0 auto;
-                          width: 100dp;
-                          text-align: center;
-                        }
-                        .load6 > div {
-                          width: 10dp;
-                          height: 10dp;
-                          background-color: #fe5a4c;
-                          border-radius: 10dp;
-                          display: inline-block;
-                          animation: bouncedelay 1.4s infinite ease-in-out;
-                          animation-fill-mode: both;
-                        }
-                        .load6 .bounce1 {
-                          animation-delay: -0.48s;
-                        }
-                        .load6 .bounce2 {
-                          animation-delay: -0.32s;
-                        }
-                        .load6 .bounce3 {
-                          animation-delay: -0.16s;
-                        }
-                        pullup, pulldown {
-                          bottom: -40dp;
-                          width: 100%;
-                          padding: 10dp 0;
-                          height: 40dp;
-                          line-height: 20dp;
-                          text-align: center;
-                          font-size: 13dp;
-                          color: #666;
-                          z-index: 99999;
-                        }
-
-                        pulldown {
-                          bottom: auto;
-                          top: -40dp;
-                        }
-                    </style>
-                    <scroll finite data="testscrolllist" style="height:320dp;" stop-propagation="true">
-                        <scrolling>
-                            <div style="margin-bottom:4dp;height:60dp;line-height:60dp;background:{colorful[i]};color:#fff;text-indent:20dp; border-radius:10dp">{_index}. {colorful[i]}</div>
-                        </scrolling>
-                        <pulldown threshold=50>
-                            <pullstart>下拉刷新</pullstart>
-                            <pulling>松手刷新</pulling>
-                            <pullend>
-                                <div class="load6">
-                                    <div class="bounce1"></div>
-                                    <div class="bounce2"></div>
-                                    <div class="bounce3"></div>
-                                    <div class="bounce4"></div>
-                                </div>
-                            </pullend>
-                            <pullover>没有更多了</pullover>
-                        </pulldown>
-                        <pullup threshold=50 auto>
-                            <pullstart>上拉加载更多</pullstart>
-                            <pulling>松手加载更多</pulling>
-                            <pullend>
-                                <div class="load6">
-                                    <div class="bounce1"></div>
-                                    <div class="bounce2"></div>
-                                    <div class="bounce3"></div>
-                                    <div class="bounce4"></div>
-                                </div>
-                            </pullend>
-                            <pullover>没有更多了</pullover>
-                        </pullup>
-                    </scroll>
-                </div>
-                <p>完成一个复杂的下拉刷新功能，仅需要下面一段主要代码</p>
-                <div class=code>
-                    <code-light type=html>
-                        <scroll finite data="testscrolllist" style="height:500dp;" stop-propagation="true">
-                            <scrolling>
-                                <!-- 该 finite 没有设定 template，因此这里 scrolling 内容被识别为 template，详细请参考 scroll 中的说明 -->
-                                <div style="background:{colorful[i]}">{_index}. {colorful[i]}</div>
-                            </scrolling>
-                            <pulldown threshold=50 event-target=scroll>
-                                <pullstart>下拉刷新</pullstart>
-                                <pulling>松手刷新</pulling>
-                                <pullend><!-- ... loading 动画放这里 --></pullend>
-                                <pullover>没有更多了</pullover>
-                            </pulldown>
-                            <pullup threshold=50 auto>
-                                <pullstart>上拉加载更多</pullstart>
-                                <pulling>松手加载更多</pulling>
-                                <pullend><!-- ... loading 动画放这里 --></pullend>
-                                <pullover>没有更多了</pullover>
-                            </pullup>
-                        </scroll>
-                    </code-light>
-                </div>
-                <p><a transform=docs-dom-scroll>#了解更多</a></p>
-            </section>
+            </section> -->
             
             <include footer></include>
         </article>

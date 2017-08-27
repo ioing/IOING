@@ -31,35 +31,35 @@
                 </scroll>
                 <h3>组建内获取组件数据源值</h3>
                 <p>假设模块有数据源对象 setting，而此时组件需要接入该对象</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <range-slider data:config=setting.config></range-slider>
-                </code-light>
+                </code-highlight>
                 <p>在该组件中的脚本通过下面的方式读取该值</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var setting
                     setting = scope.config    // 定义在组件的数据源通过 scope 对象获取
                     setting = scope.setting    // 该 scope 中的 setting 为模块数据源
-                </code-light>
+                </code-highlight>
                 <p>在该组件中的模版可以通过下面的方式读取该值</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span>{config.name}</span>
-                </code-light>
+                </code-highlight>
 
                 <h3>组建内获取组件 Attr 属性值</h3>
                 <p>为下面的组件设置一个 value 属性且给值 40</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <range-slider val=40></range-slider>
-                </code-light>
+                </code-highlight>
                 <p>在该组件中的脚本通过下面的方式读取该值</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     var val
                     val = scope.val    // 定义在组件的数据源通过 scope 对象获取
                     val = components.attr('val')    // 也可以通过传统方式获取，components 为组件自身元素
-                </code-light>
+                </code-highlight>
                 <p>在该组件中的模版可以通过下面的方式读取该值</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span>{val}</span>
-                </code-light>
+                </code-highlight>
                 <blockquote>
                     <h5>注意</h5>
                     <p>使用 Attr 设定组件数据源值时，如果有设定了重名数据源则后者优先</p>

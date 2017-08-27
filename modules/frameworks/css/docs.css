@@ -63,9 +63,6 @@ section h3::before {
     height: 12dp;
     background-color: [active-color];
     margin: 4dp auto auto -18dp;
-    border-radius: 12dp;
-    /*border-top-left-radius: 100%;*/
-    /*border-bottom-right-radius: 100%;*/
 }
 
 section h1 small, section h2 small {
@@ -229,7 +226,7 @@ scroll.exp {
     }
 }
 
-code-light {
+code-highlight {
     display: block;
     margin: 12dp 0 18dp;
 }

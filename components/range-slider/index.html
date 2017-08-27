@@ -107,9 +107,9 @@
 	  , circleW
 	  , oldvalue
 	  , maxSlider
-	  , lightLine = DOM['light']
-	  , circleBtn = DOM['circle']
-	  , rangeMark = scope.bubble ? DOM['mark'] : null
+	  , lightLine = node('light')
+	  , circleBtn = node('circle')
+	  , rangeMark = scope.bubble ? node('mark') : null
 
 	if ( isNaN(scope.value) ) {
 		scope.value = 0
@@ -117,7 +117,7 @@
 
 	function init() {
 		sliderW = lightLine.width()
-		circleW = DOM['circle'].width()
+		circleW = node('circle').width()
 
 		maxSlider = sliderW - circleW
 	}

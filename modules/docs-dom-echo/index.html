@@ -150,66 +150,66 @@
                     </scrolling>
                 </scroll>
                 <p>在单花括号<code>{{'\{\}'}}</code>或双花括号<code>{{'\{\{\}\}'}}</code>中使用数据源属性名称（了解模块的数据源配置 <a transform=docs-module-source>#资源配置</a> ）可将该条数据源对象输出到模版，就像下面这样</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <p>{teacher.name} : Hello, what’you name!</p>
                     <p>{user.name} : my name is {user.name}</p>
                     <!-- wang : Hello, what’you name! -->
                     <!-- yangyang : my name is yangyang -->
-                </code-light>
+                </code-highlight>
                 <blockquote>双花括号语法可以包含一些简单的逻辑运算，而单花括号只能进行直接的变量输出，双花括号可以完全替代单花括号。一般情况下我们推荐你使用简洁的单括号语法，因为单括号语法在运算时不需要做语法分析因此有着更优的性能。</blockquote>
             </section>
 
             <section>
                 <h2>使用 helper</h2>
                 <p>单花括号中可以使用管道符<code>|</code>指定一个 helper 方法，我们在模块配置文件的 helper 项中配置了一个 dgmdate 的时间格式化的方法， <a>#了解如何在模块中配置 helper</a></p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <h1>发布于 : {time|dgmdate}</h1>
                     <!-- 发布于 : 下午 6 点 -->
                     <h1>发布于 : {time,24|dgmdate}</h1>
                     <!-- 发布于 : 18 时 -->
-                </code-light>
+                </code-highlight>
                 <p>管道符可以串联使用多个 helper 方法，helper 从左往右被依次执行，前一个 helper 执行的结果将作为后一个 helper 的入参</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <h1>发布于:{time|fulldate|dgmdate}</h1>
                     <!-- 发布于: 2017 年 1 月 1 日 上午 6 点 10 分-->
-                </code-light>
+                </code-highlight>
                 <p>虽然 <a >#helper</a> 能够帮我们处理很多复杂的逻辑，但有时有候在面对一些简单的逻辑运算时就没有必要专门去定义一个 <a >#helper</a> 方法，这个时候我们可以使用双花括号<code>{{'\{\{\}\}'}}</code>来做简单的运算</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <h1>{{user.name ? user.name : '未命名'}}</h1>
-                </code-light>
+                </code-highlight>
                 <p>双花括号中为逻辑运算表达式，因此如果要使用 helper 时不能使用管道符的方式，而是使用函数方式调用，通过<code>@</code> + helper 方法名称即可调用配置的 helper 函数</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <h1>发布于 : {{@dgmdate(time)}}</h1>
                     <!-- 等同于简洁写法: <h1>发布于 : {time|dgmdate}</h1> -->
                     <h1>发布于 : {{@dgmdate(time,24)}}</h1>
                     <!-- 等同于简洁写法: <h1>发布于 : {time,24|dgmdate}</h1> -->
-                </code-light>
+                </code-highlight>
             </section>
 
             <section>
                 <h2>数据绑定</h2>
                 <p>这个特性我们称之为量子态，在使用数据输出时 IOING 会自动建立引用关系，当数据发生改变时源引用节点即同时发生改变，量子态存在于所有的数据引用中，包括节点属性。</p>
                 <p>下面是由 input 响应的数据驱动示例</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span>我的名字是：{test.name}</span>
                     <input react="test.name|input" type="text" value={test.name}>
-                </code-light>
+                </code-highlight>
                 <span style="word-break: break-all;">我的名字是：{test.name}</span>
                 <input react="test.name|input" type="text" value={test.name} placeholder="请输入你的名字" style="display:block; margin: 10dp 0; padding: 4dp 7dp; width: 100%; height: 30dp; font-size: 14dp; background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6dp;">
                 <p><a transform=docs-dom-input>#关于 input 的数据绑定方法请看这里</a></p>
                 <p>我们还可以通过直接修改<code>scope</code>对象上的属性来完成数据响应操作（<span>scope 是数据源传递对象</span>）</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span class="{test.className}">我的名字是：{test.name}</span>
                     <script>
                         // scope 在全局作用域时代表模块数据源
                         scope.test.name = '小明'
                         scope.test.className = 'active'
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>数据绑定能分析所有可被绑定的变量，如</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span>{{type == 'pic' ? lang.isImage : lang.isOther}}</span>
-                </code-light>
+                </code-highlight>
                 <p>该段代码中分析出的绑定数据有 type lang.isImage lang.isOther，当三者中的任意一个数据发生改变时都会引起该 span 标签内容进行重新渲染</p>
             </section>
 

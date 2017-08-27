@@ -70,9 +70,9 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <input normal type="text" value={test.name}>
-                </code-light>
+                </code-highlight>
                 <input normal type="text" value={test.name} style="display:block; margin: 10dp 0; padding: 4dp 7dp; width: 100%; height: 30dp; font-size: 14dp; background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6dp;">
                 <p>该输入框将不会响应光标剧中的特性</p>
                 <h3>光标居中的问题</h3>
@@ -108,17 +108,17 @@
                     </scrolling>
                 </scroll>
                 <p>属性 react 接收一个数据源作为值，当 input 发生 change 事件时该 react 设定的数据源的值将被更新为当前 input 的值，同时所有引用了该数据源的节点都将发生更新，如果不想在 change 事件时才进行数据更新而是需要在每一次输入时都得到更新，则可以通过在数据源后面加上管道符<code>|</code>然后加事件名的方式来实现。</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span>我的名字是：{test.name}</span>
                     <input react="test.name" type="text" value={test.name}>
-                </code-light>
+                </code-highlight>
                 <span style="word-break: break-all;">我的名字是：{test.name}</span>
                 <input react="test.name" type="text" value={test.name} placeholder="请输入你的名字" style="display:block; margin: 10dp 0; padding: 4dp 7dp; width: 100%; height: 30dp; font-size: 14dp; background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6dp;">
                 <p>设定响应事件为 input，视图将在 input 事件时更新</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <span>我的名字是：{test.name}</span>
                     <input react="test.name|input" type="text" value={test.name}>
-                </code-light>
+                </code-highlight>
                 <span style="word-break: break-all;">我的名字是：{test.name}</span>
                 <input react="test.name|input" type="text" value={test.name} placeholder="请输入你的名字" style="display:block; margin: 10dp 0; padding: 4dp 7dp; width: 100%; height: 30dp; font-size: 14dp; background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6dp;">
                 <p>input, textarea 和 htmlarea 对该特性的支持保持一致 </p>
@@ -203,12 +203,12 @@
                     </scrolling>
                 </scroll>
                 <p>我们以 textarea 为例来看一个简单的应用</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <textarea react-position=test.range resize=none></textarea>
                     <p>当前光标位置：left: {test.range.left}, top: {test.range.top}</p>
                     <!-- test.range 为一个数据源对象 -->
                     <!-- react-position 指令将把该输入框的光标状态传递给 test.range 对象  -->
-                </code-light>
+                </code-highlight>
                 <p>在下面的输入框中输入些内容看看</p>
                 <div style="position:relative">
                 <div style="position:absolute;margin:5dp 4dp;width:12dp;height:12dp;background:[active-color];border:2dp solid #fff;border-radius:12dp;box-shadow: 0 1dp 3dp rgba(0,0,0,.5);top:{test.range.top}px;left:{test.range.left}px">

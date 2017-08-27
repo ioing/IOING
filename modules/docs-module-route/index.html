@@ -37,7 +37,7 @@
 
                 <h3>改变模块仓库默认位置<small>进阶内容</small></h3>
                 <p>默认情况下模块放置在根目录的<code>modules</code>目录下，一般我们不需要修改，当然你也可以自定义这个位置，比如将所有模块文件都放置在<code>CDN</code>上，改变这一项你需要使用下面的方法：</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     App.on('launch', function () {
                         App.setting({
                             // 设定应用的 modules 和 components 的相对跟路径
@@ -46,15 +46,15 @@
                             origin: ['your-host.com']
                         })
                     })
-                </code-light>
+                </code-highlight>
                 <p>该段代码应放置在引擎脚本之后执行，其中设置项<code>origin</code>为数组类型，若<code>root</code>项的域和主域不同时则会开启<code>CORS</code>跨域，模块中数据源的加载也符合该规则</p>
 
                 <h3>访问远程模块或相对路径模块<small>进阶内容</small></h3>
                 <p>如果想访问某个绝对路径或相对路径的模块时可以使用<code>[module-path]</code>来定义 URL</p>
-                <code-light type=js>
+                <code-highlight type=js>
                     "http://your-host.com/[http://your-host.com/module-path/module-id]/param-name/value"
                     "http://your-host.com/[module-path/module-id]/param-name/value"
-                </code-light>
+                </code-highlight>
                 <p>通过加载远程模块的方式可以让应用模块更便于共享，这个远程模块也叫做<code>云模块</code></p>
                 <blockquote>
                     <h5>提示</h5>

@@ -146,17 +146,17 @@
                     </scrolling>
                 </scroll>
                 <h3>组件经过封装成为一个自定义元素标签，当使用它们的时候只需要引入这个自定义元素标签即可，就像你需要使用输入框时引入 {"\<"}input> 标签一样</h3>
-                <code-light type=html>
+                <code-highlight type=html>
                     <select-date></select-date>
-                </code-light>
+                </code-highlight>
                 <h3>不是所有组件都被放置在默认组件库中的，若想要引用绝对路径或相对路径的组件时，可以使用 src 属性</h3>
-                <code-light type=html>
+                <code-highlight type=html>
                     <googel-map src=google.com/map/ioing></googel-map>
-                </code-light>
+                </code-highlight>
                 <blockquote>
                     <h5>相比传统组件</h5>
                     <p>传统组件的引用需要将 html、js、css 等文件分别进行整合到页面中，这对开发者无疑具有很高的成本，IOING 的标签式组件则能降有效低开发者使用成本和交融产生的错误风险</p>
-                    <code-light type=html>
+                    <code-highlight type=html>
                         <!-- <html> -->
                             <!-- <head> -->
                                 <title>Markdown</title>
@@ -185,14 +185,14 @@
                                 <footer>...</footer>
                             <!-- </body> -->
                         <!-- </html> -->
-                    </code-light>
-                    <code-light type=html>
+                    </code-highlight>
+                    <code-highlight type=html>
                         <!-- <body> -->
                             <rich-editor></rich-editor>
                             <markdown-view></markdown-view>
                             <upload-file></upload-file>
                         <!-- </body> -->
-                    </code-light>
+                    </code-highlight>
                     <p>传统的组件使用方式较为抽象，且需要对引入到页面中的相关资源有所了解，否则删除组件时很容易遗留文件，而标签式组件在理解和使用上都更接近于原生组件</p>
                 </blockquote>
             </section>

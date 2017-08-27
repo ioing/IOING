@@ -29,7 +29,7 @@
             <section>
                 <h2>文件作用域</h2>
                 <p>当直接定义在 CSS 文件的根时，其值的作用域为当前文件中</p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @var {
                         common-width: 25dp;
                         common-color: blue;
@@ -39,12 +39,12 @@
                         height: 20px;
                         background: [common-color];
                     }
-                </code-light>
+                </code-highlight>
             </section>
             <section>
                 <h2>区块作用域</h2>
                 <p>当定义在 section 区块中时，其值作用域为当前区块内<a transform=docs-css-section>#了解 section 区块</a></p>
-                <code-light type=css>
+                <code-highlight type=css>
                     @var {
                         height: 25dp;
                     }
@@ -61,7 +61,7 @@
                             color : color;
                         }
                     }
-                </code-light>
+                </code-highlight>
             </section>
 
             <include footer></include>

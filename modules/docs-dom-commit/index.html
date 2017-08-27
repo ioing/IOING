@@ -31,7 +31,7 @@
                 </scroll>
                 <p>该方法会将标签内包含的 input/textarea/htmlarea 标签的 name 和 value 以键值对的形式上传服务地址</p>
                 <p>我们来看一个实现用例</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <commit uuid="test" method="post" action="{api.submitUrl}">
                         <input name="nick" value="{user.nick}">
                         <input name="introduction" value="{user.introduction}">
@@ -45,7 +45,7 @@
                             }
                         })
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>通过执行 commit 标签 Element 对象上的<code>commit</code>方法即可执行数据提交</p>
             </section>
 

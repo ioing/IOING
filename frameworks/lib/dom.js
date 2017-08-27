@@ -7,10 +7,11 @@ define('~/dom', [], function (require, module, exports) {
     var REGEXP = {
         key : /\.|\[/,
         token : /[^\w\_\$\.]/,                                               // 非变量关键词切割
-        string : /(['"])[^'"]*\1/,                                            // 过滤掉字符
+        string : /(['"])[^'"]*\1/,                                           // 过滤掉字符
         route : /(\[(.*?)(?=\])\])/g,                                        // 替换活动变量
         origins : /\{\{([\s\S]*?)(?=\}\})\}\}|\{([\s\S]*?)(?=\})\}/g,
-        imports : /[^\.\]]\s*[@|$]import\s*\(\s*["']([^'"\s]+)["']\s*\)/g
+        imports : /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/ig
+        // imports : /[^\.\]]\s*[@|$]import\s*\(\s*["']([^'"\s]+)["']\s*\)/g.   // imports : /import\s([\w\_\$]+)\sfrom\s([\w\_\$\']+)/g
     }
 
     var dOC = document
@@ -269,7 +270,7 @@ define('~/dom', [], function (require, module, exports) {
 
                     // promise get components
 
-                    return promise.get(App.config.root + id.slice(2)).then(function (err, data, xhr) {
+                    return promise.get(id.slice(2)).then(function (err, data, xhr) {
                         if ( !data ) return
                         if ( err === false ) {
                             this.SOURCE[id] = data
@@ -908,6 +909,10 @@ define('~/dom', [], function (require, module, exports) {
             }
         },
 
+        getRootScope : function (scope) {
+            return scope.__proto__.__proto__ === null ? scope : this.getRootScope(scope.__proto__)
+        },
+
         /**
          * 获取动态值
          * @param  {Object}
@@ -1053,7 +1058,7 @@ define('~/dom', [], function (require, module, exports) {
             var link = route.split('.')
             var prop = link.pop()
             var target = link.join('.')
-            var object = scope.getValueByRoute(target)
+            var object = target ? scope.getValueByRoute(target) : scope[prop] ? scope : this.getRootScope(scope)
 
             // 忽略 watch length 属性
 
@@ -1066,6 +1071,12 @@ define('~/dom', [], function (require, module, exports) {
                 // App.console.warn('SCOPE[' + route + '] is not defined')
 
                 return
+            }
+
+            // getRootScope after check
+
+            if ( object[prop] === undefined ) {
+                object[prop] = null
             }
 
             // is remove
@@ -1488,7 +1499,7 @@ define('~/dom', [], function (require, module, exports) {
                                         dom.removeClass(value)
                                     })
                                 }, 3000)
-                            }, 120)
+                            }, 50)
 
                             this.one('touchmove touchend touchcancel mouseup mousecancel', function () {
 
@@ -1903,6 +1914,10 @@ define('~/dom', [], function (require, module, exports) {
 
                         var viewWrapper, viewCenter, viewOffset
 
+                        // up 时默认值
+                        
+                        var minScrollY = 0
+
                         function checkChange () {
                             factWindowHeight = top.innerHeight
                             initialTop = dom.offset().top
@@ -1939,10 +1954,14 @@ define('~/dom', [], function (require, module, exports) {
                             })
                         }
 
-                        function getScroll () {
+                        function getScroll (type) {
                             var scroller = reactScroller || dom.closest('scroll')
 
                             scroll = scroller ? scroller.scrollEvent : null
+
+                            if ( type == 1 ) {
+                                minScrollY = scroll.minScrollY
+                            }
                         }
 
                         function getViewOffset () {
@@ -1953,7 +1972,7 @@ define('~/dom', [], function (require, module, exports) {
                         }
 
                         function keyboardUp (e) {
-                            getScroll()
+                            getScroll(1)
 
                             if ( !scroll ) return
 
@@ -1973,7 +1992,8 @@ define('~/dom', [], function (require, module, exports) {
 
                                 // change minScrollY
 
-                                scroll.minScrollY += keyboardHeight
+                                scroll.minScrollY = minScrollY + keyboardHeight
+                                scroll.options.minScrollY = scroll.minScrollY
 
                                 // 光标位置
                                 
@@ -1984,7 +2004,7 @@ define('~/dom', [], function (require, module, exports) {
                                 viewWrapper = factWindowHeight - keyboardHeight - scrollOffsetTop - scrollOffsetBottom
                                 viewCenter = keyboardHeight + viewWrapper / 2
                         
-                                scroll.scrollBy(0, getViewOffset(), 600, null, false)
+                                scroll.scrollBy(0, getViewOffset(), 300, null, false)
 
                                 // 滚动到不可见区域时 blur
                                 
@@ -2045,7 +2065,8 @@ define('~/dom', [], function (require, module, exports) {
                             
                             // change minScrollY
 
-                            scroll.minScrollY -= keyboardHeight
+                            scroll.minScrollY = minScrollY
+                            scroll.options.minScrollY = minScrollY
                             scroll.off('scroll', visibility)
                             scroll._refresh()
 
@@ -2087,7 +2108,7 @@ define('~/dom', [], function (require, module, exports) {
 
                             timeStamp = e.timeStamp
 
-                            scroll.scrollBy(0, getViewOffset(), 400, null, false)
+                            scroll.scrollBy(0, getViewOffset(), 300, null, false)
                         }
 
                         dom.on('click', checkChange)
@@ -2329,7 +2350,11 @@ define('~/dom', [], function (require, module, exports) {
 
                                     data.__proto__ = scope
 
-                                    data._index = key
+                                    data.scroll = {
+                                        x : this.x,
+                                        y : this.y,
+                                        index : key
+                                    }
 
                                     // uuid 多滚动条
 
@@ -2416,7 +2441,11 @@ define('~/dom', [], function (require, module, exports) {
 
                                     data.__proto__ = scope
 
-                                    data._index = key
+                                    data.scroll = {
+                                        x : this.x,
+                                        y : this.y,
+                                        index : key
+                                    }
 
                                     // uuid 多滚动条
 
@@ -2505,20 +2534,24 @@ define('~/dom', [], function (require, module, exports) {
                     node.command = true
 
                     var src = this.commands('src', node).value
-                    var type = this.commands('type', node).value
+                    var sync = this.commands('sync', node).key
                     var global = this.commands('global', node).key
                     var normal = this.commands('normal', node).key
                     var rooot = {}.extend(root)
                     var imports = global ? [] : null
-                    var prepath = App.config.root + (root.scopeid ? root.path : 'modules/' + this.module.id)
+                    var prepath = root.scopeid ? root.path : App.config.root + 'modules/' + this.module.id
                     var doorplate = this.commands('name', node).value || 'default'
                     var javascript = node.textContent
 
                     // scope
                     
-                    if ( type === "scope" ) {
+                    if ( sync ) {
 
-                        new this.sandbox.window.Function('scope', javascript + '\n')(scope)
+                        new this.sandbox.window.Function('scope, root', 
+                                    javascript + '\n')(
+                                        scope, 
+                                        that.DOM[rooot.scopeid], 
+                                    )
 
                         node.textContent = null
 
@@ -2533,19 +2566,16 @@ define('~/dom', [], function (require, module, exports) {
 
                             if ( imports ) {
 
-                                javascript = javascript.replace(REGEXP.imports, function (context, name) {
-                                    
-                                    imports.push('"' + prepath + '/' + name + '"')
+                                javascript = javascript.replace(REGEXP.imports, function (context, id, path) {
+                                    path = prepath + '/' + id
+                                    imports.push('"' + path + '"')
 
-                                    return context.replace('@import', '$import')
+                                    return context.replace(id, path)
                                 })
 
                                 javascript = 'var __EVAL__ \n' 
                                     + 'define("argument", ' + (imports.length ? ('[' + imports.join(',') + '], ') : ' ')
                                     + 'function (require, module, exports) { \n' 
-                                        + 'function $import (name) { \n'
-                                            + 'return require("' + prepath + '/" + name) \n'
-                                        + '} \n\n'
                                         + javascript + '\n\n'
                                         + '__EVAL__ = function (fn) { return eval("(" + fn.toString() + ").apply(this, [].slice.call(arguments, 1))") } \n'
                                         + (global ? '__inject__["' + rooot.spacename + '"].ready()' : '') + '\n'
@@ -2596,7 +2626,7 @@ define('~/dom', [], function (require, module, exports) {
 
                                 } else {
 
-                                    new window.Function('__inject__, shadow, scope, node, global, components, register, root, DOM, DOMS', 
+                                    new window.Function('__inject__, shadow, scope, node, global, components, register, root', 
                                         javascript + '\n'
 
                                         + '__inject__["' + rooot.scopeid + ':' + doorplate + '"] = '
@@ -2615,9 +2645,7 @@ define('~/dom', [], function (require, module, exports) {
                                         function (name, fn) {
                                             rooot.dom.extendProperty(name, fn)
                                         },
-                                        that.DOMS[rooot.scopeid], 
-                                        that.DOM[rooot.scopeid], 
-                                        that.DOM[0]
+                                        that.DOMS[rooot.scopeid]
                                     )
 
                                 }
@@ -2631,7 +2659,7 @@ define('~/dom', [], function (require, module, exports) {
 
                                 } else {
 
-                                    new window.Function('__inject__, scope, node, DOM, DOMS', 
+                                    new window.Function('__inject__, scope, node, root', 
                                             javascript + ' \n'
                                             + '__inject__["' + doorplate + '"] = ' 
                                             + 'function (fn) { \n' 
@@ -2643,7 +2671,6 @@ define('~/dom', [], function (require, module, exports) {
                                             function (uuid) {
                                                 return that.getElementById(uuid, 0)
                                             }, 
-                                            that.DOM[0], 
                                             that.DOM[0]
                                         )
 
@@ -2710,7 +2737,7 @@ define('~/dom', [], function (require, module, exports) {
                     var src = this.commands("src", node).value 
                     var pth = this.commands("path", node).value
                     var demo = this.commands('demo', node).key
-                    var path = src || (pth || cfg.path || 'components') + '/' + name.toLowerCase()
+                    var path = src || (pth || cfg.path || App.config.root + 'components') + '/' + name.toLowerCase()
                     var source = blackbox || demo ? that.parser(node.innerHTML) : null
                     
                     // compile shadowDOM
@@ -2874,9 +2901,9 @@ define('~/dom', [], function (require, module, exports) {
          */
         datar : function (scope, command, ext, index, ignore) {
 
-            return command.length ? (function () {
+            return command.length ? (function (datar) {
 
-                if ( ext ) this.__proto__ = scope
+                if ( ext ) datar.__proto__ = scope
 
                 command.each(function (i, data, li, length) {
                     var name = data.name
@@ -2884,30 +2911,30 @@ define('~/dom', [], function (require, module, exports) {
 
                     switch (name) {
                         case 'data':
-                            this.extend(scope.getValueByRoute(value))
+                            datar.extend(scope.getValueByRoute(value))
 
                         break
 
                         case name.indexOf('data:') === 0 ? name : null:
-                            this[name.slice(5)] = scope.getValueByRoute(value)
+                            datar[name.slice(5)] = scope.getValueByRoute(value)
 
                         break
 
                         default:
                             if ( !value && i === index )  {
-                                this.extend(scope.getValueByRoute(name))
-                            } else if ( i !== ignore && /^[a-zA-Z_$]+\w*$/.test(name) ) {
-                                this[name] = value || true
+                                datar.extend(scope.getValueByRoute(name))
+                            } else if ( i !== ignore ) {
+                                datar[name] = value || true
                             }
 
                         break
                     }
 
-                }, this)
+                }, datar)
 
-                return this
+                return datar
 
-            }).call({}) : scope
+            })({}) : scope
         },
 
         /**

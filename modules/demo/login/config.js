@@ -1,33 +1,31 @@
-define(function (require, module, exports) {
-    module.exports = {
-        resources : {
-            script : {
-                main: "main.js"
-            },
-            style : {
-                main: "main.css"
-            },
-            source : {
-                index: "index.html"
-            },
-            data : { 
-            }
+export default {
+    resources : {
+        script : {
+            main: "main.js"
         },
-        config : {
-            level : 8,
-            absolute : true,
-            background : "#fff",
-            style : ["main"],
-            script : ["main"],
-            source: ["index"],
-            data: [],
-            sandbox : true,
-            cache : 0,
-            timeout : 60,
-            animation : true
+        style : {
+            main: "main.css"
         },
-        param : {
-          turnover: 0
+        source : {
+            index: "index.html"
+        },
+        data : { 
         }
+    },
+    config : {
+        level : 8,
+        absolute : true,
+        background : "#fff",
+        style : ["main"],
+        script : ["main"],
+        source: ["index"],
+        data: [],
+        sandbox : true,
+        cache : 0,
+        timeout : 60,
+        animation : true
+    },
+    param : {
+      turnover: 0
     }
-})
+}

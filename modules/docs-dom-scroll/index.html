@@ -112,7 +112,7 @@
                 </scroll>
                 <p>该标签能够创建一个可滚动区域，且提供<code>滚动特性</code>，例：重力加速度、tabview、snap、minmap、惯性、边缘弹性、下拉刷新、自动翻页、滚动状态事件等</p>
                 <p>我们来创建一个基本滚动的例子</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <var colorful>[...color]</var>
                     <scroll>
                         <scrolling>
@@ -121,7 +121,7 @@
                             </loop>
                         </scrolling>
                     </scroll>
-                </code-light>
+                </code-highlight>
                 <div class="demo">
                     <scroll stop-propagation="auto">
                         <scrolling>
@@ -180,16 +180,16 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <var colorful>[...color]</var>
                     <scroll x snap y="false">
                         <scrolling style="height:200dp;width:{{colorful.length*100}}%">
                             <loop colorful as value key>
-                                <div style="color:{value};width:{{1/colorful.length}}%">{value}</div>
+                                <div style="color:{value};width:{{100/colorful.length}}%">{value}</div>
                             </loop>
                         </scrolling>
                     </scroll>
-                </code-light>
+                </code-highlight>
 
                 <div class="demo">
                     <scroll stop-propagation="auto" x snap y="false" style="height:200dp;width:100%">
@@ -231,7 +231,7 @@
                     </scrolling>
                 </scroll>
                 <p>比如在前面做过的 Snap 效果中定制一个个性化的指示器</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <var colorful>[...color]</var>
                     <scroll x snap y="false">
                         <scrolling style="height:200dp;width:{{colorful.length*100}}%">
@@ -248,7 +248,7 @@
                             </if>
                         </scrollbar>
                     </scroll>
-                </code-light>
+                </code-highlight>
                 <div class="demo">
                     <scroll stop-propagation="auto" x snap indicator y="false" scrollbars="false" fade-scrollbars="false" style="height:200dp;width:100%">
                         <scrolling style="height:200dp;width:{{colorful.length*100}}%">
@@ -267,7 +267,7 @@
                     </scroll>
                 </div>
                 <p>我们还可以使用这个特性来创建一个 Minimap 效果视图，通过设定<code>indicator</code>可定制一个性化的 scrollbar 指示器，此特性被设定后不会自动生成 scrollbar，而需要开发者在 scroll 标签中手动书写 scrollbar 和 indicator 标签</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <style>...style</style>
                     <scroll x y free start-x={setting.x} start-y="{setting.y}" scrollbars="false" fade-scrollbars="false" indicator interactive>
                         <scrolling></scrolling>
@@ -276,7 +276,7 @@
                     <scrollbar>
                         <indicator></indicator>
                     </scrollbar>
-                </code-light>
+                </code-highlight>
                 <p>这是一个类似放大镜效果的演示，它分为两部分，第一个部分为一个 scroll 滚动区块，第二个区域则是他的指示器（滚动条也是指示器的一种），了解结构后我们开始创建它，首先我们需要把基本 CSS 样式准备好，之后创建一个<code>scroll</code>标签，我们看一下上面代码的设定： </p>
                 <p><code>x</code> 和 <code>y</code> 分别表示横向和竖向的两个轴向上都可滚动</p>
                 <p><code>free</code>表示横向和竖向可以同时滚动，不设定此值时只能同时单个滚动方向生效</p>
@@ -353,12 +353,12 @@
                 </div>
                 <p>这张图为 Infinite 的基本工作原理，左边一排浅色的节点为 virtual dom，渲染好的模版队列都是最先存放在这里的，当文档中可视区域的滚动内容不足时，Infinite 将调度 virtual dom 中的队列进入补充，而过期不可见的节点则又会重新回收到 virtual dom 中</p>
                 <p>创建 Infinite 滚动和一般滚动不同的是不需要在 scroll 标签中插入 scrolling 内容，而是将其置空</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <template photo>
                         ...template
                     </template>
                     <scroll infinite data="gridList" template="photo"></scroll>
-                </code-light>
+                </code-highlight>
                 <div class="media">
                     <grid-photo-3 data:list="testgridlist" origin="testgridlist" height="350" style="display:block;position:relative;width:100%;height:350dp"></grid-photo-3>
                 </div>
@@ -371,7 +371,7 @@
                 
                 <h3>Infinite show 事件</h3>
                 <p>Infinite box 中包裹着一个fragment节点，Infinite 在做视图补充和回收时都是在移动 fragment 节点，移动过程中 fragment 节点会接收两个事件<code>show</code>和<code>hidden</code>，分别为片段在补充到视图和从视图中回收到 virtual dom 时触发的两个事件</p>
-                <code-light type=html>
+                <code-highlight type=html>
                     <template photo>
                         <div uuid="grid">
                             ...template
@@ -388,7 +388,7 @@
                             // todo...
                         })
                     </script>
-                </code-light>
+                </code-highlight>
                 <p>片段被回收时片段节点上的对应 js 事件并不会消失，所有状态都在被重新移入可视文档前得到保持，然而有时我们需要在片断被移回时给出一些特定的反应，另外还有一种情况是，某个 infinite 容器中的 fragment 被移除时，fragment 中的事件还处于保持状态</p>
                 <p>比如 touch 等 DOM 事件，而 DOM 事件在被移回 virtual dom 时会自动失效，所以我们没有必要担心事件保持带来性能影响，而另外一种事件：setInterval 循环定时器则可能会造成一些不必要的消耗，因此我们可以通过 hidden 事件在其被移到 virtual dom 时进行一个 clear 操作，以减少性能消耗</p>
             </section>
@@ -463,13 +463,13 @@
                         </table>
                     </scrolling>
                 </scroll>
-                <code-light type=html>
+                <code-highlight type=html>
                     <scroll stop-propagation="true" zoom x y mouse-wheel-action="zoom">
                         <scrolling>
                             <img src='{url}'>
                         </scrolling>
                     </scroll>
-                </code-light>
+                </code-highlight>
                 <div class="demo">
                     <scroll stop-propagation="true" zoom x y free zoom-min=".5" zoom-max="1" start-zoom=".2" mouse-wheel-action="zoom" style="min-height:300dp">
                         <scrolling>

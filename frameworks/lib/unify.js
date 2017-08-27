@@ -2,122 +2,117 @@
 
 (function () {
 
-    'use strict'
+    // init App config
 
-    window.App = 'top'
-
-    // module && components css style reset
+    window.App = {
+        config : {
+            root : ''
+        }
+    }
 
     /*＊
-    * scrolling > z-index : 1 !important 提升渲染性能的关键
-    * css 书写规范
-    1.位置属性(position, top, right, z-index, display, float等)
-    2.大小(width, height, padding, margin)
-    3.文字系列(font, line-height, letter-spacing, color- text-align等)
-    4.背景(background, border等)
-    5.其他(animation, transition等)
+    * module && components css style reset
+    * scrolling > z-index : 1 !important
     */
 
     // append bace css
 
-    document.write('<style>* { margin : 0; padding : 0 } \n'
-                        + 'html, body { position: absolute; width: 100%; height: 100%; background: #fff; overflow: hidden } \n'
-                        + 'mask, view { position: absolute; width: 100%; height: 100%; overflow: hidden } \n'
-                        + 'module-container[type=module] { display: block; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100% } \n'
-                        + 'iframe[app=true] { width: 100%; height: 100%; border: 0 } \n'
-                    + '</style>')
+    document.write(`<style>* { margin : 0; padding : 0 } \n
+                        html, body { position: absolute; width: 100%; height: 100%; background: #fff; overflow: hidden } \n
+                        mask, view { position: absolute; width: 100%; height: 100%; overflow: hidden } \n
+                        module-container[type=module] { display: block; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100% } \n
+                        iframe[app=true] { width: 100%; height: 100%; border: 0 } \n
+                    </style>`)
 
-    window.CSSBaseStyle = '* { box-sizing: border-box; margin : 0; padding : 0; text-size-adjust: 100%; tap-highlight-color: rgba(0, 0, 0, 0) } \n'
-                        + 'html, body { position: absolute; width: 100%; height: 100%; background: #fff; font-size: 10dp; overflow: hidden } \n'
-                        + 'a { text-decoration: none } \n'
-                        + '*[href], *[transform], *[on-tap] { cursor: pointer }'
-                        + 'button { background-color: transparent; border: 0; outline: 0 } \n'
-                        + 'input, textarea, htmlarea { user-select: initial; touch-callout: initial; border: 0; outline: 0; appearance: none } \n'
-                        + 'htmlarea { display: inline-block; text-rendering: auto; letter-spacing: normal; word-spacing: normal; text-indent: 0px; text-align: start; font: initial } \n'
-                        + 'article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block } \n'
-                        + 'ol, ul { list-style: none } \n'
-                        + 'table { border-collapse: collapse; border-spacing: 0 } \n'
+    window.CSSBaseStyle = `* { box-sizing: border-box; margin : 0; padding : 0; text-size-adjust: 100%; tap-highlight-color: rgba(0, 0, 0, 0) } \n
+                        html, body { position: absolute; width: 100%; height: 100%; background: #fff; font-size: 10dp; overflow: hidden } \n
+                        a { text-decoration: none } \n
+                        *[href], *[transform], *[on-tap] { cursor: pointer } \n
+                        button { background-color: transparent; border: 0; outline: 0 } \n
+                        input, textarea, htmlarea { user-select: initial; touch-callout: initial; border: 0; outline: 0; appearance: none } \n
+                        htmlarea { display: inline-block; text-rendering: auto; letter-spacing: normal; word-spacing: normal; text-indent: 0px; text-align: start; font: initial } \n
+                        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block } \n
+                        ol, ul { list-style: none } \n
+                        table { border-collapse: collapse; border-spacing: 0 } \n
 
-                        // scroll
-                        + 'scroll, scrolling, scrollbar, indicator { display: block; box-sizing: border-box } \n'
-                        + 'scroll { position: relative; padding: 0; border: 0; overflow: hidden } \n'
-                        + 'scroll[fullscreen] { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 2 } \n'
-                        + 'scroll > scrolling, scroll > scrolling > infinite { display: block; position: absolute; z-index: 2; backface-visibility: hidden } \n'
-                        + 'scroll > scrolling { min-width: 100%; min-height: 100% } \n'
-                        + 'scroll[y=false] > scrolling { position: relative; display: inline-block } \n'
-                        + 'scroll > scrolling > infinite { top: 0; left: 0; width: 100% } \n'
-                        + 'scroll > scrolling > infinite > fragment { display: block; position: relative; z-index: 2; width: 100% } \n'
-                        + 'scroll > scrollbar { position: absolute; z-index: 9999; border-radius: 3dp; overflow: hidden } \n'
-                        + 'scroll > scrollbar > indicator { position: absolute; z-index: 9; border-radius: 3dp; background: rgba(0, 0, 0, 0.4) } \n'
+                        scroll, scrolling, scrollbar, indicator { display: block; box-sizing: border-box } \n
+                        scroll { position: relative; padding: 0; border: 0; overflow: hidden } \n
+                        scroll[fullscreen] { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 2 } \n
+                        scroll > scrolling, scroll > scrolling > infinite { display: block; position: absolute; z-index: 2; backface-visibility: hidden } \n
+                        scroll > scrolling { min-width: 100%; min-height: 100% } \n
+                        scroll[y=false] > scrolling { position: relative; display: inline-block } \n
+                        scroll > scrolling > infinite { top: 0; left: 0; width: 100% } \n
+                        scroll > scrolling > infinite > fragment { display: block; position: relative; z-index: 2; width: 100% } \n
+                        scroll > scrollbar { position: absolute; z-index: 9999; border-radius: 3dp; overflow: hidden } \n
+                        scroll > scrollbar > indicator { position: absolute; z-index: 9; border-radius: 3dp; background: rgba(0, 0, 0, 0.4) } \n
                         
-                        // pulling
-                        + 'pullup, pullright, pulldown, pullleft { display: block; position: absolute; z-index: 9999; text-align: center } \n'
-                        + 'pullup { bottom: 0; width: 100% }'
-                        + 'pulldown { top: 0; width: 100% }'
-                        + 'pullright { left: 0; height: 100% }'
-                        + 'pullleft { right: 0; height: 100% }'
-                        + 'pullstart, pulling, pullend, pullover { display: none } \n'
-                        + 'pullup[pullstart] pullstart, pullright[pullstart] pullstart, pulldown[pullstart] pullstart, pullleft[pullstart] pullstart { display: block } \n'
-                        + 'pullup[pulling] pulling, pullright[pulling] pulling, pulldown[pulling] pulling, pullleft[pulling] pulling { display: block } \n'
-                        + 'pullup[pullend] pullend, pullright[pullend] pullend, pulldown[pullend] pullend, pullleft[pullend] pullend { display: block } \n'
-                        + 'pullup[pullover] pullover, pullright[pullover] pullover, pulldown[pullover] pullover, pullleft[pullover] pullover { display: block } \n'
+                        pullup, pullright, pulldown, pullleft { display: block; position: absolute; z-index: 9999; text-align: center } \n
+                        pullup { bottom: 0; width: 100% } \n
+                        pulldown { top: 0; width: 100% } \n
+                        pullright { left: 0; height: 100% } \n
+                        pullleft { right: 0; height: 100% } \n
+                        pullstart, pulling, pullend, pullover { display: none } \n
+                        pullup[pullstart] pullstart, pullright[pullstart] pullstart, pulldown[pullstart] pullstart, pullleft[pullstart] pullstart { display: block } \n
+                        pullup[pulling] pulling, pullright[pulling] pulling, pulldown[pulling] pulling, pullleft[pulling] pulling { display: block } \n
+                        pullup[pullend] pullend, pullright[pullend] pullend, pulldown[pullend] pullend, pullleft[pullend] pullend { display: block } \n
+                        pullup[pullover] pullover, pullright[pullover] pullover, pulldown[pullover] pullover, pullleft[pullover] pullover { display: block } \n
                         
-                        // windows
-                        + 'relative-windows, absolute-windows { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 10000; width: 100%; height: 100%; overflow: hidden } \n'
+                        relative-windows, absolute-windows { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 10000; width: 100%; height: 100%; overflow: hidden } \n`
 
 
 
     // 设备属性检测
 
-    var OS = (function (navigator, userAgent, platform, appVersion) {
+    let OS = ((navigator, userAgent, platform, appVersion) => {
+        let detect = {}
 
-        this.webkit = userAgent.match(/WebKit\/([\d.]+)/) ? true : false
+        detect.webkit = userAgent.match(/WebKit\/([\d.]+)/) ? true : false
 
-        this.ipod = /iPod/i.test(platform) || userAgent.match(/(iPod).*OS\s([\d_]+)/) ? true : false
-        this.ipad = /iPad/i.test(navigator.userAgent) ||userAgent.match(/(iPad).*OS\s([\d_]+)/) ? true : false
-        this.iphone = /iPhone/i.test(platform) || !this.ipad && userAgent.match(/(iPhone\sOS)\s([\d_]+)/) ? true : false
+        detect.ipod = /iPod/i.test(platform) || userAgent.match(/(iPod).*OS\s([\d_]+)/) ? true : false
+        detect.ipad = /iPad/i.test(navigator.userAgent) ||userAgent.match(/(iPad).*OS\s([\d_]+)/) ? true : false
+        detect.iphone = /iPhone/i.test(platform) || !detect.ipad && userAgent.match(/(iPhone\sOS)\s([\d_]+)/) ? true : false
 
-        this.ie = userAgent.match(/MSIE 10.0/i) ? true : false
-        this.mac = /Mac/i.test(platform)
-        this.ios = this.ipod || this.ipad || this.iphone
-        this.android = userAgent.match(/(Android)\s+([\d.]+)/) || userAgent.match(/Silk-Accelerated/) ? true : false
-        this.android = this.android && !this.webkit
-        this.androidICS = this.android && userAgent.match(/(Android)\s4/) ? true : false
+        detect.ie = userAgent.match(/MSIE 10.0/i) ? true : false
+        detect.mac = /Mac/i.test(platform)
+        detect.ios = detect.ipod || detect.ipad || detect.iphone
+        detect.android = userAgent.match(/(Android)\s+([\d.]+)/) || userAgent.match(/Silk-Accelerated/) ? true : false
+        detect.android = detect.android && !detect.webkit
+        detect.androidICS = detect.android && userAgent.match(/(Android)\s4/) ? true : false
 
-        this.chrome = userAgent.match(/Chrome/) ? true : false
-        this.safari = userAgent.match(/Safari/) && !this.chrome ? true : false
-        this.mobileSafari = this.ios && !!appVersion.match(/(?:Version\/)([\w\._]+)/)
-        this.opera = userAgent.match(/Opera/) ? true : false
-        this.fennec = userAgent.match(/fennec/i) ? true : userAgent.match(/Firefox/) ? true : false
-        this.MSApp = typeof(MSApp) === "object"
-        this.wechat = userAgent.match(/MicroMessenger/i) ? true : false
+        detect.chrome = userAgent.match(/Chrome/) ? true : false
+        detect.safari = userAgent.match(/Safari/) && !detect.chrome ? true : false
+        detect.mobileSafari = detect.ios && !!appVersion.match(/(?:Version\/)([\w\._]+)/)
+        detect.opera = userAgent.match(/Opera/) ? true : false
+        detect.fennec = userAgent.match(/fennec/i) ? true : userAgent.match(/Firefox/) ? true : false
+        detect.MSApp = typeof(MSApp) === "object"
+        detect.wechat = userAgent.match(/MicroMessenger/i) ? true : false
 
-        this.ieTouch = this.ie && userAgent.toLowerCase().match(/touch/i) ? true : false
-        this.supportsTouch = ((window.DocumentTouch && document instanceof window.DocumentTouch) || 'ontouchstart' in window)
+        detect.ieTouch = detect.ie && userAgent.toLowerCase().match(/touch/i) ? true : false
+        detect.supportsTouch = ((window.DocumentTouch && document instanceof window.DocumentTouch) || 'ontouchstart' in window)
 
-        this.webos = userAgent.match(/(webOS|hpwOS)[\s\/]([\d.]+)/) ? true : false
-        this.touchpad = this.webos && userAgent.match(/TouchPad/) ? true : false
+        detect.webos = userAgent.match(/(webOS|hpwOS)[\s\/]([\d.]+)/) ? true : false
+        detect.touchpad = detect.webos && userAgent.match(/TouchPad/) ? true : false
 
-        this.playbook = userAgent.match(/PlayBook/) ? true : false
-        this.blackberry10 = userAgent.match(/BB10/) ? true : false
-        this.blackberry = this.playbook || this.blackberry10|| userAgent.match(/BlackBerry/) ? true : false
+        detect.playbook = userAgent.match(/PlayBook/) ? true : false
+        detect.blackberry10 = userAgent.match(/BB10/) ? true : false
+        detect.blackberry = detect.playbook || detect.blackberry10|| userAgent.match(/BlackBerry/) ? true : false
 
         // 主流系统版本检测
 
-        if ( this.ios ) this.iosVersion = parseFloat(appVersion.slice(appVersion.indexOf("Version/")+8)) || -1
-        if ( this.android ) this.androidVersion = parseFloat(appVersion.slice(appVersion.indexOf("Android")+8)) || -1
-        if ( this.safari ) this.safariVersion = appVersion.match(/Safari\/([\d.]+)/)[1]
-        if ( this.chrome ) this.chromeVersion = appVersion.match(/Chrome\/([\d.]+)/)[1]
-        if ( this.webkit ) this.webKitVersion = appVersion.match(/WebKit\/([\d.]+)/)[1]
+        if ( detect.ios ) detect.iosVersion = parseFloat(appVersion.slice(appVersion.indexOf("Version/")+8)) || -1
+        if ( detect.android ) detect.androidVersion = parseFloat(appVersion.slice(appVersion.indexOf("Android")+8)) || -1
+        if ( detect.safari ) detect.safariVersion = appVersion.match(/Safari\/([\d.]+)/)[1]
+        if ( detect.chrome ) detect.chromeVersion = appVersion.match(/Chrome\/([\d.]+)/)[1]
+        if ( detect.webkit ) detect.webKitVersion = appVersion.match(/WebKit\/([\d.]+)/)[1]
 
-        return this
+        return detect
 
-    }).call({}, navigator, navigator.userAgent, navigator.platform, navigator.appVersion || navigator.userAgent)
+    })(navigator, navigator.userAgent, navigator.platform, navigator.appVersion || navigator.userAgent)
 
 
     /*===================================== viewport scale ========================================*/
 
-    var reviewport = function () {
+    let reviewport = () => {
 
         // 创建 viewport meta
 
@@ -136,17 +131,17 @@
             return document.getElementById(id)
         }
 
-        var windowInitWidth = window.innerWidth
+        let windowInitWidth = window.innerWidth
 
 
         // init viewport {{
 
-        var testViewport = creat('test-viewport', '1.0')
+        let testViewport = creat('test-viewport', '1.0')
 
         // mark document init width
         
-        var windowRestWidth = window.innerWidth
-        var documentElementInitWidth = document.documentElement.offsetWidth
+        let windowRestWidth = window.innerWidth
+        let documentElementInitWidth = document.documentElement.offsetWidth
 
         // remove test viewport
 
@@ -157,7 +152,7 @@
 
         // setting new viewport
 
-        var realViewport = creat('real-viewport', 1 / devicePixelRatio, true)
+        let realViewport = creat('real-viewport', 1 / devicePixelRatio, true)
 
         /* viewport is ok?
          * 由屏幕斜角排列导致dpi缩放不精准，宽度相减值应小于 w * 0.01
@@ -169,9 +164,9 @@
             !!! viewport 具有刷新缓存, 因此可能是物理值也可能是虚拟值
          */
 
-        var realScreenWidth = Math.max(window.innerWidth, window.document.documentElement.offsetWidth)
-        var realWindowWidth = devicePixelRatio * Math.min(windowRestWidth, documentElementInitWidth)
-        var scale = ((window.innerWidth != window.screen.width && windowRestWidth != windowInitWidth) || ((window.innerWidth == window.screen.width || window.innerWidth == realScreenWidth) && windowRestWidth == windowInitWidth && realScreenWidth == realWindowWidth))
+        let realScreenWidth = Math.max(window.innerWidth, window.document.documentElement.offsetWidth)
+        let realWindowWidth = devicePixelRatio * Math.min(windowRestWidth, documentElementInitWidth)
+        let scale = ((window.innerWidth != window.screen.width && windowRestWidth != windowInitWidth) || ((window.innerWidth == window.screen.width || window.innerWidth == realScreenWidth) && windowRestWidth == windowInitWidth && realScreenWidth == realWindowWidth))
                             ? Math.max(window.innerWidth / windowRestWidth, document.documentElement.offsetWidth / documentElementInitWidth)
                             : null
 
@@ -193,7 +188,6 @@
         // exports
 
         window.viewportScale = scale
-
     }
 
     // 嵌套应用
@@ -205,72 +199,145 @@
     }
 
 
+    let __dir = (() => {
+
+        // get root
+
+        let script = document.getElementById('ioing') || document.getElementsByTagName('script')[0]
+        let root = script.getAttribute('root') 
+        let paths = []
+
+        if ( root ) {
+            if ( root.match(/^\w+\:/) === null && root.indexOf('//') !== 0 ) {
+                paths = location.pathname.split('/')
+                paths.pop()
+                root = location.origin + paths.join('/') + root
+            }
+        } else {
+            paths = script.src.split('/')
+            paths.pop()
+
+            root = paths.join('/') + '/'
+        }
+
+        // root
+
+        return App.config.root = root
+    })()
 
     /*====================================== Define =======================================*/
 
 
     // Define
 
-    var Define = function (window) {
+    let Define = (window) => {
 
-        var step = {}
-        var modules = {}
-        var handlerMap = {}
-        var loadedFiles = {}
-        var requireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/ig
-
-        // get root
-
-        var scripts = document.getElementsByTagName('script')
-        var script = scripts[scripts.length - 1]
-        var paths = script.src.split('/')
-            paths.pop()
-        var root = paths.join('/')
+        let step = {}
+        let modules = {}
+        let handlerMap = {}
+        let loadedFiles = {}
+        let requireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/ig
 
         // Module
 
-        function Module (name, deps, body) {
+        function Module (name, deps, model, body) {
             this.name = name
             this.body = body
             this.deps = deps
+            this.model = model
             this.exports = {}
             this.created = false
+
+            Object.defineProperty(this.exports, "__esModule", {
+                value: true
+            })
         }
 
         Module.prototype = {
-            get : function (name, callback, error) {
-                return callback ? define('argument', name, function (require) {
-                                    callback(require)
-                                }, error)
-                                : modules[name] ? modules[name].exports : null
+            _get : function (name, callback, error) {
+                name = name || this.name
+
+                switch ( name ) {
+                    case 'module':
+                        return this
+                    break
+
+                    case 'exports':
+                        name = this.name
+                    break
+                }
+
+                if ( callback ) {
+                    define('argument', name, function (require) {
+                        callback(require)
+                    }, error)
+
+                    return this
+                }
+
+                return modules[name] ? (function (exports) {
+                    exports = modules[name].exports
+                    if ( exports.default ) {
+                        Object.defineProperty(exports.default, "__esModule", {
+                            value: true
+                        })
+                        return exports.default
+                    }
+                    return exports
+                })() : null
             },
-            create : function () {
+            _deps : function () {
+                let deps = []
+
+                for (let i = 0, l = this.deps.length; i < l; i++) {
+                    let dep = this.deps[i]
+                    deps.push(this._get(dep))
+                }
+
+                switch ( this.model ) {
+                    case 1:
+                        return deps
+                    break
+
+                    case 0:
+                    default:
+                        return [
+                            this._get, 
+                            this, 
+                            this._get()
+                        ]
+                    break
+                }
+            },
+            _create : function () {
                 if ( this.created ) return
                 this.created = true
 
                 dispatchEvent('moduleExecute', this)
 
-                this.body(this.get, this, this.exports)
+                this.body.apply(this.body, this._deps())
+                
                 dispatchEvent(this.name, this)
             }
         }
 
         function define () {
-            var name = arguments[0]
-            var deps = arguments[1]
-            var body = arguments[2]
-            var error = arguments[3]
+            let model = 0
+            let name = arguments[0]
+            let deps = arguments[1]
+            let body = arguments[2]
+            let error = arguments[3]
 
             switch (arguments.length) {
                 case 1:
                     name = null
                     body = arguments[0]
-                    deps = getRequireNames(body.toString())
+                    deps = null
                     break
                 case 2:
                     body = arguments[1]
                     if ( typeof name === 'string' ) {
-                        deps = getRequireNames(body.toString())
+                        deps = null
                     } else {
                         name = null
                         deps = arguments[0]
@@ -278,27 +345,31 @@
                     break
             }
 
-            deps = deps || []
+            deps = deps || getRequireNames(body.toString()) || []
+
+            if ( ['module', 'exports'].indexOf(deps[0]) !== -1 ) {
+                model = 1
+            }
 
             // step.call
 
             if ( name ) {
                 step.call = null
-                creat(name, deps, body, error)
+                creat(name, deps, model, body, error)
             } else {
                 step.call = function (name) {
-                    creat(name, deps, body, error)
+                    creat(name, deps, model, body, error)
                 }
             }
         }
 
         // creat deps module
 
-        function creat (name, deps, body, error) {
+        function creat (name, deps, model, body, error) {
 
             // new module
 
-            var newModule = new Module(name, deps, body)
+            let newModule = new Module(name, deps, model, body)
 
             // add to modules
 
@@ -310,13 +381,14 @@
 
             // unloadDeps
 
-            var unloadDeps = []
+            let unloadDeps = []
 
             // push to unloadDeps
 
-            for (var i = 0; i < deps.length; i++) {
-                var dep = deps[i]
-                if ( modules[dep] == null ) {
+            for (let i = 0; i < deps.length; i++) {
+                let dep = deps[i]
+
+                if ( modules[dep] == null && ['module', 'exports'].indexOf(dep) == -1 ) {
                     unloadDeps.push(dep)
                 }
             }
@@ -324,17 +396,17 @@
             // create
 
             if ( unloadDeps.length == 0 ) {
-                newModule.create()
+                newModule._create()
             } else {
                 addEventListeners(unloadDeps, function () {
-                    newModule.create()
+                    newModule._create()
                 })
 
                 // 打包独立文件时，执行完函数再检查依赖
 
                 setTimeout(function () {
-                    for (var i = 0; i < unloadDeps.length; i++) {
-                        var name = unloadDeps[i]
+                    for (let i = 0; i < unloadDeps.length; i++) {
+                        let name = unloadDeps[i]
                         
                         if ( !modules[name] ) {
                             load(name, error)
@@ -350,9 +422,9 @@
 
             // -/modulePath == {root}/modulePath
 
-            var src = getRealPath(name) + '.js'
-            var head = window.document.head
-            var script = window.document.createElement('SCRIPT')
+            let src = getRealPath(name) + '.js'
+            let head = window.document.head
+            let script = window.document.createElement('SCRIPT')
             
             // dispatchEvent
 
@@ -391,12 +463,12 @@
         }
 
         function getRealPath (path) {
-            return path.indexOf('~/') === 0 ? root + path.substr(1) : path
+            return path.indexOf('~/') === 0 ? __dir + path.substr(2) : path
         }
 
         function getRequireNames (str) {
-            var names = []
-            var r = requireRegExp.exec(str)
+            let names = []
+            let r = requireRegExp.exec(str)
             while(r != null) {
                 names.push(r[1])
                 r = requireRegExp.exec(str)
@@ -405,7 +477,7 @@
         }
 
         function addEventListener (topic, handler) {
-            var handlers = handlerMap[topic]
+            let handlers = handlerMap[topic]
             
             if ( handlers == null ) {
                 handlerMap[topic] = []
@@ -415,11 +487,11 @@
         }
 
         function addEventListeners (topics, handler) {
-            var counter = 0
+            let counter = 0
             
-            for (var i = 0; i < topics.length; i++) {
-                var topic = topics[i]
-                var handlers = handlerMap[topic]
+            for (let i = 0; i < topics.length; i++) {
+                let topic = topics[i]
+                let handlers = handlerMap[topic]
 
                 if ( handlers == null ) {
                     handlerMap[topic] = []
@@ -436,9 +508,9 @@
         }
 
         function dispatchEvent (topic, event) {
-            var handlers = handlerMap[topic]
+            let handlers = handlerMap[topic]
             if( handlers != null ) {
-                for (var i=0; i<handlers.length; i++) {
+                for (let i=0; i<handlers.length; i++) {
                     handlers[i](event)
                 }
             }
@@ -1613,9 +1685,8 @@
                               , fn
                               , val
                               , noops = []
-                              , scope = []
-                              , links = []
-                              , splits = []
+                              , scope = [this]
+                              , splits = ['scope']
                               , inscope = {}
                               , unlink = link.replace(LINKS_RE, '')
                               , inlink = unlink.split(SPLITES_RE).unique()
@@ -1646,7 +1717,7 @@
                             
                             try {
                                 fn = typeof factory == 'function' ? factory : new window.SandboxFunction(splits.join(','), 'try { return (' + link + ') } catch (e) {}')
-                                result = fn.apply(null, scope)
+                                result = fn.apply(this, scope)
                             } catch (e) {
                                 error && error(e)
                             }
