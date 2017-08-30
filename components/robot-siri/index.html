@@ -1,0 +1,89 @@
+<style>
+.screen {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+	background: rgba(0,0,0,.85);
+	backdrop-filter: blur(20px);
+	opacity: 0;
+	display: none;
+}
+#light {
+	position: absolute;
+	bottom: 20dp;
+	height: 40dp;
+	width: 100%;
+}
+#light canvas {
+	width: 100%!important;
+}
+</style>
+
+<script global>
+	import SiriWave from 'siriwave'
+</script>
+
+<div id="screen" class="screen">
+	<div id="content">
+	</div>
+	<div id="light"></div>
+</div>
+
+<script>
+	var SW
+	var inStart = false
+	var screen = node('screen')
+	var screenA = screen.Animate()
+
+	function ready (_SW) {
+		SW = _SW
+		if ( !inStart) SW.stop()
+	}
+
+	function start () {
+		global.call(function (light, ready) {
+			let SW = new SiriWave({
+				style: 'ios9',
+				speed: 0.1,
+				amplitude: 1,
+				container: light,
+				autostart: true
+			})
+			ready(SW)
+		}, node('light'), ready)
+	}
+
+	register('start', function () {
+		screen.style.display = "block"
+		
+		screenA.duration(0).style('opacity', 0).end(function () {
+			screenA.duration(300).opacity(1).end(function () {
+				inStart = true
+				if (SW) {
+					SW.start()
+				} else {
+					start()
+				}
+			})
+		})
+	})
+
+	register('stop', function () {
+		screenA.duration(300).opacity(0).end(function () {
+			node('screen').style.display = "none"
+			if (SW) SW.stop()
+			inStart = false
+		})
+	})
+
+	App.on('transformstart', function () {
+		screenA.duration(300).opacity(1).end(function () {
+			if (SW) SW.stop()
+			inStart = false
+		})
+	})
+
+</script>
