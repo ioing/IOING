@@ -5,14 +5,533 @@
 </if>
 
 
-<script src="js/datePicker.js"></script>
+<script>
+var datePicker = function(that, options) {
+    return that.each(function(e) {
+
+        //插件默认选项
+        var that = this,
+            docType = this.is('input'),
+            nowdate = new Date(),
+            yearScroll = null,
+            monthScroll = null,
+            dayScroll = null,
+            hourScroll = null,
+            minuteScroll = null,
+            initY = null,
+            initM = null,
+            initD = null,
+            initH = null,
+            initI = null,
+            initS = null,
+            initVal = null;
+
+        /*使用到的全局函数-e*/
+        datePicker.defaultOptions = {
+            beginyear: 2010, //日期--年--份开始
+            endyear: 2020, //日期--年--份结束
+            monthDay: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], //日期--12个月天数(默认2月是28,闰年为29)--份结束
+            days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+            beginhour: 0,
+            endhour: 23,
+            beginminute: 0,
+            endminute: 59,
+            curdate: false, //打开日期是否定位到当前日期
+            liH: 40 * device.ui.scale,
+            theme: "date", //控件样式（1：日期(date)，2：日期+时间(datepicker),3:时间(time),4:年月(month)）
+            mode: null, //操作模式（滑动模式）
+            event: "click", //打开日期插件默认方式为点击后后弹出日期 
+            show: true,
+            scrollOpt: {
+                snap: "li",
+                momentum: false,
+                bounce: false,
+                useTransition: false,
+                deceleration: 0.006,
+                checkDOMChanges: true,
+                stopPropagation: true,
+                vScrollbar: false
+            },
+            callBack: function() {}
+        }
+        var opts = {}.extend(datePicker.defaultOptions, options)
+
+        if ( !opts.show ) {
+            that.off('click')
+        } else {
+            //绑定事件（默认事件为获取焦点）
+            that.on('focus', function() {
+                init()
+            })
+        }
+
+        function init() { //初始化函数
+            initVal = that.val()
+
+            if ( !opts.curdate && initVal.trim() != '' ) {
+                var inputDate = null,
+                    inputTime = null
+
+                if ( opts.theme == 'date' || opts.theme == 'datepicker' ) {
+                    inputDate = initVal.split(' ')[0]
+
+                    if ( inputDate.indexOf('-') === -1 ) {
+                        var myDate = new Date()
+                        var yy = myDate.getYear()
+                        var mm = myDate.getMonth() + 1
+                        var dd = myDate.getDate()
+
+                        inputDate = yy + '-' + mm + '-' + dd
+                    }
+
+                    initY = parseInt(inputDate.split('-')[0] - parseInt(opts.beginyear)) + 1
+                    initM = parseInt(inputDate.split('-')[1])
+                    initD = parseInt(inputDate.split('-')[2])
+                }
+                if (opts.theme == 'datepicker') {
+                    inputTime = initVal.split(' ')[1]
+                    initH = parseInt(inputTime.split(':')[0]) + 1
+                    initI = parseInt(inputTime.split(':')[1]) + 1
+                }
+                if (opts.theme == 'time') {
+                    inputTime = initVal
+                    initH = parseInt(inputTime.split(':')[0]) + 1
+                    initI = parseInt(inputTime.split(':')[1]) + 1
+                }
+                if (opts.theme == 'month') {
+                    inputDate = initVal
+                    initY = parseInt(inputDate.split('-')[0] - parseInt(opts.beginyear)) + 1
+                    initM = parseInt(inputDate.split('-')[1])
+                }
+            } else {
+                initY = parseInt(nowdate.getFullYear()) - parseInt(opts.beginyear) + 1
+                initM = parseInt(nowdate.getMonth()) + 1
+                initD = parseInt(nowdate.getDate())
+                initH = parseInt(nowdate.getHours()) + 1
+                initI = parseInt(nowdate.getMinutes()) + 1
+                initS = parseInt(nowdate.getSeconds())
+            }
+
+            node('date-plugin').show()
+
+            destroyScroll()
+            renderDom()
+
+            new Touch(root.find('#d-okBtn')[0]).on('tap', function(event) {
+                that.blur()
+                setTimeout(function () {
+                    destroyScroll()
+
+                    that.val(root.find('.d-return-info')[0].innerText)
+                    that.trigger('valueseted',{"date":root.find('.d-return-info').html()})
+                    node('date-plugin').hide().html('');
+                    // opts.callBack({y:y,M:M,d:d,h:h,m:m});
+                }, 400)
+
+                event.srcEvent.stopPropagation()
+            })
+
+            new Touch(root.find('#d-cancleBtn')[0]).on('tap', function(event) {
+                that.blur()
+                setTimeout(function () {
+                    destroyScroll();
+                    node('date-plugin').hide().html('');
+                    document.body.removeEventListener('touchmove', cancleDefault, false);
+                }, 400)
+
+                event.srcEvent.stopPropagation()
+            })
+
+            that.attr('readonly', true)
+
+            that.onBlur = function (event) {
+                event.preventDefault()
+                event.stopPropagation()
+                event.srcEvent.stopPropagation()
+
+                return false
+            }
+        }
+
+        function cancleDefault(event) {
+            event.preventDefault();
+        }
+
+        function isLeap(y) {
+            if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function renderDom() {
+            node('date-plugin').innerTemplate("main-html", {})
+            switch (opts.theme) {
+                case 'date':
+                    node('d-date-box').appendTemplate("date", {})
+                    createYear()
+                    createMonth()
+                    createDay(opts.monthDay[initM - 1])
+                    break
+                case 'datepicker':
+                    node('d-date-box').appendTemplate("date", {})
+                    node('d-date-box').appendTemplate("time", {})
+                    createYear()
+                    createMonth()
+                    createDay(opts.monthDay[initM - 1])
+                    createHour()
+                    createMinute()
+                    break
+                case 'time':
+                    node('d-date-box').appendTemplate("time", {})
+                    createHour()
+                    createMinute()
+                    break
+                case 'month':
+                    node('d-date-box').appendTemplate("month", {})
+                    createYear()
+                    createMonth()
+                    break
+                default:
+                    node('d-date-box').appendTemplate("date", {})
+                    createYear()
+                    createMonth()
+                    createDay(opts.monthDay[initM - 1])
+                    break
+            }
+            showTxt()
+        }
+
+        function showTxt() {
+            var y = root.find('#yearScroll li').eq(initY).data('num'),
+                m = root.find('#monthScroll li').eq(initM).data('num'),
+                d = root.find('#dayScroll li').eq(initD).data('num'),
+                h = root.find('#hourScroll li').eq(initH).data('num'),
+                i = root.find('#minuteScroll li').eq(initI).data('num'),
+                date = new Date(y + '-' + m + '-' + d)
+
+            switch (opts.theme) {
+                case 'date':
+                    root.find('.d-day-info').html((opts.days[date.getDay()] || '') + "&nbsp;");
+                    if (y&&m&&d) root.find('.d-return-info').html(y + '-' + m + '-' + d);
+                    break;
+                case 'time':
+                    root.find('.d-return-info').html(h + ':' + i);
+                    break;
+                case 'month':
+                    root.find('.d-return-info').html(y + '-' + m);
+                    break;
+                default:
+                    root.find('.d-day-info').html((opts.days[date.getDay()] || '') + "&nbsp;");
+                    if (y&&m&&d) root.find('.d-return-info').html(y + '-' + m + '-' + d);
+                    break;
+            }
+        }
+        function destroyScroll(){//销毁scroll滚动
+            var scrollArr=[yearScroll,monthScroll,dayScroll,hourScroll,minuteScroll];
+            scrollArr.forEach(function(itm){
+                if (itm!=null) {
+                    itm.destroy();
+                    itm=null;
+                }
+            });
+        }
+        function createYear() {
+            var yearHtml = '<scroll uuid="d-year-scroll" class="d-year-wrap d-date-cell" snap="li" scrollbars=false>'
+                         + '<scrolling>'
+                         + '<ul>'
+                         + '<li></li>'
+            
+            var yearDom = node('yearScroll')
+            var yearNum = opts.endyear - opts.beginyear
+
+            for (var i = 0; i <= yearNum; i++) {
+                yearHtml += '<li data-num=' + (opts.beginyear + i) + '>' + (opts.beginyear + i) + '年</li>';
+            }
+
+            yearHtml += '<li></li></ul></scrolling></scroll>'
+
+            node('yearScroll').innerTemplate(["yearHtml",$$(yearHtml)[0]], {})
+
+            yearScroll = node('d-year-scroll').Scroll()
+            yearScroll.on('scrollend', function() {
+                initY = this.currentPage.pageY + 1
+
+                if (isLeap(parseInt(yearDom.find('li').eq(initY - 1).data('num')))) {
+                    opts.monthDay[1] = 29
+                } else {
+                    opts.monthDay[1] = 28
+                }
+                if (initM == 2 && opts.theme != 'month') {
+                    createDay(opts.monthDay[initM - 1])
+                }
+                showTxt()
+            })
+
+            var newX = 0
+            var newY = -(initY - 1) * opts.liH
+            var time
+            var easing
+            var snap = yearScroll._nearestSnap(newX, newY)
+            yearScroll.currentPage = snap
+            time = yearScroll.options.snapSpeed || Math.max(
+                    Math.max(
+                        Math.min(Math.abs(newX - snap.x), 1000),
+                        Math.min(Math.abs(newY - snap.y), 1000)
+                    ), 300)
+            newX = snap.x
+            newY = snap.y
+
+            yearScroll.directionX = 0
+            yearScroll.directionY = 0
+            easing = yearScroll.options.bounceEasing
+
+            yearScroll.scrollTo(newX, newY, time, easing)
+
+        }
+
+        function createMonth() {
+            var monthHtml = '<scroll uuid="d-month-scroll" class="d-month-wrap d-date-cell" snap="li" scrollbars=false>'
+                         + '<scrolling>'
+                         + '<ul>'
+                         + '<li></li>'
+
+            for (var i = 1; i <= 12; i++) {
+                if (i < 10) {
+                    monthHtml += '<li data-num="0' + i + '">0' + i + '月</li>'
+                } else {
+                    monthHtml += '<li data-num="' + i + '">' + i + '月</li>'
+                }
+            }
+
+            monthHtml += '<li></li></ul></scrolling></scroll>'
+
+            node('monthScroll').innerTemplate(["monthHtml",$$(monthHtml)[0]], {})
+            
+            monthScroll = node('d-month-scroll').Scroll()
+            monthScroll.on('scrollend', function () {
+                var mIndex = this.currentPage.pageY
+                var dayNum = opts.monthDay[mIndex]
+                initM = mIndex + 1;
+                if (opts.theme != 'month') {
+                    createDay(dayNum)
+                }
+                showTxt()
+            })
+            monthScroll.scrollTo(0, -(initM - 1) * opts.liH)
+        }
+
+        function createDay(dayNum) {
+            var dayHtml = '<scroll uuid="d-day-scroll" class="d-day-wrap d-date-cell" snap="li" scrollbars=false>'
+                         + '<scrolling>'
+                         + '<ul>'
+                         + '<li></li>'
+
+            for (var i = 1; i <= dayNum; i++) {
+                if (i < 10) {
+                    dayHtml += '<li data-num="0' + i + '">0' + i + '日</li>'
+                } else {
+                    dayHtml += '<li data-num="' + i + '">' + i + '日</li>'
+                }
+            }
+
+            dayHtml += '<li></li></ul></scrolling></scroll>'
+
+            node('dayScroll').innerTemplate(["dayHtml",$$(dayHtml)[0]], {})
+
+            dayScroll = node('d-day-scroll').Scroll()
+            dayScroll.on('scrollend', function () {
+                initD = this.currentPage.pageY + 1
+                showTxt()
+            })
+            if (initD > opts.monthDay[initM - 1]) {
+                initD = 1
+            }
+            dayScroll.scrollTo(0, -(initD - 1) * opts.liH)
+        }
+
+        function createHour() {
+        	var hourHtml = '<scroll uuid="d-hour-scroll" class="d-hour-wrap d-date-cell" snap="li" scrollbars=false>'
+                         + '<scrolling>'
+                         + '<ul>'
+                         + '<li></li>'
+
+            for (var i = opts.beginhour; i <= opts.endhour; i++) {
+                if (i < 10) {
+                    hourHtml += '<li data-num="0' + i + '">0' + i + '时</li>';
+                } else {
+                    hourHtml += '<li data-num="' + i + '">' + i + '时</li>';
+                }
+            };
+
+            hourHtml += '<li></li></ul></scrolling></scroll>'
+
+            node('hourScroll').innerTemplate(["hourHtml",$$(hourHtml)[0]], {})
+      
+            hourScroll = node('d-hour-scroll').Scroll()
+            hourScroll.on('scrollend', function () {
+                initH = Math.floor(-this.y / opts.liH) + 1;
+                showTxt();
+            })
+            hourScroll.scrollTo(0, -(initH - 1) * opts.liH);
+        }
+
+        function createMinute() {
+        	var minuteHtml = '<scroll uuid="d-minute-scroll" class="d-minute-wrap d-date-cell" snap="li" scrollbars=false>'
+                         + '<scrolling>'
+                         + '<ul>'
+                         + '<li></li>'
+
+            for (var i = 0; i <= 59; i++) {
+                if (i < 10) {
+                    minuteHtml += '<li data-num="0' + i + '">0' + i + '分</li>';
+                } else {
+                    minuteHtml += '<li data-num="' + i + '">' + i + '分</li>';
+                }
+            };
+
+            minuteHtml += '<li></li></ul></scrolling></scroll>'
+
+            node('minuteScroll').innerTemplate(["minuterHtml",$$(minuteHtml)[0]], {})
+
+            minuteScroll = node('d-minute-scroll').Scroll();
+            minuteScroll.on('scrollend', function () {
+                initI = Math.floor(-this.y / opts.liH) + 1;
+                showTxt();
+            })
+            minuteScroll.scrollTo(0, -(initI - 1) * opts.liH);
+        }
+    });
+}
+
+document.body.find('input').each(function (i) {
+    var type = this.attr('type')
+
+    switch (type) {
+        case 'datepicker':
+            datePicker($$(this), {
+                beginyear: Number(this.attr('beginyear')) || 2005,
+                theme: 'date'
+            })
+        break
+        case 'date':
+            datePicker($$(this), {
+                beginyear: Number(this.attr('beginyear')) || 2005,
+                theme: 'date'
+            })
+        break
+        case 'time':
+            datePicker($$(this), {
+                theme: 'time'
+            })
+        break
+        case 'month':
+            datePicker($$(this), {
+                theme: 'month'
+            })
+        break
+    }
+
+})
+
+function countTime(opt) {
+    var now = new Date().getTime()
+    var defaultOpt = {
+        st: now, //开始时间,时间戳
+        et: now, //结束时间,时间戳
+        sdom: null,
+        mdom: null,
+        hdom: null,
+        ddom: null,
+        Mdom: null,
+        ydom: null
+    }
+    this.opt = {}.extend(defaultOpt, opt);
+    this.h = 0;
+    this.m = 0;
+    this.s = 0;
+    this.d = 0;
+    this.M = 0;
+    this.y = 0;
+    this.init = function() {
+        if (now >= this.st) {
+            this.interCount();
+        } else {
+            this.interCount();
+        }
+    };
+    this.interCount = function() {
+        var _this = this;
+        var bTime = _this.bTime();
+        if (bTime > 0) {
+            _this.interSwitch = setInterval(function() {
+                bTime--;
+                if (bTime < 0) {
+                    clearInterval(_this.interSwitch);
+                } else {
+                    _this.renderTime(bTime);
+                }
+            }, 1000);
+        } else {
+
+        }
+    };
+    this.bTime = function() { //距离的时间(单位s)
+        return Math.round(this.opt.et / 1000 - now / 1000);
+    };
+    this.renderTime = function(t) {
+        /*if (t <= 60) {
+            this.h = 0;
+            this.m = 0;
+            this.s = t;
+        } else {
+            if (Math.floor(t / 60) < 60) {
+                this.m = Math.floor(t / 60);
+                this.h = 0;
+                this.s = t % 60;
+            } else {
+                this.h = Math.floor(t / 3600);
+                this.m = Math.floor(t / 60) % 60;
+                this.s = t % 60;
+            }
+        }*/
+        this.s = t % 60;
+        this.m = Math.floor(t / 60) % 60;
+        this.h = (Math.floor(t / 3600) % 60) % 24;
+        this.d = Math.floor(t / 86400) % 30;
+        this.M = Math.floor(t / 2592000) % 12;
+        this.y = Math.floor(t / 31104000);
+        this.opt.ydom.innerHTML = this.y < 10 ? "0" + this.y : this.y;
+        this.opt.Mdom.innerHTML = this.M < 10 ? "0" + this.M : this.M;
+        this.opt.ddom.innerHTML = this.d < 10 ? "0" + this.d : this.d;
+        this.opt.hdom.innerHTML = this.h < 10 ? "0" + this.h : this.h;
+        this.opt.mdom.innerHTML = this.m < 10 ? "0" + this.m : this.m;
+        this.opt.sdom.innerHTML = this.s < 10 ? "0" + this.s : this.s;
+
+    }
+
+}
+
+var two = new countTime({
+    et: new Date('2015-4-7 8:30').getTime(),
+    ydom: document.getElementById('y'),
+    Mdom: document.getElementById('M'),
+    ddom: document.getElementById('d'),
+    hdom: document.getElementById('h'),
+    mdom: document.getElementById('m'),
+    sdom: document.getElementById('s')
+})
+
+two.init()
+
+</script>
 
 <div uuid="date-plugin" class="date-plugin"></div>
 
 
 <template name="main-html">
 	<div uuid=d-date-box class="d-date-box">
-		<!-- <div class="d-date-title">请选择日期</div> -->
 		<div class="d-date-btns"><button class="d-btn" id="d-cancleBtn">取消</button><button class="d-btn" id="d-okBtn">确定</button></div>
 		<p class="d-date-info">
 			<span class="d-day-info"></span>
@@ -26,14 +545,9 @@
         <div class="d-date-mark"></div>
 
         <div class="scroll-wrap">
-	    	<div id="yearScroll">
-	    	</div>
-
-	    	<div id="monthScroll">
-	    	</div>
-
-	    	<div id="dayScroll">
-	    	</div>
+	    	<div id="yearScroll"></div>
+	    	<div id="monthScroll"></div>
+	    	<div id="dayScroll"></div>
     	</div>
 	</div>
 </template>
@@ -42,18 +556,20 @@
 	<div class="d-date-wrap d-time-wrap">
 		<div class="d-date-mark"></div>
 
-		<div class="d-hour-wrap d-date-cell" id="hourScroll"><ul></ul></div>
-		<div class="d-minute-wrap d-date-cell" id="minuteScroll"><ul></ul></div>
+        <div class="scroll-wrap">
+            <div id="hourScroll"></div>
+            <div id="minuteScroll"></div>
+        </div>
 	</div>
 </template>
 
 <template month>
-	<div class="d-date-mark"></div>
-		<div class="d-year-wrap d-date-cell" style="width:50%" uuid="yearScroll"><ul></ul></div>
-		<div class="d-month-wrap d-date-cell" style="width:50%" id="monthScroll"><ul></ul></div>
-	</div>
-</template>
+	<div class="d-date-wrap">
+        <div class="d-date-mark"></div>
 
-<template btn>
-	
+        <div class="scroll-wrap">
+            <div id="yearScroll"></div>
+            <div id="monthScroll"></div>
+        </div>
+	</div>
 </template>

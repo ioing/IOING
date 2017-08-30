@@ -455,7 +455,7 @@ gulp.task('css', (cb) => {
     gulp.src(["{components,modules}/**/*.css"])
     	.on('end', cb)
 	    .pipe(watch(["{components,modules}/**/*.css"]))
-	    .pipe(cssnano())
+	    .pipe(cssnano({safe: true}))
 	    .pipe(gulp.dest(PATH.static))
 })
 

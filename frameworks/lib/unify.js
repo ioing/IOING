@@ -422,7 +422,7 @@
 
             // -/modulePath == {root}/modulePath
 
-            let src = getRealPath(name) + '.js'
+            let src = getRealPath(name) + ( name.split('\/').pop().indexOf('.js') !== -1 ? '' : '.js' )
             let head = window.document.head
             let script = window.document.createElement('SCRIPT')
             
@@ -1185,9 +1185,9 @@
             // setBaseUI
 
             setBaseUI(window)
-            window.onresize = function () {
+            top.addEventListener('resize', function () {
                 setBaseUI(window)
-            }
+            })
 
             window.keyboard = {}
 
@@ -2118,7 +2118,7 @@
 
                                 var at_rect, end_range, format, html, mirror, start_range
 
-                                if ( pos === void 0 ) {
+                                if ( pos === undefined ) {
                                     pos = this.selectionStart
                                 }
 

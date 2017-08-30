@@ -237,7 +237,7 @@ define('~/transform', [], function (require, module, exports) {
 
             // remot module id
 
-            return (/\//.test(id) && id.indexOf('[') !== 0 ? '%' + id + '%' : id
+            return (/\//.test(id) && id.indexOf('[') !== 0 ? '!' + id + '!' : id
             );
         },
 

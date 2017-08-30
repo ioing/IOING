@@ -14,11 +14,18 @@
 		font-size: 18dp;
 		font-weight: bold;
 	}
+	scroll {
+		background: #000;
+	}
 </style>
 
-<div class="content">
-	<input type=datepicker value="2017-06-01" readonly>
-</div>
+<scroll fullscreen>
+	<scrolling>
+		<div class="content">
+			<input type=datepicker value="2017-06-01" readonly>
+		</div>
+	</scrolling>
+</scroll>
 
 <date-picker theme="android"></date-picker>
 

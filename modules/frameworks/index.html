@@ -101,7 +101,7 @@
                     </nav>
                 </section>
             </div> -->
-            <div class="section-mod {setting.status.activeMainNav, 'docs,components,tutorial,developers'|showAsideNav}">
+            <div class="section-mod docs-nav {setting.status.activeMainNav, 'docs,components,tutorial,developers'|showAsideNav}">
                 <section class="search-mod">
                     <div class="search-box">
                         <input type="text" placeholder="检索文档类目" on-input="search::searchDoc(this)">
@@ -123,7 +123,7 @@
                     </div>
                 </section>
             </div>
-            <div class="section-mod {setting.status.activeMainNav, 'docs'|showAsideNav}">
+            <div class="section-mod docs-nav {setting.status.activeMainNav, 'docs'|showAsideNav}">
                 <include nav></include>
             </div>
             <div class="section-mod {setting.status.activeMainNav, 'components,tutorial,developers'|showAsideNav}">
@@ -264,11 +264,12 @@
 
 
 <script name=search>
+    var searchResultBox = node('search-result-box')
+    var searchResult = node('search-result')
+    
     function searchDoc (el) {
         var val = el.value
         var result = []
-        var searchResultBox = node('search-result-box')
-        var searchResult = node('search-result')
 
         if ( val ) {
             scope.nav.each(function (i, list) {
@@ -300,5 +301,10 @@
             list: result
         })
     }
+
+    App.on('transformstart', function () {
+        searchResultBox.style.display = 'none'
+    })
+
 </script>
 

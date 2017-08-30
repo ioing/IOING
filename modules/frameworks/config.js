@@ -188,44 +188,80 @@ export default {
                             title : "变量", 
                             href: "docs-css-scope" ,
                             keys : [
-                                "变量"
+                                "变量",
+                                "CSS变量"
                             ]
                         },
                         { 
                             title : "书写标准", 
-                            href: "docs-css-common"
+                            href: "docs-css-common" ,
+                            keys : [
+                                "书写标准",
+                                "CSS书写标准"
+                            ]
                         },
                         { 
                             title : "单位/运算", 
-                            href: "docs-css-units" 
+                            href: "docs-css-units" ,
+                            keys : [
+                                "单位/运算"
+                            ]
                         },
                         { 
                             title : "onload url()", 
-                            href: "docs-css-background-onload" 
+                            href: "docs-css-background-onload" ,
+                            keys : [
+                                "onload url()",
+                                "背景图加载完毕显示"
+                            ]
                         },
                         { 
                             title : "@var", 
-                            href: "docs-css-var" 
+                            href: "docs-css-var" ,
+                            keys : [
+                                "@var",
+                                "定义变量"
+                            ]
                         },
                         { 
                             title : "@global", 
-                            href: "docs-css-global" 
+                            href: "docs-css-global" ,
+                            keys : [
+                                "@global",
+                                "定义全局变量"
+                            ]
                         },
                         { 
                             title : "@section", 
-                            href: "docs-css-section" 
+                            href: "docs-css-section" ,
+                            keys : [
+                                "@section",
+                                "作用区块"
+                            ]
                         },
                         { 
                             title : "@if", 
-                            href: "docs-css-if" 
+                            href: "docs-css-if" ,
+                            keys : [
+                                "@if",
+                                "逻辑语句"
+                            ]
                         },
                         { 
                             title : "@class", 
-                            href: "docs-css-class" 
+                            href: "docs-css-class" ,
+                            keys : [
+                                "@class",
+                                "CSS 原型类"
+                            ]
                         },
                         { 
                             title : "@extend", 
-                            href: "docs-css-extend" 
+                            href: "docs-css-extend" ,
+                            keys : [
+                                "@extend",
+                                "继承"
+                            ]
                         }
                     ]
                 },
@@ -236,59 +272,102 @@ export default {
                     list : [
                         { 
                             title : "{data} 数据绑定和输出" , 
-                            href : "docs-dom-echo" 
+                            href : "docs-dom-echo" ,
+                            keys : [
+                                "{data} 数据绑定和输出"
+                            ]
                         },
                         { 
                             title : "if / else / elseif" , 
-                            href : "docs-dom-if" 
+                            href : "docs-dom-if" ,
+                            keys : [
+                                "if",
+                                "else", 
+                                "elseif"
+                            ]
                         },
                         { 
                             title : "switch / case" , 
-                            href : "docs-dom-switch" 
+                            href : "docs-dom-switch" ,
+                            keys : [
+                                "switch",
+                                "case"
+                            ] 
                         },
                         { 
                             title : "loop" , 
-                            href : "docs-dom-loop" 
+                            href : "docs-dom-loop" ,
+                            keys : [
+                                "loop"
+                            ] 
                         },
                         { 
                             title : "style" , 
-                            href : "docs-dom-style" 
+                            href : "docs-dom-style" ,
+                            keys : [
+                                "style"
+                            ] 
                         },
                         { 
                             title : "script" , 
-                            href : "docs-dom-script" 
+                            href : "docs-dom-script" ,
+                            keys : [
+                                "script"
+                            ] 
                         },
                         { 
                             title : "commit" , 
-                            href : "docs-dom-commit" 
+                            href : "docs-dom-commit" ,
+                            keys : [
+                                "commit"
+                            ] 
                         },
                         { 
                             title : "include" , 
-                            href : "docs-dom-include" 
+                            href : "docs-dom-include" ,
+                            keys : [
+                                "include"
+                            ] 
                         },
                         { 
                             title : "scroll" , 
-                            href : "docs-dom-scroll" 
+                            href : "docs-dom-scroll" ,
+                            keys : [
+                                "scroll"
+                            ] 
                         },
                         { 
                             title : "shadow" , 
-                            href : "docs-dom-shadow" 
+                            href : "docs-dom-shadow" ,
+                            keys : [
+                                "shadow"
+                            ] 
                         },
                         { 
                             title : "input / textarea/ htmlarea" , 
-                            href : "docs-dom-input" 
+                            href : "docs-dom-input" ,
+                            keys : [
+                                "input",
+                                "textarea",
+                                "htmlarea"
+                            ] 
                         },
                         { 
                             title : "pullup / pulldown / pullright / pullleft" , 
-                            href : "docs-dom-pulling" 
-                        },
-                        { 
-                            title : "var" , 
-                            href : "docs-dom-var" 
+                            href : "docs-dom-pulling" ,
+                            keys : [
+                                "pullup",
+                                "pulldown",
+                                "pullright",
+                                "pullleft"
+                            ] 
                         },
                         { 
                             title : "template" , 
-                            href : "docs-dom-template" 
+                            href : "docs-dom-template" ,
+                            keys : [
+                                "template"
+                            ] 
                         }
                     ]
                 },
@@ -299,31 +378,60 @@ export default {
                     list : [
                         { 
                             title : "on" , 
-                            href : "docs-attr-on" 
+                            href : "docs-attr-on" ,
+                            keys : [
+                                "on-"
+                            ] 
                         },
                         { 
                             title : "id/uuid" , 
-                            href : "docs-attr-uuid" 
+                            href : "docs-attr-uuid" ,
+                            keys : [
+                                "id",
+                                "uuid"
+                            ] 
                         },
                         { 
                             title : "transform" , 
-                            href : "docs-attr-transform" 
+                            href : "docs-attr-transform" ,
+                            keys : [
+                                "transform"
+                            ] 
                         },
                         { 
                             title : "href" , 
-                            href : "docs-attr-href" 
+                            href : "docs-attr-href" ,
+                            keys : [
+                                "href"
+                            ] 
                         },
                         { 
                             title : "src/path/..." , 
-                            href : "docs-attr-src" 
+                            href : "docs-attr-src" ,
+                            keys : [
+                                "src",
+                                "path",
+                                "link",
+                                "href",
+                                "src:",
+                                "path:",
+                                "link:",
+                                "href:"
+                            ] 
                         },
                         { 
                             title : "toggle-class" , 
-                            href : "docs-attr-toggle-class" 
+                            href : "docs-attr-toggle-class" ,
+                            keys : [
+                                "toggle-class"
+                            ] 
                         },
                         { 
                             title : "tap-highlight" , 
-                            href : "docs-attr-tap-highlight" 
+                            href : "docs-attr-tap-highlight" ,
+                            keys : [
+                                "tap-highlight"
+                            ] 
                         }
                     ]
                 },
@@ -334,27 +442,45 @@ export default {
                     list : [
                         { 
                             title : "String" , 
-                            href : "docs-api-string" 
+                            href : "docs-api-string" ,
+                            keys : [
+                                "String"
+                            ] 
                         },
                         { 
                             title : "Object" , 
-                            href : "docs-api-object" 
+                            href : "docs-api-object" ,
+                            keys : [
+                                "Object"
+                            ] 
                         },
                         { 
                             title : "Array" , 
-                            href : "docs-api-array" 
+                            href : "docs-api-array" ,
+                            keys : [
+                                "Array"
+                            ] 
                         },
                         { 
                             title : "Node" , 
-                            href : "docs-api-node" 
+                            href : "docs-api-node" ,
+                            keys : [
+                                "Node"
+                            ] 
                         },
                         { 
                             title : "Element : Query" , 
-                            href : "docs-api-element-query" 
+                            href : "docs-api-element-query" ,
+                            keys : [
+                                "Element : Query"
+                            ] 
                         },
                         { 
                             title : "Element : Move" , 
-                            href : "docs-api-element-Move" 
+                            href : "docs-api-element-Move" ,
+                            keys : [
+                                "Element : Move"
+                            ] 
                         }
                     ]
                 },
@@ -365,19 +491,31 @@ export default {
                     list : [
                         { 
                             title : "标签式引入" , 
-                            href : "docs-components-tags" 
+                            href : "docs-components-tags" ,
+                            keys : [
+                                "标签式引入"
+                            ] 
                         },
                         { 
                             title : "组件文件" , 
-                            href : "docs-components-files" 
+                            href : "docs-components-files" ,
+                            keys : [
+                                "组件文件"
+                            ] 
                         },
                         { 
                             title : "数据" , 
-                            href : "docs-components-data" 
+                            href : "docs-components-data" ,
+                            keys : [
+                                "数据"
+                            ] 
                         },
                         { 
                             title : "特性" , 
-                            href : "docs-components-props" 
+                            href : "docs-components-props" ,
+                            keys : [
+                                "特性"
+                            ] 
                         }
                     ]
                 }

@@ -12,8 +12,8 @@
     }
     @media screen and (max-width: 800dp) {  
         scroll[fullscreen] {
-            background-image: onload url(static/img/1.png);
-            background-size: 90% auto;
+            background-image: onload url(static/img/2.png);
+            background-size: cover;
         }
     }
     scroll[fullscreen] scrollbar {
@@ -22,7 +22,7 @@
         transition: opacity .4s;
     }
 
-    .overlay {
+    .startup {
         position: absolute;
         width: 100%;
         height: 100%;
@@ -110,7 +110,7 @@
 
 </style>
 
-<div uuid=startup class=overlay></div>
+<div uuid=startup class=startup></div>
 
 <template appitem>
     <loop value as v k>

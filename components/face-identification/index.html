@@ -22,7 +22,7 @@
 </style>
 
 <div uuid="img-box" class="img-box">
-    <img src="{scope['image-src']}">
+    <img uuid=images src="{this['image-src']}">
 </div>
 
 <script import global>
@@ -34,7 +34,7 @@
         var imgbox = node('img-box')
         var api = new FacePP('d2bf946ebdbe6d57b062d310da6992c6', 'n_MEHzfEIrtbALXvFBKgqhSdWE5LIwSM')
         api.request('detection/detect', {
-            url: scope['image-src']
+            url: node('images').src
         }, function(err, result) {
             if ( err ) {
                 // TODO handle error

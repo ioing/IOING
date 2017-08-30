@@ -1486,7 +1486,7 @@ define('~/dom', [], function (require, module, exports) {
                 case 'tap-highlight':
 
                     this.mission[root.order].events.push(function (window) {
-                        dom.on('touchstart mousedown', function () {
+                        dom.on('touchstart mousedown', function (e) {
                             var startTimeId
                             var cancleTimeId
 
@@ -1501,10 +1501,12 @@ define('~/dom', [], function (require, module, exports) {
                                 }, 3000)
                             }, 50)
 
-                            this.one('touchmove touchend touchcancel mouseup mousecancel', function () {
+                            this.one('touchmove touchend touchcancel mousemove mouseup mousecancel', function (e) {
 
-                                clearTimeout(startTimeId)
-                                clearTimeout(cancleTimeId)
+                                if ( ['touchmove', 'mousemove'].consistOf(e.type) ) {
+                                    clearTimeout(startTimeId)
+                                    clearTimeout(cancleTimeId)
+                                }
 
                                 setTimeout(function () {
                                     rAF(function () {
@@ -1959,7 +1961,7 @@ define('~/dom', [], function (require, module, exports) {
 
                             scroll = scroller ? scroller.scrollEvent : null
 
-                            if ( type == 1 ) {
+                            if ( scroll && type == 1 ) {
                                 minScrollY = scroll.minScrollY
                             }
                         }
@@ -1989,6 +1991,10 @@ define('~/dom', [], function (require, module, exports) {
                             function upend (e) {
 
                                 window.keyboard.height = keyboardHeight = top.scrollY || factWindowHeight - top.innerHeight
+
+                                // return
+
+                                if ( keyboardHeight == 0 ) return
 
                                 // change minScrollY
 
@@ -2772,13 +2778,14 @@ define('~/dom', [], function (require, module, exports) {
 
                         this.reflow(dom.previousScroller)
 
-                        // onload
-
-                        dom.trigger('load')
-
                         // bind events
                         
-                        this.end(shadowId)     
+                        this.end(shadowId)  
+
+                        // onload
+
+                        dom.trigger('load') 
+                        dom.loadState = 'complete'  
                     }
 
                     var render = function (data) {
@@ -2790,12 +2797,14 @@ define('~/dom', [], function (require, module, exports) {
                         if ( source ) {
                             compile.call(that, source.cloneNode(true), data, null)
                             dom.trigger('ready')
+                            dom.readyState = 'complete'  
                         }
 
                         if ( !blackbox ) {
                             that.get('~/' + path + '/index.html', function (source) {
                                 compile.call(that, source, data, path)
                                 dom.trigger('ready')
+                                dom.readyState = 'complete'
                             })
                         }
 
@@ -2825,6 +2834,14 @@ define('~/dom', [], function (require, module, exports) {
                     dom.extendProperty("update", render)
                     dom.extendProperty("reflow", function () {
                         that.reflow(dom.previousScroller)
+                    })
+                    dom.extendProperty("ready", function (fn) {
+                        if ( dom.readyState ) fn()
+                        dom.on('ready', fn)
+                    })
+                    dom.extendProperty("load", function (fn) {
+                        if ( dom.loadState ) fn()
+                        dom.on('load', fn)
                     })
 
                     // 简 on

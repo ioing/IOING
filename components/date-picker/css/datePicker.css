@@ -42,9 +42,7 @@
   position: relative;
   flex: 1;
 }
-.date-plugin .d-time-wrap {
-  border-top: 1dp solid #f70;
-}
+
 .date-plugin .d-time-wrap .d-date-cell {
   width: 50%;
 }

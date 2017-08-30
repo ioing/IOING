@@ -5,17 +5,19 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		z-index: 998;
+		z-index: 9998;
 		display: none;
 	}
 	.touch-box {
 		position: absolute;
 		top: 0;
 		left: 0;
-		z-index: 999;
-		opacity: .5;
+		z-index: 9999;
 		transition: all .3s ease;
 		transform-origin: top left;
+		border-radius: 30dp;
+		opacity: .4;
+		transform: translate3d(calc(100vw - 63dp), calc(100vh * .7), 0);
 	}
 	.touch {
 		width: 60dp;
@@ -30,7 +32,7 @@
 		height: 42dp;
 		top: 9dp;
 		left: 9dp;
-		z-index: 999;
+		z-index: 9999;
 		background: rgba(255,255,255,.3);
 		border-radius: 30dp;
 		opacity: 1;
@@ -64,29 +66,94 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		z-index: 999;
+		z-index: 9999;
+		color: #fff;
 		width: 300dp;
 		height: 300dp;
 		background: rgba(38,39,40,.85);
 		backdrop-filter: blur(20px);
 		border-radius: 30dp;
-		opacity: 0;
+		display: none;
 	}
 
+	.touch-content {
+		position: absolute;
+		top: 20dp;
+		right: 20dp;
+		bottom: 20dp;
+		left: 20dp;
+	}
+
+	.touch-show .item {
+		position: absolute;
+		width: 60dp;
+		height: 80dp;
+		text-align: center;
+	}
+	.touch-show .item.a {
+		opacity: .5;
+	}
+	.touch-show .item i {
+		display: block;
+		width: 60dp;
+		height: 60dp;
+		margin-bottom: 5dp;
+		background-size: cover;
+	}
+	.touch-show .item span {
+		font-size: 14dp;
+	}
 </style>
 
-<div uuid=overlay class=overlay></div>
-<div uuid=touch class=touch-box on-tap="tap(event)" on-event-0="touchmove(event)|touchmove" on-event-1="touchstart(event)|mousedown touchstart" on-event-2="touchend(event)|touchend touchcancel" style="opacity:0">
+<script sync>
+	scope._items = [
+		{
+			text: "返回",
+			pos: ['0', '100dp', '', ''],
+			href: "-1",
+			icon: "back.svg"
+		},
+		{
+			text: "Siri",
+			pos: ['', '', '90dp', '0'],
+			todo: "siri",
+			icon: "siri.svg"
+		},
+		{
+			text: "Siri",
+			pos: ['', '0', '90dp', ''],
+			todo: "git",
+			icon: "git.svg"
+		},
+		{
+			text: "主屏幕",
+			pos: ['', '100dp', '0', ''],
+			href: scope.homescreen || "frameworks",
+			icon: "homescreen.svg"
+		}
+	]
+
+	if ( scope.items ) {
+		scope._items.extend(scope.items)
+	}
+</script>
+
+<div uuid=overlay class=overlay on-tap="closeTouch()"></div>
+<div uuid=touch class=touch-box on-tap="tap(event)" on-event-0="touchmove(event)|touchmove" on-event-1="touchstart(event)|mousedown touchstart" on-event-2="touchend(event)|touchend touchcancel">
 	<div uuid="toucher" class=touch>
 		<i uuid=touch-pop class="pop"></i>		
 	</div>
 
 	<div uuid=touch-show class=touch-show>
+		<div uuid=touch-content class=touch-content>
+			<loop _items as val key>
+				<div class=item style="top:{val.pos[0]};right:{val.pos[1]};bottom:{val.pos[2]};left:{val.pos[3]}" transform="{val.href}" on-tap="trigg(event, {val.todo})" tap-highlight="a">
+					<i style="background-image: onload url({val.icon})"></i>
+					<span>{val.text}</span>
+				</div>
+			</loop>
+		</div>
 	</div>
-
-	<if toucher>
-		<include toucher></include>
-	</if>
 </div>
 
 <script>
@@ -98,6 +165,8 @@
 	var touchpop = node('touch-pop')
 	var touchshow = node('touch-show')
 	var touchshowA = touchshow.Animate()
+	var touchcontent = node('touch-content')
+	var touchcontentA = touchcontent.Animate()
 	var overlay = node('overlay')
 	var x, y, s = 0, open
 	var scale = 1
@@ -112,10 +181,12 @@
 		_x = (w - DP(300)) / 2
 		_y = (h - DP(300)) / 2
 
+		overlay.style.display = 'block'
 		touchpop.style.opacity = 0
-		touchA.duration(300).origin(0, 0).all().to(_x, _y, 0).end()
-		toucherA.duration(0).opacity(0).end()
-		touchshowA.duration(0).scale(.2).end(function () {
+		touchA.duration(300).origin(0, 0).opacity(1).all().to(_x, _y, 0).end()
+		toucherA.duration(0).style('display', 'none').end()
+		touchcontentA.duration(0).opacity(1).end()
+		touchshowA.duration(0).style('border-radius', '30dp').style('display', 'block').opacity(1).all().scale(.2).end(function () {
 			touchshowA.duration(300).opacity(1).scale(1).end()
 		})
 
@@ -124,12 +195,17 @@
 	}
 
 	function closeTouch () {
-		touchshowA.duration(240).origin(x, y).scale(.2).end(function () {
-			toucherA.duration(60).opacity(1).end()
-			touchshowA.duration(60).scale(0).end()
+		if ( open !== true ) return
+		overlay.style.display = 'none'
+		touchcontentA.duration(300).opacity(0).end()
+		touchshowA.duration(300).style('border-radius', '70dp').origin(0,0).all().scale(.2).end(function () {
+			toucherA.duration(0).style('display', 'block').end()
+			touchshowA.duration(0).style('display', 'none').end()
 		})
 		touchA.duration(300).origin(x, y).scale(scale).all().to(x, y, 0).end(function () {
 			touchpop.style.opacity = 1
+
+			touchfade()
 
 			s = 0
 			open = false
@@ -137,19 +213,8 @@
 	}
 
 	function tap (e) {
-		// if ( !scope.toucher ) {
-		// 	if ( scope.back ) {
-		// 		App.to(-1)
-		// 	} else {
-		// 		App.to("frameworks")
-		// 	}
-			
-		// 	return 
-		// }
-
 		if ( open ) {
 			closeTouch()
-			App.to(-1)
 		} else {
 			openTouch()
 		}
@@ -176,6 +241,7 @@
 		overlay.style.display = "block"
 
 		overid = setTimeout(function () {
+			if ( open == true ) return
 			overlay.style.display = "none"
 		}, 300)
 
@@ -229,27 +295,36 @@
 
 		touchA.duration(300).to(x, y, 0).origin(0, 0).scale(scale).end()
 
-		timeid = setTimeout(function () {
-			touch.css({
-				"opacity": ".5",
-				"backdrop-filter": "blur(0px)"
-			})
-		}, 4000)
+		touchfade()
 	}
 
-	if ( !device.os.supportsTouch ) {
-		validWindow.on('mousemove', touchmove)
-		validWindow.on('mouseup mousecancel', touchend)
+	function touchfade () {
+		timeid = setTimeout(function () {
+			if ( open == true ) return
+			touch.css({
+				"opacity": ".4",
+				"backdrop-filter": "blur(0px)"
+			})
+		}, 3000)
 	}
+
+	function trigg (e, id) {
+		components.trigger('action', {id:id})
+
+		if ( open ) {
+			setTimeout(function () {
+				closeTouch()
+			}, 600)
+		}
+	}
+
+
+	validWindow.on('mousemove', touchmove)
+	validWindow.on('mouseup mousecancel', touchend)
+	top.on('resize', touchend)
 
 	x = device.ui.width - DP(63)
 	y = device.ui.height*.7
 
-
-	register('showin', function () {
-		touchA.duration(300).to(x, y).scale(scale).end(function () {
-			touch.style.opacity = .4
-		})
-	})
 
 </script>

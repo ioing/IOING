@@ -1,11 +1,10 @@
-<assistive-touch id=assistivetouch back></assistive-touch>
+<robot-siri id=robotsiri></robot-siri>
+<assistive-touch id=assistivetouch homescreen="docs-started-ioing" back></assistive-touch>
 
 <add-to-homescreen></add-to-homescreen>
 
 <script>
-    setTimeout(function () {
-    	node('assistivetouch').showin()
-    }, 1000)
+    var siri = false
 
     function toogleTouch (id) {
     	if ( id.indexOf('/demo/app') == 0 ) {
@@ -14,6 +13,20 @@
     		node('assistivetouch').style.display = ""
     	}
     }
+
+    node('assistivetouch').on('action', function (e) {
+        if ( siri && e.data.id !== 'siri' ) {
+            node('robotsiri').stop()
+            siri = false
+        } else if ( siri && e.data.id === 'siri' ) {
+            return
+        } else if ( !siri &&  e.data.id === 'siri' ) {
+            node('robotsiri').start()
+            siri = true
+        } else if ( e.data.id === 'git' ) {
+            top.open('https://github.com/ioing/IOING', '_bank')
+        }
+    })
 
     if ( App.id.indexOf('/demo/app') == 0 ) {
     	toogleTouch(App.id)

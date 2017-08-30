@@ -364,7 +364,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // -/modulePath == {root}/modulePath
 
-            var src = getRealPath(name) + '.js';
+            var src = getRealPath(name) + (name.split('\/').pop().indexOf('.js') !== -1 ? '' : '.js');
             var head = window.document.head;
             var script = window.document.createElement('SCRIPT');
 
@@ -1067,9 +1067,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // setBaseUI
 
             setBaseUI(window);
-            window.onresize = function () {
+            top.addEventListener('resize', function () {
                 setBaseUI(window);
-            };
+            });
 
             window.keyboard = {};
 
@@ -1974,7 +1974,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                                 var at_rect, end_range, format, html, mirror, start_range;
 
-                                if (pos === void 0) {
+                                if (pos === undefined) {
                                     pos = this.selectionStart;
                                 }
 

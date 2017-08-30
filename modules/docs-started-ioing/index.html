@@ -321,115 +321,6 @@
                 </shadow>
             </section>
 
-            <!-- <section style="display: none;">
-                <h2>
-                    IOING 能做什么？
-                    <small>一个全能前端引擎，开启 HTML 开发新篇章</small>
-                </h2>
-                <scroll class="flow-card-wrap" x scrollbars y=false>
-                    <scrolling style="width:{{6 * 286 + 12}}dp;">
-                        <div class=card-cols-row>
-                            <div class=card-related>
-                                <div class=card-inner>
-                                    <div class="title">云组件/云模块</div>
-                                    <code-highlight type=html>
-                                        <switch-slider></switch-slider>
-                                        <switch-slider value=on></switch-slider>
-                                    </code-highlight>
-                                    <switch-slider></switch-slider>
-                                    <switch-slider value=on></switch-slider>
-                                    <p>未来互联网下组件共享成为趋势，第三方组件为构建超大型互联网应用提供可能</p>
-                                    <a class=more transform=docs-components-props>了解更多</a>
-                                </div>
-                            </div>
-                            <div class=card-related>
-                                <div class=card-inner>
-                                    <div class="title">DOM+ 功能标签扩展</div>
-                                    <code-highlight type=html>
-                                        <scroll x scrollbar=false>
-                                            <scrolling>
-                                                <loop list as value key>
-                                                    <include item>
-                                                </loop>
-                                            </scrolling>
-                                        </scroll>
-                                    </code-highlight>
-                                    <p>新增特性标签，如 <code>if</code><code>loop</code><code>scroll</code><code>include</code><code>shadow</code><code>htmlarea</code>等</p>
-                                    <a class=more transform=docs-dom-if>了解更多</a>
-                                </div>
-                            </div>
-                            <div class=card-related>
-                                <div class=card-inner>
-                                    <div class="title">CSS 标准化</div>
-                                    <code-highlight type=css>
-                                        @class ibox (s) {
-                                            display: flex;
-                                            transform: scale([s]);
-                                            box-shadow: 0 0 5dp red;
-                                            border-radius: 6dp;
-                                        }
-                                    </code-highlight>
-                                    <p>无需后端预处理也能够在浏览器中使用标准 CSS 代码，从此摆脱各种浏览器兼容前缀，更有效的减小 CSS 传输体积</p>
-                                    <a class=more transform=docs-css-common>了解更多</a>
-                                </div>
-                            </div>
-                            <div class=card-related>
-                                <div class=card-inner>
-                                    <div class="title">CSS+ 功能扩展</div>
-                                    <code-highlight type=css>
-                                        @if (device.os.ios) {
-                                            .demo {
-                                                top: [header-height];
-                                                height: calc(100vh + 12dp - 1px);
-                                                @extend: .test;
-                                                @class: icon(6);
-                                            }
-                                        }
-                                    </code-highlight>
-                                    <p>让浏览器支持丰富的 CSS+ 语法，更简洁有效的维护你的 CSS 代码</p>
-                                    <a class=more transform=docs-css-if>了解更多</a>
-                                </div>
-                            </div>
-                            <div class=card-related>
-                                <div class=card-inner>
-                                    <div class="title">shadowroot 隔离</div>
-                                    <code-highlight type=html>
-                                        <style> a { color: red; } </style>
-                                        <shadow>
-                                            <style> a { color: blue; } </style>
-                                            <a>blue</a>
-                                        </shadow>
-                                        <a>red</a>
-                                    </code-highlight>
-                                    <p>使用 shadow 标签封装子节点为 shadow dom，使其脱离外部 DOM Tree 节点，内部 CSS 命名能有效减少样式覆盖率</p>
-                                    <a class=more transform=docs-dom-shadow>了解更多</a>
-                                </div>
-                            </div>
-                            <div class=card-related>
-                                <div class=card-inner>
-                                    <div class="title">自动数据绑定</div>
-                                    <code-highlight type=html>
-                                        <if is="list.length > 0">
-                                            <p>{{user.name || user.nick || user.phone}}</p>
-                                            <p>{user.slogan}</p>
-                                        </if>
-                                        <script>
-                                            scope.user.name = null
-                                            scope.user.nick = "test"
-                                        </script>
-                                    </code-highlight>
-                                    <p>建立数据驱动型视图，自动拆解和绑定模版中的所有有效数据引用</p>
-                                    <a class=more transform=docs-dom-echo>了解更多</a>
-                                </div>
-                            </div>
-                        </div>
-                    </scrolling>
-                </scroll>
-                <blockquote>
-                    <p>IOING 不是一个单纯的前端框架，而是提供了一套完整解决方案的次引擎，其包括解决模块化方案、组件化方案、沙盒方案、内存管理方案、内容预加载方案、与原生差异改善方案等一系列难题和应对方案，真正实现用 H5 技术构建大型 web 视图应用</p>
-                </blockquote>
-            </section> -->
-
             <section>
                 <h2>安装</h2>
                 <p>克隆项目到本地</p>
@@ -562,93 +453,7 @@
                 <p><a transform=docs-components-props>#了解更多</a></p>
             </section>
 
-            <section>
-                <h2>沙盒化</h2>
-                <p>HTML 的设计之初是为了传递和共享信息，因而它已开始更偏向于构建内容而非构建应用。当文档要传递的内容过多时则无法通过一个文档来显示所有内容，我们需要使用多个文档协作展示，即通过链接跳转的方式展示更多内容，但这种方式会导致文档脱离了原有的历史关系，同时在你的窗口运行环境中的数据也将一并随之丢失，后来我们开始流行使用 Ajax 技术在同一个页面中展示更多数据</p>
-                <shadow>
-                    <style>
-                        .demo-box:after {
-                            content: ".";
-                            display: block;
-                            height: 0;
-                            clear: both;
-                            visibility: hidden;
-                            overflow: hidden;
-                        }
-                        .idocument {
-                            position: relative;
-                            float: left;
-                            margin-right: 7dp;
-                            padding: 12dp;
-                            width: 35%;
-                            min-width: 150dp;
-                            max-width: 200dp;
-                            min-height: 220dp;
-                            max-height: 270dp;
-                            height: 20vw;
-                            overflow: hidden;
-                        }
-                        .idocument:before {
-                            @class: piexborderradius(12);
-                            border-color: rgba(0,0,0,.15);
-                        }
-                        .idocument p {
-                            color: [active-color];
-                            margin-bottom: 5dp;
-                        }
-                        .idocument span, .idocument i {
-                            display: block;
-                            margin: 0 auto 12dp;
-                            width: 100%;
-                            height: 2dp;
-                            border: 2dp solid [active-color];;
-                        }
-
-                        .idocument i {
-                            margin-left: 0;
-                            width: 100dp;
-                            height: 40dp;
-                            line-height: 36dp;
-                            font-weight: bold;
-                            font-style: normal;
-                            color: [active-color];
-                            text-align: center;
-                            border-radius: 4dp;
-                        }
-                    </style>
-                    <div class="demo-box">
-                        <div class="idocument">
-                            <p>document-A</p>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <p>document-B</p>
-                        </div>
-                        <div class="idocument">
-                            <p>document-B</p>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <i>Ajax</i>
-                            <i>Ajax</i>
-                        </div>
-                    </div>
-                </shadow>
-                <p>但 Ajax 也同样带来了诸多问题，载入的大量内容节点都堆积在同一个 DOM Tree 下，每一次节点更改都造成大量性能损耗，以至于性能也随之下降</p>
-                <p>IOING 模块支持三种运行模式为<a transform=docs-module-config param=section/sandbox>sandbox</a>和<a transform=docs-module-config param=section/shadowbox>shadowbox</a>及传统模式，在沙盒模式下模块拥有独立的作用域空间以保证模块间互不干扰，当模块被卸载时也能够自动释放占用内存，并解除模块产生的僵尸事件</p>
-                <p>
-                    <a transform=docs-module-config param=section/sandbox>#了解更多</a>
-                </p>
-            </section>
-
-            <section>
+                        <section>
                 <h2>Touch 多手势</h2>
                 <shadow>
                     <style>
@@ -750,6 +555,110 @@
                 </scroll>
                 <p>
                     <a transform=docs-attr-on>#了解更多</a>
+                </p>
+            </section>
+
+            <section>
+                <h2>shadowroot 隔离</h2>
+                <p>使用<code>shadow 标签</code>包裹的子节点被封装为 shadow dom，使其脱离外部 DOM Tree 节点，被包裹元素的 id、class、 CSS 样式、js 变量 都能够和父级解耦</p>
+                <code-highlight type=html>
+                    <style> a { color: red; } </style>
+                    <shadow>
+                        <style> a { color: blue; } </style>
+                        <a>blue</a>
+                    </shadow>
+                    <a>red</a>
+                </code-highlight>
+                <p>提问环节：</p>
+                <blockquote>
+                    <h5>浏览器不支持 shadow dom 特性怎么办？</h5>
+                    <p>引擎对不支持该特性的浏览器能够自动采用无感知降级方案，开发者无需担心两者间的区别。另外该特性其实也是组件的基本特性，从而能够保证组件内外的逻辑互不干扰</p>
+                </blockquote>
+                <p><a transform=docs-dom-shadow>#了解更多</a></p>
+            </section>
+
+            <section>
+                <h2>沙盒化</h2>
+                <p>HTML 的设计之初是为了传递和共享信息，因而它已开始更偏向于构建内容而非构建应用。当文档要传递的内容过多时则无法通过一个文档来显示所有内容，我们需要使用多个文档协作展示，即通过链接跳转的方式展示更多内容，但这种方式会导致文档脱离了原有的历史关系，同时在你的窗口运行环境中的数据也将一并随之丢失，后来我们开始流行使用 Ajax 技术在同一个页面中展示更多数据</p>
+                <shadow>
+                    <style>
+                        .demo-box:after {
+                            content: ".";
+                            display: block;
+                            height: 0;
+                            clear: both;
+                            visibility: hidden;
+                            overflow: hidden;
+                        }
+                        .idocument {
+                            position: relative;
+                            float: left;
+                            margin-right: 7dp;
+                            padding: 12dp;
+                            width: 35%;
+                            min-width: 150dp;
+                            max-width: 200dp;
+                            min-height: 220dp;
+                            max-height: 270dp;
+                            height: 20vw;
+                        }
+                        .idocument:before {
+                            @class: piexborderradius(12);
+                            border-color: rgba(0,0,0,.25);
+                        }
+                        .idocument p {
+                            color: [active-color];
+                            margin-bottom: 5dp;
+                        }
+                        .idocument span, .idocument i {
+                            display: block;
+                            margin: 0 auto 12dp;
+                            width: 100%;
+                            height: 2dp;
+                            border: 2dp solid [active-color];;
+                        }
+
+                        .idocument i {
+                            margin-left: 0;
+                            width: 100dp;
+                            height: 40dp;
+                            line-height: 36dp;
+                            font-weight: bold;
+                            font-style: normal;
+                            color: [active-color];
+                            text-align: center;
+                            border-radius: 4dp;
+                        }
+                    </style>
+                    <div class="demo-box">
+                        <div class="idocument">
+                            <p>document-A</p>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <p>document-B</p>
+                        </div>
+                        <div class="idocument">
+                            <p>document-B</p>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <i>Ajax</i>
+                            <i>Ajax</i>
+                        </div>
+                    </div>
+                </shadow>
+                <p>但 Ajax 也同样带来了诸多问题，载入的大量内容节点都堆积在同一个 DOM Tree 下，每一次节点更改都造成大量性能损耗，以至于性能也随之下降</p>
+                <p>IOING 模块支持三种运行模式为<a transform=docs-module-config param=section/sandbox>sandbox</a>和<a transform=docs-module-config param=section/shadowbox>shadowbox</a>及传统模式，在沙盒模式下模块拥有独立的作用域空间以保证模块间互不干扰，当模块被卸载时也能够自动释放占用内存，并解除模块产生的僵尸事件</p>
+                <p>
+                    <a transform=docs-module-config param=section/sandbox>#了解更多</a>
                 </p>
             </section>
 
