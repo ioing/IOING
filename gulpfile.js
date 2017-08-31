@@ -421,7 +421,7 @@ gulp.task("index", ["fetchModule", "moveRootJs"], (cb) => {
     	.on('end', cb)
         .pipe(replace(/\/\*\*::config\*\*\//g, 'App.config.root = "' + PATH.approot + '"'))
         .pipe(replace(/<script .*?src=\"(.+?)\"/ig, function (script, url) {
-        	return script.replace(/src=\"(.+?)\"/, "src=\"" + PATH.approot + url + "\"")
+        	return url.match(/^\w+\:/) === null && url.indexOf('//') !== 0 ? script.replace(/src=\"(.+?)\"/, "src=\"" + PATH.approot + url + "\"") : script
         }))
         .pipe(replace(/\<\/head\>/ig, function (head) {
         	return loadcache.join('\n') + head

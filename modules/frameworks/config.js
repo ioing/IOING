@@ -42,24 +42,25 @@ export default {
                     var theme = [
                             {
                                 color: '#ff5252',
-                                background: '#ff5252'
+                                background: '#ff5252 onload(opacity:1) url({id})'
                             },
                             {
                                 color: '#00bc9c',
-                                background: '#00bc9c'
+                                background: '#00bc9c onload(opacity:1) url({id})'
                             },
                             {
                                 color: '#ff7752',
-                                background: '#ff7752'
+                                background: '#ff7752 onload(opacity:1) url({id})'
                             },
                             {
                                 color: '#43d297',
-                                background: '#43d297'
+                                background: '#43d297 onload(opacity:1) url({id})'
                             }
                         ]
 
 
                     var i = 0
+                    var earth = [5310,6356,6160,6293,5044,5181,6161,2056,1494,5957,1199,1056,2284,6578,6543,1212]
 
                     try {
                         i = sessionStorage.getItem('_theme') || -1
@@ -71,10 +72,8 @@ export default {
                     if ( i > 1 ) {
                         theme = theme.sort(function(){ return 0.5 - Math.random() })
                     }
-
-                    // if ( Math.random() > 0.7 ) {
-                    //     theme[i].background = '#fff'
-                    // }
+                    earth = earth.sort(function(){ return 0.5 - Math.random() })
+                    theme[i].background = theme[i].background.replace('{id}', 'https://www.gstatic.com/prettyearth/assets/full/' + earth[i] + '.jpg')
 
                     return theme[i]
                 })()

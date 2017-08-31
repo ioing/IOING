@@ -219,6 +219,8 @@ define('~/dom', [], function (require, module, exports) {
             this.window = window
             this.container = container
 
+            container.trigger('ready')
+
             return this
         },
 

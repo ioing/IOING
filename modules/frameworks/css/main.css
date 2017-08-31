@@ -1,6 +1,17 @@
 body {
+	background-color: [active-color];
+}
+.main-bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
 	background: [main-background];
 	background-size: [main-background-size];
+	opacity: 0;
+	transition: opacity .3s;
 }
 
 @section (header) {
@@ -174,7 +185,7 @@ body {
 		padding: 0 14dp;
 		width: [max-width];
 		height: 100%;
-		background: rgba(255,255,255,.1);
+		background: rgba(255,255,255,.15);
 	}
 
 	this.hidden {
@@ -754,6 +765,7 @@ footer nav ul li a.active .icon {
 
 	body {
 		background: #fff;
+		background-image: none;
 	}
 
 	@section (header) {

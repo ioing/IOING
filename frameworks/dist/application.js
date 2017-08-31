@@ -1055,7 +1055,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					}
 				}
 
-				id = /(^\!(.*?)(?=\!)\!)/.exec(_route);
+				id = /(^\!(.*?)(?=\!\/)\!\/)/.exec(_route);
 				id = id ? id[2] : false;
 				_route = id ? _route.slice(id.length) : _route;
 				_route = _route.split(/\/|\$|\?|\&|\,|\=|\:/);

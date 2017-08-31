@@ -390,12 +390,12 @@ define('~/css', [], function (require, module, exports) {
                     // additional style
 
                     if (call) {
-                        var styler = call.split(' ');
+                        var styler = call.split(',');
 
                         for (var i = 0, l = styler.length; i < l; i++) {
                             var prop = styler[i].split(':');
 
-                            dom.style.set[(prop[0], prop[1])];
+                            dom.style.set(prop[0], prop[1]);
                         }
                     }
 
@@ -563,16 +563,25 @@ define('~/css', [], function (require, module, exports) {
 
                                             fetch(0);
                                         }
-                                    } else if (target) {
-
-                                        // 对于 CSS 文件的 onload 处理
-
-                                        target.on('ready', function () {
+                                    } else {
+                                        var load = function load() {
                                             this.find(parent).each(function () {
                                                 this.style.backgroundImage = 'none';
                                                 that._loadBackgroundImage(this, url, src, call, 1);
                                             });
-                                        });
+                                        };
+
+                                        if (target) {
+                                            target.on('ready', load);
+                                        } else {
+                                            that.module.on('load', function () {
+                                                target = that.module.elements.context;
+
+                                                if (target) {
+                                                    load.call(target);
+                                                }
+                                            });
+                                        }
 
                                         return url;
                                     }

@@ -14,7 +14,7 @@ export default {
     },
     config : {
         level : 8,
-        absolute : false,
+        absolute : true,
         style : ["main"],
         source: ["index"],
         data: ["photo"],

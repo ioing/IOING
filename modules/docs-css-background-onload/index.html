@@ -5,7 +5,7 @@
                 <h2>onload url()</h2>
                 <p>设置该属性可令背景图在加载完毕时显示</p>
                 <scroll class=exp stop-propagation="auto" x=auto y=false>
-                    <scrolling style="min-width:624dp">
+                    <scrolling style="min-width:754dp">
                         <table>
                             <thead>
                                 <tr>
@@ -19,6 +19,11 @@
                                     <td>background</td>
                                     <td>onload url()</td>
                                     <td>当 url 设定的背景图加载完成时展示该背景图</td>
+                                </tr>
+                                <tr>
+                                    <td>background</td>
+                                    <td>onload(prop:value,prop:value) url()</td>
+                                    <td>当 url 设定的背景图加载完成时展示该背景图，且同时设置额外样式</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -38,6 +43,12 @@
                 <code-highlight type=css class="error">
                     .bg {
                         background: onload #fff url(./bg.png) center no-repeat;
+                    }
+                </code-highlight>
+                <p>在图片加载完成时你还可以给元素设置一些额外样式</p>
+                <code-highlight type=css>
+                    .bg {
+                        background: #fff onload(opacity:1,color:#fff) url(./bg.png) center no-repeat;
                     }
                 </code-highlight>
                 <p>在 CSS 文件中应尽量避免大面积使用该特性，同时应避免复杂的选择器命名，比如下面是一个不好的规范</p>

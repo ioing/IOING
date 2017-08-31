@@ -188,19 +188,19 @@ define('~/transform', [], function (require, module, exports) {
 
             // param trim all \s
 
-            param = param ? '/' + param.replace(/\s/g, '') : ''
+            param = param ? param.replace(/\s/g, '') : ''
 
             switch (prepush) {
                 case 0:
-                    window.history.replaceState({ id : id }, null, '#' + id + param)
+                    window.history.replaceState({ id : id }, null, '#' + id + '/' + param)
 
                     break
                 case 1:
-                    window.history.pushState({ id : id }, null, '#' + id + param)
+                    window.history.pushState({ id : id }, null, '#' + id + '/' + param)
 
                     break
                 default:
-                    window.location.hash = id + param
+                    window.location.hash = id + '/' + param
 
                     break
             }
@@ -224,7 +224,7 @@ define('~/transform', [], function (require, module, exports) {
 
                 // remot module id
             
-                window.history.replaceState({}, null, '#' + this.reid(id) + (param ? '/' + param.replace(/\s/g, '') : ''))
+                window.history.replaceState({}, null, '#' + this.reid(id) + '/' + (param ? param.replace(/\s/g, '') : ''))
             }
 
             this.module.setParam(param)
