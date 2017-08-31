@@ -278,34 +278,34 @@ let babelhtml = () => {
 // babel unify
 
 gulp.task("babel:unify", (cb) => {
-	let index = 'frameworks/lib/unify.js'
+	let index = 'ioing_src/lib/unify.js'
 	gulp.src(index)
 		.on('end', cb)
     	.pipe(watch(index))
     	.pipe(babel({
 	      presets: ['es2015','stage-3']
 	    }))
-	    .pipe(gulp.dest('frameworks/dist'))
+	    .pipe(gulp.dest('ioing_src/dist'))
 })
 
 // bulid ioing
 
 gulp.task("build:ioing", ["babel:unify"], (cb) => {
 	let libs = [
-        'frameworks/lib/application.js',
-        'frameworks/lib/proto.js',
-        'frameworks/lib/transform.js',
-        'frameworks/lib/template.js',
-        'frameworks/lib/dom.js',
-        'frameworks/lib/css.js',
-        'frameworks/lib/fetch.js',
-        'frameworks/lib/loader.js',
-        'frameworks/lib/sandbox.js',
-        'frameworks/lib/promise.js',
-        'frameworks/lib/query.js',
-        'frameworks/lib/move.js',
-        'frameworks/lib/touch.js',
-        'frameworks/lib/scroll.js'
+        'ioing_src/lib/application.js',
+        'ioing_src/lib/proto.js',
+        'ioing_src/lib/transform.js',
+        'ioing_src/lib/template.js',
+        'ioing_src/lib/dom.js',
+        'ioing_src/lib/css.js',
+        'ioing_src/lib/fetch.js',
+        'ioing_src/lib/loader.js',
+        'ioing_src/lib/sandbox.js',
+        'ioing_src/lib/promise.js',
+        'ioing_src/lib/query.js',
+        'ioing_src/lib/move.js',
+        'ioing_src/lib/touch.js',
+        'ioing_src/lib/scroll.js'
     ]
 
     gulp.src(libs)
@@ -314,28 +314,28 @@ gulp.task("build:ioing", ["babel:unify"], (cb) => {
     	.pipe(babel({
 	      presets: ['es2015','stage-3'],
 	    }))
-	    .pipe(gulp.dest('frameworks/dist'))
+	    .pipe(gulp.dest('ioing_src/dist'))
 })
 
 // concat ioing
 
 gulp.task("concat:ioing", ["build:ioing"], (cb) => {
 	 let dist = [
-		'frameworks/dist/unify.js',
-        'frameworks/dist/application.js',
-        'frameworks/dist/proto.js',
-        'frameworks/dist/transform.js',
-        'frameworks/dist/template.js',
-        'frameworks/dist/dom.js',
-        'frameworks/dist/css.js',
-        'frameworks/dist/fetch.js',
-        'frameworks/dist/loader.js',
-        'frameworks/dist/sandbox.js',
-        'frameworks/dist/promise.js',
-        'frameworks/dist/query.js',
-        'frameworks/dist/move.js',
-        'frameworks/dist/touch.js',
-        'frameworks/dist/scroll.js'
+		'ioing_src/dist/unify.js',
+        'ioing_src/dist/application.js',
+        'ioing_src/dist/proto.js',
+        'ioing_src/dist/transform.js',
+        'ioing_src/dist/template.js',
+        'ioing_src/dist/dom.js',
+        'ioing_src/dist/css.js',
+        'ioing_src/dist/fetch.js',
+        'ioing_src/dist/loader.js',
+        'ioing_src/dist/sandbox.js',
+        'ioing_src/dist/promise.js',
+        'ioing_src/dist/query.js',
+        'ioing_src/dist/move.js',
+        'ioing_src/dist/touch.js',
+        'ioing_src/dist/scroll.js'
     ]
 
     let stream = gulp.src(dist) 
