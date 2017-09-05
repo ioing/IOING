@@ -214,7 +214,7 @@ define('~/transform', [], function (require, module, exports) {
             // param = (this.module.param || this.param || {}).extend(param).objectToParams()
 
             id = id || this.id
-            param = param.objectToParams()
+            param = (this.module.param || this.param || {}).extend(param).objectToParams(null, 1)
 
             // push or replace
 

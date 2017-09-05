@@ -1326,7 +1326,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     // objectToParams
 
-                    proto.extendProperty("objectToParams", function (object) {
+                    proto.extendProperty("objectToParams", function (object, route) {
                         var payload = "";
                         var params = [];
                         var e = encodeURIComponent;
@@ -1350,10 +1350,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                             break;
                                     }
 
-                                    params.push(k + '=' + e(value));
+                                    params.push(k + (route ? '/' : '=') + e(value));
                                 }
                             }
-                            payload = params.join('&');
+                            payload = params.join(route ? '/' : '&');
                         }
 
                         return payload;

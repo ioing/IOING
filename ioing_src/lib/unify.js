@@ -1457,14 +1457,14 @@
 
                     // objectToParams
 
-                    proto.extendProperty("objectToParams", function (object) {
+                    proto.extendProperty("objectToParams", function (object, route) {
                         var payload = ""
                         var params = []
                         var e = encodeURIComponent
 
                         object = object || this
                         
-                        if (typeof object === "string") {
+                        if ( typeof object === "string" ) {
                             payload = object
                         } else {
 
@@ -1481,10 +1481,10 @@
                                         break
                                     }
 
-                                    params.push(k + '=' + e(value))
+                                    params.push(k + (route ? '/' : '=') + e(value))
                                 }
                             }
-                            payload = params.join('&')
+                            payload = params.join(route ? '/' : '&')
                         }
 
                         return payload
