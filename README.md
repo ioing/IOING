@@ -166,6 +166,6 @@ As a second engine, it provides a complete solution of modularization, component
 
 ## License
 
-[GPL](https://github.com/ioing/IOING/blob/master/LICENSE.md)
+[GPL](https://opensource.org/licenses/GPL-3.0)
 
 Copyright (c) 2013-present, Linyang (Lien) You
