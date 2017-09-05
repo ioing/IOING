@@ -166,6 +166,6 @@ As a second engine, it provides a complete solution of modularization, component
 
 ## License
 
-[MIT](http://opensource.org/licenses/MIT)
+[GPL](https://opensource.org/licenses/GPL-3.0)
 
 Copyright (c) 2013-present, Linyang (Lien) You
