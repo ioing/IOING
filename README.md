@@ -56,10 +56,10 @@ As a second engine, it provides a complete solution of modularization, component
  </thead>
  <tbody>
   <tr>
-   <td><img src="https://github.com/ioing/IOING-docs/blob/master/frameworks/readme/fade.gif?raw=true" width="200" /></td>
-   <td><img src="https://github.com/ioing/IOING-docs/blob/master/frameworks/readme/slide.gif?raw=true" width="200" /></td>
-   <td><img src="https://github.com/ioing/IOING-docs/blob/master/frameworks/readme/zoom.gif?raw=true" width="200" /></td>
-   <td><img src="https://github.com/ioing/IOING-docs/blob/master/frameworks/readme/flip.gif?raw=true" width="200" /></td>
+   <td><img src="https://github.com/ioing/IOING-docs/blob/master/ioing_src/preview/fade.gif?raw=true" width="200" /></td>
+   <td><img src="https://github.com/ioing/IOING-docs/blob/master/ioing_src/preview/slide.gif?raw=true" width="200" /></td>
+   <td><img src="https://github.com/ioing/IOING-docs/blob/master/ioing_src/preview/zoom.gif?raw=true" width="200" /></td>
+   <td><img src="https://github.com/ioing/IOING-docs/blob/master/ioing_src/preview/flip.gif?raw=true" width="200" /></td>
   </tr>
  </tbody>
 </table>
