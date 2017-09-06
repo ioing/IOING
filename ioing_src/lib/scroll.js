@@ -410,7 +410,7 @@ define('~/scroll', [], function (require, module, exports) {
 				 * 边缘弹性最大自然惯性边缘
 				 * @type {Number}
 				 */
-				boundariesLimit : 0.6,
+				boundariesLimit : 0.15,
 
 				/**
 				 * 是否阻止自然惯性引起的边缘弹性
@@ -1896,8 +1896,25 @@ define('~/scroll', [], function (require, module, exports) {
 				 * @param  {Number} wrapperSize 
 				 * @return {Number}             
 				 */
-				_momentum : function (current, start, time, upperMargin, lowerMargin, wrapperSize) {
-					var speed, distance, distances, direction, duration, destination, deceleration
+				_momentum : function (type, time) {
+					var current, start, upperMargin, lowerMargin, wrapperSize, speed, distance, distances, direction, duration, destination, deceleration
+
+					switch (type) {
+						case 'x':
+							current = this._x
+							start = this.startX
+							upperMargin = this.minScrollX
+							lowerMargin = this.maxScrollX
+						break
+						case 'y':
+							current = this._y
+							start = this.startY
+							upperMargin = this.minScrollY
+							lowerMargin = this.maxScrollY
+						break
+					}
+
+					wrapperSize = this.options.bounce && this.options.bounceBreakThrough ? this.wrapperWidth : 0
 					
 					distances = current - start,
 					direction = distances < 0 ? -1 : 1
@@ -1911,11 +1928,11 @@ define('~/scroll', [], function (require, module, exports) {
 					if ( destination < lowerMargin ) {
 						destination = wrapperSize ? lowerMargin - (wrapperSize * this.options.boundariesLimit * (speed / dP(8))) : lowerMargin
 						distance = Math.abs(destination - current)
-						duration = distance / speed
+						duration = distance / speed * 1.7
 					} else if ( destination > upperMargin ) {
 						destination = wrapperSize ? wrapperSize * this.options.boundariesLimit * (speed / dP(8)) : 0
 						distance = Math.abs(current) + destination
-						duration = distance / speed
+						duration = distance / speed * 1.7
 					}
 
 					return {
@@ -2404,8 +2421,8 @@ define('~/scroll', [], function (require, module, exports) {
 					// start momentum animation if needed
 
 					if ( this.options.momentum && duration < 300 ) {
-						momentumX = this.hasHorizontalScroll ? this._momentum(this._x, this.startX, duration, this.minScrollX, this.maxScrollX, this.options.bounce && this.options.bounceBreakThrough ? this.wrapperWidth : 0) : { destination: newX, duration: 0 }
-						momentumY = this.hasVerticalScroll ? this._momentum(this._y, this.startY, duration, this.minScrollY, this.maxScrollY, this.options.bounce && this.options.bounceBreakThrough ? this.wrapperHeight : 0) : { destination: newY, duration: 0 }
+						momentumX = this.hasHorizontalScroll ? this._momentum('x', duration) : { destination: newX, duration: 0 }
+						momentumY = this.hasVerticalScroll ? this._momentum('y', duration) : { destination: newY, duration: 0 }
 						newX = momentumX.destination
 						newY = momentumY.destination
 						time = Math.max(momentumX.duration, momentumY.duration)
