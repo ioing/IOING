@@ -472,7 +472,7 @@ define('~/transform', [], function (require, module, exports) {
 
                 // 联网且预览或预取
 
-                if (navigator.onLine === true && (this.prefetched || module.config.preview)) {
+                if (navigator.onLine !== false && (this.prefetched || module.config.preview)) {
                     this.include(id, null, readied);
                 } else {
                     readied(module, function () {
@@ -571,13 +571,13 @@ define('~/transform', [], function (require, module, exports) {
 
             // open loading
 
-            module.loading(1);
-
             this.loadingTimeId = setTimeout(function () {
+                module.loading(1);
+
                 if (that.modulu) {
                     that.modulu.loading(1);
                 }
-            }, 1000);
+            }, 1200);
 
             // preload on event
 
@@ -632,11 +632,13 @@ define('~/transform', [], function (require, module, exports) {
                 App.trigger('moduleload', { module: module });
             }).get(function (module) {
 
+                // clear loadingTimeId
+
+                clearTimeout(that.loadingTimeId);
+
                 // close loading
 
                 module.loading(0);
-
-                clearTimeout(that.loadingTimeId);
 
                 if (that.modulu) {
                     that.modulu.loading(0);

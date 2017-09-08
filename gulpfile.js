@@ -376,42 +376,45 @@ gulp.task("moveRootJs", ["concat:ioing"], (cb) => {
 // prefetch index module
 
 gulp.task("fetchModule", ["js"], (cb) => {
-	let id = ''
-    let geter = () => {
-    	let through = require('through2')
+	if ( release ) {
+		let id = ''
+	    let geter = () => {
+	    	let through = require('through2')
 
-    	return through.obj(function(file, enc, cb, contents) {
-	        contents = file.contents.toString()
-	        contents = contents.replace(/define\(/, function (d) {
-	        	return d + '"' + PATH.approot + id + '", '
-	        })
-	        loadcache.push('<script>\n'
-	        	+ contents + '\n'
-	        	+ '</script>')
-			
-	        cb()
-	    })
-    }
+	    	return through.obj(function(file, enc, cb, contents) {
+		        contents = file.contents.toString()
+		        contents = contents.replace(/define\(/, function (d) {
+		        	return d + '"' + PATH.approot + id + '", '
+		        })
+		        loadcache.push('<script>\n'
+		        	+ contents + '\n'
+		        	+ '</script>')
+				
+		        cb()
+		    })
+	    }
 
-    let step = () => {
-    	id = "modules/" + prefetch.pop().id + "/config"
-    	gulp.src([PATH.static + id + ".js"])
-			.on('end', function () {
-				if ( prefetch.length == 0 ) {
-					cb()
-				} else {
-					step()
-				}
-			})
-			.pipe(geter())
-    }
- 
-    if ( prefetch.length == 0 ) {
-    	cb()
-    } else {
-    	step()
-    }
-    
+	    let step = () => {
+	    	id = "modules/" + prefetch.pop().id + "/config"
+	    	gulp.src([PATH.static + id + ".js"])
+				.on('end', function () {
+					if ( prefetch.length == 0 ) {
+						cb()
+					} else {
+						step()
+					}
+				})
+				.pipe(geter())
+	    }
+	 
+	    if ( prefetch.length == 0 ) {
+	    	cb()
+	    } else {
+	    	step()
+	    }
+	} else {
+		cb()
+	}
 })
 
 // bulid index page

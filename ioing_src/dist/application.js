@@ -648,7 +648,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 						failed && failed();
 					});
 				} else {
-					callback.apply([modules[id]]);
+					callback.apply(this, [modules[id]]);
 
 					return modules[id];
 				}
