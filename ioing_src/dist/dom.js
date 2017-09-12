@@ -1812,6 +1812,8 @@ define('~/dom', [], function (require, module, exports) {
                 case 'INPUT':
                 case 'TEXTAREA':
                 case 'HTMLAREA':
+                case 'SELECT':
+                case 'SELECTER':
 
                     /* DEMO
                      * 1. <input react="keydown" value="{data.count}">
@@ -1863,6 +1865,8 @@ define('~/dom', [], function (require, module, exports) {
                             });
                         }
                     }
+
+                    if (name.indexOf('SELECT') == 0) break;
 
                     // transformstart blur
 
