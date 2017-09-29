@@ -14,7 +14,7 @@ define('~/scroll', [], function (require, module, exports) {
   */
 
 	var UI = device.ui;
-	var DPR = devicePixelRatio;
+	var DPR = UI.scale;
 
 	/**
   * 设备属性描述
@@ -399,7 +399,7 @@ define('~/scroll', [], function (require, module, exports) {
      * @type {Number}
      */
 				bounceDrag: 3,
-				bounceDragRate: 20,
+				bounceDragRate: 30,
 
 				/**
      * 边缘弹性动画时长
@@ -532,7 +532,7 @@ define('~/scroll', [], function (require, module, exports) {
 			// snap: reset speedLimit
 
 			if (!options.speedLimit && options.snap) {
-				this.options.speedLimit = dP(1);
+				this.options.speedLimit = 1;
 			}
 
 			/**
@@ -1917,10 +1917,10 @@ define('~/scroll', [], function (require, module, exports) {
 					wrapperSize = this.options.bounce && this.options.bounceBreakThrough ? this.wrapperWidth : 0;
 
 					distances = current - start, direction = distances < 0 ? -1 : 1;
-					speed = Math.min(Math.abs(distances) * DPR / time, this.options.speedLimit);
-					speed = this.speedM == undefined ? speed : Math.min(this.speedM * DPR, speed);
+					speed = Math.min(Math.abs(distances) / DPR / time, this.options.speedLimit);
+					// speed = this.speedM == undefined ? speed : Math.min(this.speedM, speed)
 					deceleration = Math.max(this.options.deceleration - this.acceleration, 0.003);
-					distance = speed * speed / deceleration / DPR / 2 * direction;
+					distance = speed * speed / deceleration / 2 * direction;
 					duration = speed / deceleration * this.options.speedRate;
 					destination = current + distance;
 
@@ -1950,7 +1950,7 @@ define('~/scroll', [], function (require, module, exports) {
 
 					// 两次连续滚动且两次滚动方向一致则重力加速
 
-					if (this.isScrolling() && this.scrollTrendY != -1 && this.scrollTrendX != -1) {
+					if (this.isScrolling() && this.scrollTrendY != -1 && this.scrollTrendX != -1 && this.speedM > 2) {
 						if (this.gapTime < 1000) {
 							this.acceleration = Math.min(this.acceleration + 0.0005, 0.001);
 						} else {
@@ -2296,8 +2296,8 @@ define('~/scroll', [], function (require, module, exports) {
 					absDistX = Math.abs(this.distX);
 					absDistY = Math.abs(this.distY);
 
-					this.speedX = Math.abs(deltaX) / movedTime;
-					this.speedY = Math.abs(deltaY) / movedTime;
+					this.speedX = Math.abs(deltaX) / DPR / movedTime;
+					this.speedY = Math.abs(deltaY) / DPR / movedTime;
 					this.speedM = Math.max(this.speedX, this.speedY);
 
 					this.bounceDragPhase++;
@@ -2315,11 +2315,11 @@ define('~/scroll', [], function (require, module, exports) {
 					// Slow down if outside of the boundaries
 
 					if (newX > this.minScrollX || newX < this.maxScrollX) {
-						this.bounceDragPhase++;
+						this.bounceDragPhase = newX > this.minScrollX ? newX - this.minScrollX : this.maxScrollX - newX;
 						newX = this.options.bounce ? this._x + deltaX / (this.options.bounceDrag + this.bounceDragPhase / this.options.bounceDragRate) : newX > this.minScrollX ? this.minScrollX : this.maxScrollX;
 					}
 					if (newY > this.minScrollY || newY < this.maxScrollY) {
-						this.bounceDragPhase++;
+						this.bounceDragPhase = newY > this.minScrollY ? newY - this.minScrollY : this.maxScrollY - newY;
 						newY = this.options.bounce ? this._y + deltaY / (this.options.bounceDrag + this.bounceDragPhase / this.options.bounceDragRate) : newY > this.minScrollY ? this.minScrollY : this.maxScrollY;
 					}
 

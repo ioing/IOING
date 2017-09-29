@@ -433,7 +433,7 @@ define('~/transform', [], function (require, module, exports) {
                     if ( od ) {
                         that.transform(function () {
                             callback()
-                            that.inProcess = 18
+                            that.inProcess = 1
                         })
                     } else {
                         callback()
@@ -480,7 +480,7 @@ define('~/transform', [], function (require, module, exports) {
                 } else {
                     readied(module, function () {
                         that.include(id, null, function (module, callback) { 
-                            callback()
+                            callback && callback()
                         })
                     })
                 }
@@ -660,6 +660,8 @@ define('~/transform', [], function (require, module, exports) {
                 }
 
             }).error(function (module) {
+
+                that.inProcess = -1
 
                 module.trigger('error')
 
@@ -1087,6 +1089,8 @@ define('~/transform', [], function (require, module, exports) {
 
         then : function (callback) {
             this.callback = callback || noop
+
+            return this
         }
     }
 

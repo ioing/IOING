@@ -56,15 +56,17 @@
 	function start (event) {
 		switchBox.removeClass('end')
 		circleBtn.addClass('active')
-
-		components.trigger('on')
 	}
 
 	function end (event) {
 		switchBox.addClass('end')
 		circleBtn.removeClass('active')
 
-		components.trigger('off')
+		if ( switchBox.hasClass('active') ) {
+			components.trigger('on')
+		} else {
+			components.trigger('off')
+		}
 	}
 
 	if ( scope.value == 'on' ) {

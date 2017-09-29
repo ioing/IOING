@@ -750,9 +750,11 @@ define('~/dom', [], function (require, module, exports) {
 
                 // creat shadowRoot
 
-                baseCSS.innerHTML = this.css.compile(this.module.id, CSSBaseStyle, scope, {
-                                        descendant : false
-                                    })
+                // baseCSS.innerHTML = this.css.compile(this.module.id, CSSBaseStyle, {}, {
+                //                         descendant : false
+                //                     })
+
+                baseCSS.innerHTML = this.css.base()
 
                 shadowRoot.appendChild(baseCSS)
                 shadowRoot.appendChild(shadowDOM)
@@ -762,8 +764,7 @@ define('~/dom', [], function (require, module, exports) {
 
                 // 不支持shadowRoot的css作用域方案
 
-                baseCSS.innerHTML = this.css.compile(this.module.id, CSSBaseStyle, scope, { 
-                                        path : root.path, 
+                baseCSS.innerHTML = this.css.compile(this.module.id, CSSBaseStyle, {}, { 
                                         descendant : '.' + shadowDOM.className
                                     })
 
@@ -1501,7 +1502,7 @@ define('~/dom', [], function (require, module, exports) {
                                         dom.removeClass(value)
                                     })
                                 }, 3000)
-                            }, 50)
+                            }, 60)
 
                             this.one('touchmove touchend touchcancel mousemove mouseup mousecancel', function (e) {
 
@@ -1560,7 +1561,7 @@ define('~/dom', [], function (require, module, exports) {
                                                 applys.push(args[0])
                                             }
 
-                                            scopeFunctionEval(window).apply(this, applys)
+                                            scopeFunctionEval(window).apply(dom, applys)
                                         }
                             }
                         var scopeFunctionArguments = (/\((.*)\)/.exec(scopeNamedEvent) || [null,''])[1].split(',')
@@ -2243,7 +2244,7 @@ define('~/dom', [], function (require, module, exports) {
                             scrollY : this.sign(name, command, 'y', -1, null, true, true),
                             freeScroll : this.sign(name, command, 'free', -1, null, true, false),
                             stepLimit : this.sign(name, command, 'step-limit', -1, null, false, 120),
-                            speedLimit : this.sign(name, command, 'speed-limit', -1, null, false, 4),
+                            speedLimit : this.sign(name, command, 'speed-limit', -1, null, false, 5),
                             speedRate : this.sign(name, command, 'speed-rate', -1, null, false, 1),
                             scrollbars : this.sign(name, command, 'scrollbars', -1, null, true, true),
                             indicator : this.sign(name, command, 'indicator', -1, null, true, null),
@@ -2325,7 +2326,7 @@ define('~/dom', [], function (require, module, exports) {
                                 var data = dataRows && this.infiniteDataLength === 0 ? scope : null
                                     
                                 that.module.turnover({
-                                    id : uuid,
+                                    id : node.id || node.uuid || uuid,
                                     data : data, 
                                     start : start, 
                                     limit : dataLimit, 
@@ -2548,9 +2549,10 @@ define('~/dom', [], function (require, module, exports) {
                     var src = this.commands('src', node).value
                     var sync = this.commands('sync', node).key
                     var global = this.commands('global', node).key
+                    var impmod = this.commands('type', node).value === 'module'
                     var normal = this.commands('normal', node).key
                     var rooot = {}.extend(root)
-                    var imports = global ? [] : null
+                    var imports = global || impmod ? [] : null
                     var prepath = root.scopeid ? root.path : App.config.root + 'modules/' + this.module.id
                     var doorplate = this.commands('name', node).value || 'default'
                     var javascript = node.textContent
@@ -3289,7 +3291,6 @@ define('~/dom', [], function (require, module, exports) {
             this.dispatch(order, 'async')
 
             this.over(order)
-
         },
 
         /**

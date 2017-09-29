@@ -140,10 +140,10 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             // set module param
 
             this.setParam(((param) => {
-                param.page = param._page = param.$page = Math.ceil(start / limit)
-                param.start = param._start = param.$start = start
-                param.limit = param._limit = param.$limit = limit
-                param.turnover = param._turnover = param.$turnover = turnover
+                param[id + '_page'] = param.page = param._page = param.$page = Math.ceil(start / limit)
+                param[id + '_start'] = param.start = param._start = param.$start = start
+                param[id + '_limit'] = param.limit = param._limit = param.$limit = limit
+                param[id + '_turnover'] = param.turnover = param._turnover = param.$turnover = turnover
 
                 return param
             })({}))
@@ -898,7 +898,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 		setParam (id, param, initial) {
             let module = this.modules[id]
-            let params = this.filterParam(param)
+            let params = this.filterParam(param, module.config.route)
 
             // if this module cache param != param ? update = ture
             
@@ -916,9 +916,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             }
         }
 
-		filterParam (param) {
+		filterParam (param, route) {
 			let config = {}
-			let params = (typeof param === 'string' ? param.paramsToObject() : param) || {}
+			let params = (typeof param === 'string' ? param.paramsToObject(null, route) : param) || {}
 
 			// filter config param
 
@@ -1061,6 +1061,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         	
         	if ( isNaN(config.level) ) {
         		config.level = 0
+        	}
+
+        	// reset route
+
+        	if ( Object.getInstanceType(config.route) !== 'Array' ) {
+        		if ( typeof config.route === 'string' ) {
+        			config.route = config.route.split('\\')
+        		} else {
+        			config.route = false
+        		}
         	}
 
         	// app type

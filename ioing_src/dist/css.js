@@ -106,8 +106,18 @@ define('~/css', [], function (require, module, exports) {
             };
         },
 
+        base: function base(css) {
+            if (CompiledCSSBaseStyle) {
+                css = CompiledCSSBaseStyle;
+            } else {
+                css = CompiledCSSBaseStyle = this.compile('frameworks', CSSBaseStyle);
+            }
+
+            return css;
+        },
+
         render: function render(list, sids, sources) {
-            var css = this.compile('frameworks', CSSBaseStyle);
+            var css = this.base();
 
             if (!list) {
                 throw 'IOING ERROR { module ' + sids + ' css source is null }';
@@ -128,6 +138,10 @@ define('~/css', [], function (require, module, exports) {
             this.scope = {}.extend(this.config.data, scope);
             this.descendant = this.opts.descendant === false ? '' : this._descendant + (this.opts.descendant ? this.opts.descendant + ' ' : '');
             this.element = element;
+
+            if (source === true) {
+                return this.base();
+            }
 
             return this.toCSS(this.data = this.toJSON(source));
         },
