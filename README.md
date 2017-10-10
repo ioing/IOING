@@ -33,7 +33,7 @@ Brand new front-end engine
 Really grateful to meet you all here and bring the differences of experience to the community within IOING.
 Continuous updating would be guaranteed of Docs and Website.
 
-[DEMO](http://www.ioing.com/#components-store)
+[DEMO](http://www.ioing.com/#discover-index)
 
 ## What is IOING?
 IOING 是一款高性能的前端开发引擎。它为创建一个大型应用提供一整套的完备方案，如页面模块化拆分、层级路由控制、可编程CSS、热拔插组件、双向数据绑定、DOM语法扩展、自动兼容处理等
