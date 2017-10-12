@@ -4,7 +4,7 @@
 define('~/dom', [], function (require, module, exports) {
     'use strict'
 
-    var REGEXP = {
+    const REGEXP = {
         key : /\.|\[/,
         token : /[^\w\_\$\.]/,                                               // 非变量关键词切割
         string : /(['"])[^'"]*\1/,                                           // 过滤掉字符
@@ -14,16 +14,32 @@ define('~/dom', [], function (require, module, exports) {
         // imports : /[^\.\]]\s*[@|$]import\s*\(\s*["']([^'"\s]+)["']\s*\)/g.   // imports : /import\s([\w\_\$]+)\sfrom\s([\w\_\$\']+)/g
     }
 
-    var dOC = document
-    var rAF = window.requestAnimationFrame
-    
-    function DOM () {
-        if ( !(this instanceof DOM) ) {
-            return new DOM()
+    const dOC = document
+    const rAF = window.requestAnimationFrame
+
+    const HELPER = {
+        encode : function (s) {
+            return typeof s === 'string' ? encodeURIComponent(s) : s
+        },
+        decode : function (s) {
+            return typeof s === 'string' ? decodeURIComponent(s) : s
+        },
+        replace : function (s, r, p) {
+            return typeof s === 'string' ? s.replace(r, p) : s
         }
     }
+    
 
-    DOM.prototype = {
+    class DOM {
+        constructor () {
+            if ( !(this instanceof DOM) ) {
+                return new DOM()
+            }
+
+            // helper
+        
+            this.helper = HELPER
+        }
 
         /**
          * 初始化DOM
@@ -32,7 +48,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param {Function} css编译器
          * @returns {Object} this
          */
-        init : function (module, sandbox, helper, css) {
+        init (module, sandbox, helper, css) {
             
             // DOM属性[uuid,id]的存储
 
@@ -94,21 +110,7 @@ define('~/dom', [], function (require, module, exports) {
             this.renderCountTime = 0
 
             return this
-        },
-
-        // helper
-        
-        helper : {
-            encode : function (s) {
-                return typeof s === 'string' ? encodeURIComponent(s) : s
-            },
-            decode : function (s) {
-                return typeof s === 'string' ? decodeURIComponent(s) : s
-            },
-            replace : function (s, r, p) {
-                return typeof s === 'string' ? s.replace(r, p) : s
-            }
-        },
+        }
 
         /**
          * 创建新的文档空间
@@ -117,7 +119,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Boolean}
          * @return {String}
          */
-        creat : function (root, node, creat) {
+        creat (root, node, creat) {
 
             var uuid = creat ? this.i++ : root.uuid
 
@@ -167,7 +169,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return uuid
-        },
+        }
 
         /**
          * creat root state
@@ -175,7 +177,7 @@ define('~/dom', [], function (require, module, exports) {
          * @return Object
          */
         
-        state : function (id) {
+        state (id) {
             return {
                 "id" : id,
                 "uuid" : 0,
@@ -183,32 +185,32 @@ define('~/dom', [], function (require, module, exports) {
                 "target" : 0,
                 "quantum" : []
             }
-        },
+        }
 
         /**
          * save
          * @param {Object} source
          * @param {Object} data
          */
-        save : function (source, data) {
+        save (source, data) {
             this.DATA = data
             this.SOURCE = source
-        },
+        }
 
         /**
          * set config
          * @param {Object} config
          */
-        setup : function (config) {
+        setup (config) {
             this.config = config
-        },
+        }
         
         /**
          * @param  {Window} window
          * @param  {HTMLElement} container
          * @return {Object} this
          */
-        space : function (window, container) {
+        space (window, container) {
 
             window.trigger('moduleready')
             
@@ -222,7 +224,7 @@ define('~/dom', [], function (require, module, exports) {
             container.trigger('ready')
 
             return this
-        },
+        }
 
         /**
          * 为node节点分配唯一ip
@@ -230,7 +232,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Node}
          * @return {String}
          */
-        uuid : function (root, node, uuid) {
+        uuid (root, node, uuid) {
             uuid = parseInt(uuid || (node.parentNode ? node.parentNode.uuid : root.uuid))
             
             uuid++
@@ -245,11 +247,11 @@ define('~/dom', [], function (require, module, exports) {
             if ( node && !node.uuid ) node.extendProperty("uuid", uuid)
 
             return uuid
-        },
+        }
 
-        quantum : function (uuid) {
+        quantum (uuid) {
             return this.Quantum[uuid] || []
-        },
+        }
 
         /**
          * 获取模版Node对象
@@ -261,7 +263,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {HTMLElement} source
          */
-        get : function (id, callback, prefixe, suffix, source) {
+        get (id, callback, prefixe, suffix, source) {
             source = source || this.SOURCE[id]
             suffix = suffix || ''
             prefixe = prefixe || ''
@@ -272,16 +274,15 @@ define('~/dom', [], function (require, module, exports) {
 
                     // promise get components
 
-                    return promise.get(id.slice(2)).then(function (err, data, xhr) {
+                    return promise.get(id.slice(2)).then(function (result) {
+                        let data = result[0]
                         if ( !data ) return
-                        if ( err === false ) {
-                            this.SOURCE[id] = data
-                            callback.call(this, this.parser(data))
-                        } else {
-                            callback.call({}, null)
-                        }
-                    }.bind(this))
 
+                        this.SOURCE[id] = data
+                        callback.call(this, this.parser(data))
+                    }.bind(this)).catch(function () {
+                        callback.call({}, null)
+                    })
                 }
                 
                 return
@@ -299,7 +300,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return source
-        },
+        }
 
         /**
          * 保存模版
@@ -308,7 +309,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param {String|Node}
          * @param {String}
          */
-        set : function (space, id, source, pid) {
+        set (space, id, source, pid) {
 
             id = (space ? space + '::' : '') + id
 
@@ -319,7 +320,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             this.SOURCE[id] = source
-        },
+        }
 
         /**
          * 闭包形式获取作用域内模版
@@ -329,41 +330,41 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {Node}
          */
-        take : function (space, id, prefixe, suffix) {
+        take (space, id, prefixe, suffix) {
             return this.get((space ? space + '::' : '') + id, null, prefixe, suffix) || this.get(id, null, prefixe, suffix)
-        },
+        }
 
         /**
          * 解析HTML字符为Node
          * @param  {String|HTMLElement}
          * @return {HTMLElement}
          */
-        parser : function (source) {
+        parser (source) {
             return new DOMParser().parseFromStringToNode('<body>' + source + '</body>', "text/html").body
-        },
+        }
 
         /**
          * 创建NodeTreeWalker
          * @param  {HTMLElement}
          * @return {HTMLElement}
          */
-        iterator : function (nodes) {
+        iterator (nodes) {
 
             if ( nodes.nextNode ) return nodes
             
             // createTreeWalker
 
             return dOC.createNodeIterator(nodes, NodeFilter.SHOW_ALL, null, false)
-        },
+        }
 
         /**
          * 取数据源名称对应之源id
          * @param  {String}
          * @return {String}
          */
-        spath : function (id) {
+        spath (id) {
             return this.config.sids[id]
-        },
+        }
 
         /**
          * 取绝对路径
@@ -371,16 +372,16 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {String}
          */
-        realpath : function (root, url) {
+        realpath (root, url) {
             return App.realpath(this.module.id, this.spath(root.id), url, root.path)
-        },
+        }
 
         /**
          * 取之父级
          * @param  {Node}
          * @return {[type]}
          */
-        target : function (node) {
+        target (node) {
             var uuid
 
             // parentNode is not commandNode
@@ -397,14 +398,14 @@ define('~/dom', [], function (require, module, exports) {
             uuid = parent.command ? this.target(parent) : parent.uuid
 
             return uuid
-        },
+        }
 
         /**
          * 片段归位
          * @param  {Object}
          * @param  {Function}
          */
-        insert : function (root, compiler) {
+        insert (root, compiler) {
             var uuid = root.uuid
             var targetid = root.target
             var quantums = this.quantum(uuid)
@@ -441,7 +442,7 @@ define('~/dom', [], function (require, module, exports) {
 
             //}
             
-        },
+        }
 
         /**
          * 归位至父级
@@ -449,7 +450,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @param  {String}
          */
-        into : function (root, uuid, puid) {
+        into (root, uuid, puid) {
             var child = this.DOMS[uuid]
             var parent = this.DOMS[puid]
             var quantum = root.quantum
@@ -476,14 +477,14 @@ define('~/dom', [], function (require, module, exports) {
             for (var i = quantum.length - 1; i >= 0; i--) {
                 this.Quantum[quantum[i]].push(child)
             }
-        },
+        }
 
         /**
          * 附之其父
          * @param  {Object}
          * @param  {Node}
          */
-        append : function (root, node) {
+        append (root, node) {
             var uuid = node.uuid
             var puid = this.target(node)
 
@@ -492,7 +493,7 @@ define('~/dom', [], function (require, module, exports) {
             if ( node.command ) return node.remove()
 
             this.into(root, uuid, puid)
-        },
+        }
 
         /**
          * 创建片段
@@ -500,7 +501,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Boolean}
          * @return {HTMLElement}
          */
-        creatFragment : function (uuid, creat) {
+        creatFragment (uuid, creat) {
 
             if ( uuid === undefined ) uuid = this.i++
 
@@ -524,7 +525,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return this.DOMS[uuid]
-        },
+        }
 
         /**
          * 创建文档节点
@@ -534,7 +535,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {HTMLElement}
          */
-        createElement : function (root, node, uuid, name) {
+        createElement (root, node, uuid, name) {
 
             uuid = uuid ? this.uuid(root, node, uuid) : node.uuid
             name = name ? name : node.nodeName
@@ -623,7 +624,7 @@ define('~/dom', [], function (require, module, exports) {
             // }
 
             return this.DOMS[uuid]
-        },
+        }
 
         /**
          * 设置节点属性
@@ -633,7 +634,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param {String}
          * @param {Object}
          */
-        setAttribute : function (root, node, name, value, scope) {
+        setAttribute (root, node, name, value, scope) {
             var text = ''
             var uuid = node.uuid
 
@@ -660,7 +661,7 @@ define('~/dom', [], function (require, module, exports) {
                 }
 
             // }
-        },
+        }
 
         /**
          * 创建文本节点
@@ -670,7 +671,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {Object}
          */
-        createTextNode : function (root, node, value, scope) {
+        createTextNode (root, node, value, scope) {
             var text = ''
             var uuid = node.uuid
 
@@ -726,7 +727,7 @@ define('~/dom', [], function (require, module, exports) {
                 // }
 
             }
-        },
+        }
 
         /**
          * 创建影子节点树
@@ -735,7 +736,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {HTMLElement}
          * @return {Object}
          */
-        createShadowRoot : function (root, node, dom, scope) {
+        createShadowRoot (root, node, dom, scope) {
             var uuid = node.uuid
             var baseCSS = this.createElement(root, null, uuid, 'style')
             var shadowDOM = this.createElement(root, null, uuid, 'shadow-root')
@@ -754,7 +755,7 @@ define('~/dom', [], function (require, module, exports) {
                 //                         descendant : false
                 //                     })
 
-                baseCSS.innerHTML = this.css.base()
+                baseCSS.innerHTML = this.css.baseCSS()
 
                 shadowRoot.appendChild(baseCSS)
                 shadowRoot.appendChild(shadowDOM)
@@ -799,7 +800,7 @@ define('~/dom', [], function (require, module, exports) {
                 dom : shadowDOM,
                 shadow : shadowRoot
             }
-        },
+        }
 
         /**
          * 据其uuid及scope获取文档节点
@@ -807,14 +808,14 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {HTMLElement}
          */
-        getElementById : function(uuid, scopeid) {
+        getElementById (uuid, scopeid) {
             var element
             
             scopeid = scopeid || 0
             element = this.DOM[scopeid][uuid]
 
             return element || scopeid == 0 ? element : this.getElementById(uuid, this.DOMS[scopeid].scopeid)
-        },
+        }
 
         /**
          * 简约书写的过滤器
@@ -822,7 +823,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Array}
          * @return {Object}
          */
-        getValueByMagic : function (scope, magic) {
+        getValueByMagic (scope, magic) {
             var result
             var handle
 
@@ -841,7 +842,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return result
-        },
+        }
 
         /**
          * 传统过滤器
@@ -849,7 +850,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {Object}
          */
-        getValueByRoute : function (scope, origin) {
+        getValueByRoute (scope, origin) {
             var result
             var handle
 
@@ -887,9 +888,9 @@ define('~/dom', [], function (require, module, exports) {
             // return
             
             return result.result
-        },
+        }
 
-        getOriginType : function (origin) {
+        getOriginType (origin) {
             var html = false
             var watch = true
 
@@ -898,10 +899,12 @@ define('~/dom', [], function (require, module, exports) {
             switch ( origin.charAt(0) ) {
                 case '#':
                     origin = origin.substr(1)
+                    watch = false
                 break
                 case '!':
                     origin = origin.substr(2)
                     html = true
+                    watch = false
                 break
             }
 
@@ -910,11 +913,11 @@ define('~/dom', [], function (require, module, exports) {
                 watch : watch,
                 origin : origin
             }
-        },
+        }
 
-        getRootScope : function (scope) {
+        getRootScope (scope) {
             return scope.__proto__.__proto__ === null ? scope : this.getRootScope(scope.__proto__)
-        },
+        }
 
         /**
          * 获取动态值
@@ -926,7 +929,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {String}
          */
-        variable : function (root, scope, value, callback, uuid, type) {
+        variable (root, scope, value, callback, uuid, type) {
             var origin
             var identity = {}
 
@@ -973,7 +976,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return value
-        },
+        }
 
         /**
          * 监视数据源改变
@@ -983,7 +986,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Function}
          * @param  {String}
          */
-        watch : function (root, scope, origin, callback, uuid) {
+        watch (root, scope, origin, callback, uuid) {
 
             // exists 检测源的有效性
 
@@ -1046,7 +1049,7 @@ define('~/dom', [], function (require, module, exports) {
             // 组合完整数据源路由
             
             split.call(this, origin)
-        },
+        }
 
         /**
          * 数据源改变时响应其事件
@@ -1056,7 +1059,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Function}
          * @param  {String}
          */
-        react : function (root, scope, route, callback, uuid) {
+        react (root, scope, route, callback, uuid) {
             var that = this
             var link = route.split('.')
             var prop = link.pop()
@@ -1126,14 +1129,14 @@ define('~/dom', [], function (require, module, exports) {
 
                 })
             })
-        },
+        }
 
         /**
          * 建立平行节点
          * @param  {HTMLElement}
          * @param  {HTMLElement}
          */
-        parallel : function (reality, virtual) { 
+        parallel (reality, virtual) { 
             var that = this
 
             if ( this.config.parallel && this.config.parallel.appoint == true ) {
@@ -1199,14 +1202,14 @@ define('~/dom', [], function (require, module, exports) {
                     }
                 })
             })
-        },
+        }
 
         /**
          * 设置节点特性
          * @param {Object}
          * @param {Node}
          */
-        setProperty : function (root, node) {
+        setProperty (root, node) {
             var that = this
             var uuid = node.uuid
             var rooot = that.state(uuid).extend({
@@ -1239,7 +1242,7 @@ define('~/dom', [], function (require, module, exports) {
                 "insetBeforeTemplate"   : inner(-1),
                 "insetAfterTemplate"    : inner(1)
             })
-        },
+        }
 
         /**
          * 节点属性语法拓展
@@ -1250,7 +1253,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Object}
          * @return {String}
          */
-        attributeRule : function (root, node, name, value, scope) {
+        attributeRule (root, node, name, value, scope) {
             var that = this
             var dom = this.DOMS[node.uuid]
             var command = node.attributes
@@ -1659,7 +1662,7 @@ define('~/dom', [], function (require, module, exports) {
 
             return value || ''
 
-        },
+        }
 
         /**
          * 文档节点语法拓展
@@ -1669,7 +1672,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Object}
          * @return {Function}
          */
-        tagRule : function (root, node, scope, react) {
+        tagRule (root, node, scope, react) {
             var that = this
             var uuid = node.uuid
             var targid = this.target(node)
@@ -2533,8 +2536,8 @@ define('~/dom', [], function (require, module, exports) {
                         }
 
                     if ( src ) {
-                        promise.get(this.realpath(root, src)).then(function (err, context, xhr) {
-                            innerCSSText(dom, context)
+                        promise.get(this.realpath(root, src)).then(function (context) {
+                            innerCSSText(dom, context[0])
                             that.reflow(dom.previousScroller)
                         })
                     } else {
@@ -2698,9 +2701,8 @@ define('~/dom', [], function (require, module, exports) {
                         }
 
                         if ( src ) {
-                            promise.get(src).then(function (err, data, xhr) {
-                                if ( err ) return
-                                javascript = data
+                            promise.get(src).then(function (context) {
+                                javascript = context[0]
 
                                 run()
                             })
@@ -2870,7 +2872,7 @@ define('~/dom', [], function (require, module, exports) {
 
                 break
             }
-        },
+        }
 
         /**
          * 根据符号及序列获取值
@@ -2882,7 +2884,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @return {String}
          */
-        sign : function (tag, command, sign, index, wrap, boolean, repatriate) {
+        sign (tag, command, sign, index, wrap, boolean, repatriate) {
 
             // appoint 指定命令
 
@@ -2914,7 +2916,7 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return value
-        },
+        }
 
         /**
          * 根据序列获取数据
@@ -2924,7 +2926,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Number}
          * @return {Object}
          */
-        datar : function (scope, command, ext, index, ignore) {
+        datar (scope, command, ext, index, ignore) {
 
             return command.length ? (function (datar) {
 
@@ -2960,7 +2962,7 @@ define('~/dom', [], function (require, module, exports) {
                 return datar
 
             })({}) : scope
-        },
+        }
 
         /**
          * get command
@@ -2968,7 +2970,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Node}
          * @return {Object}
          */
-        commands : function (name, node) {
+        commands (name, node) {
             var dom = this.DOMS[node.uuid]
             var command = node.attributes
             var acommand = dom.attributes
@@ -2989,7 +2991,7 @@ define('~/dom', [], function (require, module, exports) {
                     value : null
                 }
             }
-        },
+        }
 
         /**
          * DOM监视器
@@ -2997,19 +2999,19 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Function}
          * @return {Object} DOM change data
          */
-        observer : function (dom, callback) {
+        observer (dom, callback) {
             dom.observer({
                 childList: true,
                 subtree: true,
                 characterData: true
             }, callback)
-        },
+        }
 
         /**
          * 视图重计算
          * @param  {Scroll}
          */
-        reflow : function (scroller) {
+        reflow (scroller) {
             if ( scroller ) {
                 var scroll = scroller.scrollEvent
 
@@ -3023,7 +3025,7 @@ define('~/dom', [], function (require, module, exports) {
                     }, 300)
                 }
             }
-        },
+        }
 
         /**
          * Node类别处理
@@ -3031,7 +3033,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Node}
          * @param  {Object}
          */
-        step : function (root, node, scope) {
+        step (root, node, scope) {
 
             // set node uuid
 
@@ -3096,20 +3098,20 @@ define('~/dom', [], function (require, module, exports) {
             // append to parent
 
             this.append(root, node)
-        },
+        }
 
         /**
          * Node walker
          * @param  {Node}
          * @param  {Function}
          */
-        walker : function (nodes, callback) {
+        walker (nodes, callback) {
             var node
 
             while ( node = nodes.nextNode() ) {
                 callback.call(this, node)
             }
-        },
+        }
 
         /**
          * include
@@ -3120,7 +3122,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Boolean}
          * @param  {Boolean}
          */
-        include : function (root, target, source, data, replace, inset) {
+        include (root, target, source, data, replace, inset) {
 
             source = typeof source == 'string' ? this.take(root.spacename, source) : source
             target = typeof target == 'string' ? this.getElementById(target, root.scopeid) : target
@@ -3155,7 +3157,7 @@ define('~/dom', [], function (require, module, exports) {
             // event end
 
             this.end(root.order)
-        },
+        }
 
         /**
          * 以数据渲染模版
@@ -3164,7 +3166,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Object}
          * @return {HTMLElement}
          */
-        render : function (id, source, data) {
+        render (id, source, data) {
             this.save(source, data)
 
             // compile
@@ -3172,7 +3174,7 @@ define('~/dom', [], function (require, module, exports) {
             this.compile(this.state(id), this.get(id), data, true)
 
             return [this.DOMS[0], this.DOM2[0]]
-        },
+        }
 
         /**
          * 编译模版
@@ -3182,7 +3184,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {Boolean}
          * @return {HTMLElement}
          */
-        compile : function (root, nodes, scope, creat) {
+        compile (root, nodes, scope, creat) {
             var uuid = root.uuid
             var node
 
@@ -3224,14 +3226,14 @@ define('~/dom', [], function (require, module, exports) {
             }
 
             return this.DOMS[uuid]
-        },
+        }
 
         /**
          * 事件分发
          * @param  {String}
          * @param  {String}
          */
-        dispatch : function (order, group) {
+        dispatch (order, group) {
 
             // 模块被卸载
 
@@ -3246,13 +3248,13 @@ define('~/dom', [], function (require, module, exports) {
             // 清空事件队列
 
             this.mission[order][group] = []
-        },
+        }
 
         /**
          * 渲染结束
          * 最后一个组件加载完毕时触发moduleload事件
          */
-        over : function (order) {
+        over (order) {
             if ( order == 0 ) {
                 if ( this.window.window ) {
                     this.window.trigger('moduleload')
@@ -3272,13 +3274,13 @@ define('~/dom', [], function (require, module, exports) {
                     App.trigger('moduleloadall', { id : this.module.id, module : this.module })
                 }
             }
-        },
+        }
 
         /**
          * 渲染结束
          * @param  {String}
          */
-        end : function (order) {
+        end (order) {
 
             // 按照顺序执行任务
 
@@ -3291,18 +3293,18 @@ define('~/dom', [], function (require, module, exports) {
             this.dispatch(order, 'async')
 
             this.over(order)
-        },
+        }
 
         /**
          * 加载结束
          * @param  {Function}
          * @return {Object}
          */
-        load : function (callback) {
+        load (callback) {
             this.loaded = callback
 
             return this
-        },
+        }
 
         /**
          * 错误处理
@@ -3310,7 +3312,7 @@ define('~/dom', [], function (require, module, exports) {
          * @param  {String}
          * @param  {Object}
          */
-        debug : function (tagname, type, e, end) {
+        debug (tagname, type, e, end) {
             App.console.error('<' + tagname + ' ' + type + '=?>', 'DOMError', 'is not defined')
             if ( e ) App.console.dir([e])
             if ( end ) throw '<' + tagname + '> error'
