@@ -60,9 +60,14 @@ define('~/proto', ['~/query', '~/sandbox', '~/move', '~/promise', '~/scroll', '~
             window.Move = require('~/move')
 
             // Promise
-   
+            
             Object.defineProperty(window, "Promise", {configurable:true, writable:true})
-            window.io = window.promise = require('~/promise')
+            window.promise = require('~/promise')
+
+            if ( !window.Promise ) {
+                Object.defineProperty(window, "Promise", {configurable:true, writable:true})
+                window.Promise = window.promise.Promise
+            }
 
             // Scroll
 
