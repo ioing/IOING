@@ -1,24 +1,19 @@
 // 道生一，一生二，二生三，三生万物。万物负阴而抱阳，冲气以为和。
 
-define('~/fetch', ['~/promise'], function (require, module, exports) {
+define('~/fetch', function (require, module, exports) {
     "use strict"
 
-    var promise = require('~/promise')
-    var Promise = promise.Promise
-
     // 为学日益，为道日损。损之又损，以至於无为。
-    
-    var Get = function () {
-        if ( !(this instanceof Get) ) {
-            return new Get()
-        }
-    }
-
     // 圣人常无心，以百姓之心为心。善者，吾善之；不善者，吾亦善之，德善。信者，吾信之；
-    // 不信者，吾亦信之，德信。圣人在天下，歙歙焉为天下浑其心，百姓皆注其耳目，圣人皆孩之。
 
-    Get.prototype = {
-        uri : function (id, param, name, type, callback) {
+    class Get {
+        constructor () {
+           if ( !(this instanceof Get) ) {
+                return new Get()
+            } 
+        }
+
+        uri (id, param, name, type, callback) {
             var that = this,
                 uri,
                 remote,
@@ -121,7 +116,7 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                         url : url,
                         remote : remote,
                         method : 'GET',
-                        cache : 0,
+                        cache : 600,
                         param : {},
                         headers : {},
                         settings : {},
@@ -177,7 +172,7 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                         url : uri,
                         remote : remote,
                         method : 'GET',
-                        cache : 0,
+                        cache : 600,
                         param : {},
                         headers : {},
                         settings : {},
@@ -187,9 +182,9 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
 
                 return callback.call(this, id, rename, uri, 'url')
             }
-        },
+        }
 
-        ajax : function (id, type, sid, sname, suri, stack, cacid, geter) {
+        ajax (id, type, sid, sname, suri, stack, cacid, resolve) {
             var that = this
             var module = App.get(id)
 
@@ -199,44 +194,116 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
                 var sendTime = Date.now()
             }
 
-            promise.ajax(suri.method, suri.url, suri.param, suri.headers, suri.settings, type, id).then(function (err, data, xhr) {
-                if ( err ) {
-                    App.trigger('sourceerror', {
-                        id : id,
-                        url : suri.url,
-                        params : suri.param
-                    })
-                    
-                    return that.error()
-                }
+            promise.ajax(suri.method, suri.url, suri.param, suri.headers, suri.settings, type, id, this.sessioncache).then(function (results) {
+
+                let data = results[0]
+                let xhr = results[1]
 
                 // 数据缓存 
 
                 if ( cacid ) {
-                    try {
-                        stack.setItem(cacid, '[' + Date.now() + ']=' + xhr.response)
+                    if ( type == 'source' || type == 'style' ) {
+                        App.setFileCache(sid, cacid, xhr.response)
+                    } else {
+                        try {
+                            stack.setItem(cacid, '[' + Date.now() + ']=' + xhr.response)
 
-                        // storagemaps
-                        
-                        module.storagemaps.push(cacid)
-                    } catch (e) {}
+                            // storagemaps
+                            
+                            let maps = stack.getItem()
+                            module.storagemaps.push(cacid)
+                        } catch (e) {}
+                    }
                 }
 
                 if ( type == 'data' ) {
                     data = that.filter(module, data, sname)
                 }
 
-                if ( geter ) geter.done(err, sid, sname, suri.url, data)
-
                 // request 请求用时统计
                 
-                if ( suri.remote ) {
-                    App.trigger('requestserver', { url : suri.url, time : Date.now() - sendTime })
-                }
-            })
-        },
+                requestIdleCallback(function () {
+                    if ( suri.remote ) {
+                        App.trigger('requestserver', { url : suri.url, time : Date.now() - sendTime })
+                    }
+                })
 
-        filter : function (module, data, name) {
+                resolve([sid, sname, suri.url, data])
+
+            }).catch(function () {
+                App.trigger('sourceerror', {
+                    id : id,
+                    url : suri.url,
+                    params : suri.param
+                })
+                
+                return that.error()
+            })
+        }
+
+        cache (id, sid, cacid, suri, sname, cache, stack, type, resolve) {
+            var module = App.get(id)
+            var clife, ctime
+
+            // 查看cache生命周期
+
+            if ( cache ) {
+                clife = /\[([0-9]+)\]\=/.exec(cache) || [0, 0]
+                ctime = clife[1]
+
+                cache = !ctime 
+                        ? null 
+                        : App._EXISTS && Date.now() - ctime > suri.cache * 1000 
+                        ? null 
+                        : cache.substr(clife[0].length)
+            }
+
+            // 如果cache符合条件则从cache读取数据
+
+            if ( cache ) {
+
+                if ( type === 'data' ) {
+
+                    if ( typeof cache === 'string' ) {
+                        try {
+                            cache = JSON.parse(cache)
+                        } catch (e) {
+
+                            try {
+                                cache = App.sandbox.window.eval('(' + cache + ')')
+                            } catch (e) {
+                                cache = null 
+                            }
+
+                            App.console[typeof cache === 'object' ? 'warn' : 'error']('url[' + suri.url + ']', 'SyntaxError', 'Unexpected token in JSON')
+                        }
+                    }
+
+                    cache = cache ? this.filter(module, cache, sname) : null
+                }
+
+                // 模块超时
+
+                if ( App._EXISTS === false && suri.permanent && Date.now() - ctime > module.config.timeout * 1000 ) {
+                    module.timeout = true
+                }
+
+                if ( cache ) {
+
+                    resolve([sid, sname, suri.url, cache])
+
+                    App.console.info('Data [' + sname + ']', 'From cache', sid)
+
+                    return
+                }
+            }
+
+            // fetch
+
+            this.ajax(id, type, sid, sname, suri, stack, cacid, resolve)
+        }
+
+        filter (module, data, name) {
             var con = module.controller
  
             if ( typeof con == 'function' ) {
@@ -246,178 +313,126 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
             } else {
                 return data
             }
-        },
+        }
 
-        async : function (id, param, source, type, geter) {
+        async (id, param, source, type, resolve) {
             var that = this
               , gets = []
               , module = App.get(id)
 
             for (var i in source) {
                 gets.push((function () {
-                    var geter = new Promise()
+                    return new Promise(function (resolve, reject) {
 
-                    this.uri(id, param, source[i], type, function (sid, sname, suri, stype) {
+                        that.uri(id, param, source[i], type, function (sid, sname, suri, stype) {
 
-                        switch (stype) {
-                            case 'object':
+                            switch (stype) {
+                                case 'object':
 
-                                // filter
-                                
-                                if ( type == 'data' ) {
-                                    suri = that.filter(module, suri, sname)
-                                }
-
-                                geter.done(null, sid, sname, null, suri)
-                                
-                            break
-
-                            case 'function':
-                                var callback = function (data) {
-                                        geter.done(null, sid, sname, suri, data)
+                                    // filter
+                                    
+                                    if ( type == 'data' ) {
+                                        suri = that.filter(module, suri, sname)
                                     }
-                                  , data = suri(callback)
 
-                                // filter
+                                    resolve([sid, sname, null, suri])
+                                    
+                                break
 
-                                if ( type == 'data' ) {
-                                    data = that.filter(module, data, sname)
-                                }
-
-                                // suri return fn (param, callback) param 为模块参数
-                                
-                                // 支持同步和异步, 如果function返回的方式是异步则需要callback
-
-                                if ( typeof data === 'object' || data === false ) {
-                                    callback(data)
-                                } else {
-                                    return data
-                                }
-                                
-                            break
-
-                            case 'url':
-                                var stack = suri.storeage 
-                                var cacid = suri.cache ? suri.url + '$' + JSON.stringify(suri.param) : false
-                                var cache, clife, ctime
-
-                                try {
-                                    cache = cacid ? stack.getItem(cacid) : false
-                                } catch (e) {}
-
-                                // 查看cache生命周期
-
-                                if ( cache ) {
-                                    clife = /\[(\d+)\]\=/.exec(cache) || [0, 0]
-                                    ctime = clife[1]
-
-                                    cache = !ctime 
-                                            ? null 
-                                            : App._EXISTS && Date.now() - ctime > suri.cache * 1000 
-                                            ? null 
-                                            : cache.substr(clife[0].length)
-                                }
-
-                                // 如果cache符合条件则从cache读取数据
-
-                                if ( cache ) {
-
-                                    if ( type === 'data' ) {
-
-                                        if ( typeof cache === 'string' ) {
-                                            try {
-                                                cache = JSON.parse(cache)
-                                            } catch (e) {
-
-                                                try {
-                                                    cache = App.sandbox.window.eval('(' + cache + ')')
-                                                } catch (e) {
-                                                    cache = null 
-                                                }
-
-                                                App.console[typeof cache === 'object' ? 'Warning' : 'error']('url[' + suri.url + ']', 'SyntaxError', 'Unexpected token in JSON')
-                                            }
+                                case 'function':
+                                    var callback = function (data) {
+                                            resolve([sid, sname, suri, data])
                                         }
+                                      , data = suri(callback)
 
-                                        cache = cache ? that.filter(module, cache, sname) : null
+                                    // filter
+
+                                    if ( type == 'data' ) {
+                                        data = that.filter(module, data, sname)
                                     }
 
-                                    if ( App._EXISTS === false && suri.permanent && Date.now() - ctime > module.config.timeout * 1000 ) {
-                                        module.timeout = true
+                                    // suri return fn (param, callback) param 为模块参数
+                                    // 支持同步和异步, 如果function返回的方式是异步则需要callback
+
+                                    if ( typeof data === 'object' || data === false ) {
+                                        callback(data)
+                                    } else {
+                                        return data
+                                    }
+                                    
+                                break
+
+                                case 'url':
+                                    var stack = suri.storeage 
+                                    var dimen = JSON.stringify(suri.param)
+                                    var cacid = suri.cache > 0 ? suri.url + (dimen == '{}' ? '' : '$' + encodeURI(dimen)) : null
+                                    var cache
+
+                                    if ( cacid ) {
+                                        if ( type == 'source' || type == 'style' ) {
+                                            App.getFileCache(sid, cacid).then(function (res) {
+                                                resolve([sid, sname, suri.url, res])
+                                                console.log()
+                                            }).catch(function () {
+                                                that.ajax(id, type, sid, sname, suri, stack, cacid, resolve)
+                                            })
+                                        } else {
+                                            try {
+                                                cache = stack.getItem(cacid)
+                                            } catch (e) {}
+                                            that.cache(id, sid, cacid, suri, sname, cache, stack, type, resolve)
+                                        }
+                                    } else {
+                                        that.ajax(id, type, sid, sname, suri, stack, cacid, resolve)
                                     }
 
-                                    if ( cache ) {
+                                break
+                            }
 
-                                        geter.done(null, sid, sname, suri.url, cache)
-
-                                        setTimeout(function () {
-
-                                            // fetch
-
-                                            that.ajax(id, type, sid, sname, suri, stack, cacid)
-                                            
-                                        }, 2000)
-
-                                        App.console.info('Data [' + sname + ']', 'From cache', sid)
-
-                                        break
-                                    }
-                                }
-                                
-
-                                // fetch
-
-                                that.ajax(id, type, sid, sname, suri, stack, cacid, geter)
-
-                            break
-                        }
+                        })
 
                     })
-
-                    return geter
 
                 }).call(this))
             }
 
-            promise.join(gets).then(
-                function (results) {
+            Promise.all(gets).then(function (results) {
                     var sids = [],
                         suri = [],
                         source = []
 
                     for (var i = 0, l = results.length; i < l; i++) {
                         var data = results[i],
-                            id = data[1],
-                            sid = data[2],
-                            uri = data[3],
-                            context = data[4]
+                            id = data[0],
+                            sid = data[1],
+                            uri = data[2],
+                            context = data[3]
 
                         sids[sid] = id
                         suri[sid] = uri
                         source[sid] = context
                     }
 
-                    geter.done(null, sids, suri, source, type)
+                    resolve([sids, suri, source, type])
                 }
             )
-        },
+        }
 
-        source : function (id, param, config, type) {
-            var geter = new Promise()
-            
-            if ( !config[type] || !config[type].length ) {
-                geter.done(null, id, null, {}, type)
-            } else {
-                this.async(id, param, config[type], type, geter)
-            }
+        source (id, param, config, type) {
+            var that = this
+            return new Promise(function (resolve, reject) {
+                if ( !config[type] || !config[type].length ) {
+                    resolve([id, null, {}, type])
+                } else {
+                    that.async(id, param, config[type], type, resolve)
+                }
+            })
+        }
 
-            return geter
-        },
-
-        get : function (id, config, param, callback, error) {
+        get (id, config, param, callback, error) {
             this.error = error || noop
 
-            promise.join([
+            Promise.all([
                 this.source(id, param, config, 'data'),
                 this.source(id, param, config, 'style'),
                 this.source(id, param, config, 'source')
@@ -429,24 +444,24 @@ define('~/fetch', ['~/promise'], function (require, module, exports) {
 
                     for (var i = 0, l = results.length; i < l; i++) {
                         var data = results[i],
-                            type = data[4]
+                            type = data[3]
 
-                        sids[type] = data[1] || {}
-                        suri[type] = data[2] || {}
-                        source[type] = data[3] || {}
+                        sids[type] = data[0] || {}
+                        suri[type] = data[1] || {}
+                        source[type] = data[2] || {}
                     }
 
                     callback(sids, suri, source)
                 }
             )
-        },
+        }
 
-        fetch : function () {
+        fetch () {
             this.sessioncache = false
             this.get.apply(this, arguments)
-        },
+        }
 
-        prefetch : function () {
+        prefetch () {
             this.sessioncache = true
             this.get.apply(this, arguments)
         }
