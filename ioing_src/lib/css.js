@@ -6,12 +6,12 @@ define('~/css', [], function (require, module, exports) {
 
     // class & global scope
     
-    var CLASS = {}
-    var GLOBAL = {}
+    const CLASS = {}
+    const GLOBAL = {}
 
     // requestAnimationFrame
 
-    var rAF = window.requestAnimationFrame
+    const rAF = window.requestAnimationFrame
 
     /*
      * 语法解释 提取
@@ -20,7 +20,7 @@ define('~/css', [], function (require, module, exports) {
 
     // Capture groups
 
-    var REGEXP = {
+    const REGEXP = {
             variable : /\[(.*?)(?=\])\]/g,
             factor : /\((.*?)(?=\))\)/,
             url : /\burl\((.*?)(?=\))\)/,
@@ -39,42 +39,42 @@ define('~/css', [], function (require, module, exports) {
 
     // Capture groups
 
-    var CAP_COMMENT = 1
-      , CAP_SELECTOR = 2
-      , CAP_END = 3
-      , CAP_ATTR = 4
+    const CAP_COMMENT = 1
+        , CAP_SELECTOR = 2
+        , CAP_END = 3
+        , CAP_ATTR = 4
 
-    // 是为空也
+    // 是为空
     
-    function isEmpty (x) {
+    let isEmpty = (x) => {
         return typeof x == 'undefined' || x.length == 0 || x == null
     }
 
     // 适配的前缀
 
-    function getPrefixStyleProp (prop) {
+    let getPrefixStyleProp = (prop) => {
         return device.feat.prefixStyle(prop, true)
     }
 
     // CLASS CSS
 
-    function CSS () {
-        if ( !(this instanceof CSS) ) {
-            return new CSS()
+    class CSS {
+        constructor () {
+            if ( !(this instanceof CSS) ) {
+                return new CSS()
+            }
         }
-    }
 
-    CSS.prototype = {
-        init : function (id, module) {
+        init (id, module) {
             this.id = id
             this.module = module
             this._keyFrame = []
             this.sandbox = application.sandbox
 
             return this
-        },
+        }
 
-        setup : function (config) {
+        setup (config) {
             this.config = config || {
                 root : "modules/",
                 data : {},
@@ -94,9 +94,9 @@ define('~/css', [], function (require, module, exports) {
 
             this.sandbox.window.fileCache = {}
             this.sandbox.window.fileLoading = []
-        },
+        }
 
-        clear : function () {
+        clear () {
 
             // 清除当前模块css变量
 
@@ -104,35 +104,23 @@ define('~/css', [], function (require, module, exports) {
                 attributes : {},
                 children : {}
             }
-        },
+        }
 
-        base : function (css) {
-            if ( CompiledCSSBaseStyle ) {
-                css = CompiledCSSBaseStyle
-            } else {
-                css = CompiledCSSBaseStyle = this.compile('frameworks', CSSBaseStyle)
-            }
-
-            return css
-        },
-
-        render : function (list, sids, sources) {
-            var css = this.base()
+        render (list, sids, sources) {
+            let css = this.baseCSS()
 
             if ( !list ) {
                 throw 'IOING ERROR { module ' + sids + ' css source is null }'
             }
 
-            for (var i = 0, l = list.length; i < l; i++) {
-                var name = list[i]
-
+            for (let name of list) {
                 css += this.compile(sids[name], sources[name], { root : 0 })
             }
 
             return css
-        },
+        }
 
-        compile : function (id, source, scope, opts, element) {
+        compile (id, source, scope, opts, element) {
             this.id = id
             this.opts = opts || {}
             this.scope = {}.extend(this.config.data, scope)
@@ -140,27 +128,35 @@ define('~/css', [], function (require, module, exports) {
             this.element = element
 
             if ( source === true ) {
-                return this.base()
+                return this.baseCSS()
             }
 
             return this.toCSS(this.data = this.toJSON(source))
-        },
+        }
 
-        toJSON : function (cssString, args) {
-            var node = {
+        baseCSS (css) {
+            if ( CompiledCSSBaseStyle ) {
+                css = CompiledCSSBaseStyle
+            } else {
+                css = CompiledCSSBaseStyle = this.compile('frameworks', CSSBaseStyle)
+            }
+
+            return css
+        }
+
+        toJSON (cssString, args) {
+            let node = {
                 children: {},
                 attributes: {}
             }
-            var match = null
-            var count = 0
+            let match = null
+            let count = 0
 
-            if ( typeof args == 'undefined' ) {
-                var args = {
-                    ordered: false,
-                    comments: false,
-                    stripComments: false,
-                    split: false
-                }
+            args = args || {
+                ordered: false,
+                comments: false,
+                stripComments: false,
+                split: false
             }
 
             if ( args.stripComments ) {
@@ -173,37 +169,30 @@ define('~/css', [], function (require, module, exports) {
 
                     // Comment
 
-                    var add = match[CAP_COMMENT].trim()
+                    let add = match[CAP_COMMENT].trim()
                     node[count++] = add
                 } else if ( !isEmpty(match[CAP_SELECTOR]) ) {
 
                     // New node, we recurse
 
-                    var name = match[CAP_SELECTOR].trim()
+                    let name = match[CAP_SELECTOR].trim()
 
                     // This will return when we encounter a closing brace
 
-                    var newNode = this.toJSON(cssString, args)
+                    let newNode = this.toJSON(cssString, args)
+
                     if ( args.ordered ) {
-                        var obj = {}
-                        obj['name'] = name
-                        obj['value'] = newNode
-
-                        // Since we must use key as index to keep order and not
-                        // name, this will differentiate between a Rule Node and an
-                        // Attribute, since both contain a name and value pair.
-
-                        obj['type'] = 'rule'
-                        node[count++] = obj
-                    } else {
-                        if ( args.split ) {
-                            var bits = name.split(',')
-                        } else {
-                            var bits = [name]
+                        node[count++] = {
+                            name: name,
+                            type: 'rule',
+                            value: newNode
                         }
-                        for (var i in bits) {
-                            var sel = bits[i].trim()
-                            var unique = sel in node.children
+                    } else {
+                        let bits = args.split ? name.split(',') : [name]
+
+                        for (let i in bits) {
+                            let sel = bits[i].trim()
+                            let unique = sel in node.children
 
                             // function unique
                             
@@ -212,10 +201,10 @@ define('~/css', [], function (require, module, exports) {
                                 unique = false
                             }
                             if ( unique ) {
-                                for (var att in newNode.attributes) {
+                                for (let att in newNode.attributes) {
                                     node.children[sel].attributes[att] = newNode.attributes[att]
                                 }
-                                for (var cel in newNode.children) {
+                                for (let cel in newNode.children) {
                                     node.children[sel].children[cel] = newNode.children[cel]
                                 }
                             } else {
@@ -229,29 +218,31 @@ define('~/css', [], function (require, module, exports) {
 
                     return node
                 } else if ( !isEmpty(match[CAP_ATTR]) ) {
-                    var line = match[CAP_ATTR].trim()
+                    let line = match[CAP_ATTR].trim()
 
                     if ( line.charAt(line.length - 1) == '}' ) {
                         REGEXP.alt.lastIndex = REGEXP.alt.lastIndex - 1
                     }
 
-                    var attr = REGEXP.attr.exec(line)
+                    let attr = REGEXP.attr.exec(line)
 
                     if (attr) {
 
                         // Attribute
 
-                        var name = attr[1].trim()
-                        var value = attr[2].trim()
+                        let name = attr[1].trim()
+                        let value = attr[2].trim()
+
                         if ( args.ordered ) {
-                            var obj = {}
-                            obj['name'] = name
-                            obj['value'] = value
-                            obj['type'] = 'attr'
-                            node[count++] = obj
+                            node[count++] = {
+                                name: name,
+                                type: 'attr',
+                                value: value
+                            }
                         } else {
                             if ( name in node.attributes ) {
-                                var currVal = node.attributes[name]
+                                let currVal = node.attributes[name]
+
                                 if ( !(currVal instanceof Array) ) {
                                     node.attributes[name] = [currVal]
                                 }
@@ -270,10 +261,11 @@ define('~/css', [], function (require, module, exports) {
             }
 
             return node
-        },
+        }
 
-        toCSS : function (node, depth, scope, breaks, parent) {
-            var cssString = ''
+        toCSS (node, depth, scope, breaks, parent) {
+            let cssString = ''
+
             if ( typeof depth == 'undefined' ) {
                 depth = 0
             }
@@ -284,10 +276,11 @@ define('~/css', [], function (require, module, exports) {
                 breaks = false
             }
             if ( node.attributes ) {
-                for (i in node.attributes) {
-                    var att = node.attributes[i]
+                for (let i in node.attributes) {
+                    let att = node.attributes[i]
+
                     if ( att instanceof Array ) {
-                        for (var j = 0; j < att.length; j++) {
+                        for (let j = 0; j < att.length; j++) {
                             cssString += this._setAttr(i, att[j], depth, scope, parent)
                         }
                     } else {
@@ -296,8 +289,9 @@ define('~/css', [], function (require, module, exports) {
                 }
             }
             if ( node.children ) {
-                var first = true
-                for (var i in node.children) {
+                let first = true
+
+                for (let i in node.children) {
                     if (breaks && !first) {
                         cssString += '\n'
                     } else {
@@ -309,13 +303,13 @@ define('~/css', [], function (require, module, exports) {
             }
 
             return cssString
-        },
+        }
 
-        realpath : function (url) {
+        realpath (url) {
             return application.realpath(this.id, this.opts.sid, url, this.opts.path)
-        },
+        }
 
-        unit : function (value, data, li, ri) {
+        unit (value, data, li, ri) {
             li = 0
             ri = 0
             data = data || this.scope
@@ -337,7 +331,7 @@ define('~/css', [], function (require, module, exports) {
                 })
 
                 value = value.replace(REGEXP.evals, function (val, count) { 
-                    var translate = false
+                    let translate = false
                     count = data.getValueByRoute(count.replace(UNIT.__unitRegExp__, function (size, length, unit) { 
                         if ( unit == '%' ) {
                             switch (name) {
@@ -375,9 +369,9 @@ define('~/css', [], function (require, module, exports) {
             })
 
             return value
-        },
+        }
 
-        eval : function (value, data) {
+        eval (value, data) {
 
             if ( value.indexOf('(') !== -1 ) {
                 if ( !device.feat.supportSizeCalc ) {
@@ -390,11 +384,12 @@ define('~/css', [], function (require, module, exports) {
             value = this.unit(value, data)
 
             return value
-        },
+        }
 
-        _loadBackgroundImage : function (dom, url, src, call, file) {
-            var that = this
-            var image = document.createElement('IMG')
+        _loadBackgroundImage (dom, url, src, call, file) {
+            let that = this
+            let sdoc = this.sandbox.window.document
+            let image = sdoc.createElement('IMG')
 
             image.src = src
             image.onload = function () {
@@ -405,10 +400,10 @@ define('~/css', [], function (require, module, exports) {
                     // additional style
 
                     if ( call ) {
-                        var styler = call.split(',')
+                        let styler = call.split(',')
 
-                        for (var i = 0, l = styler.length; i < l; i++) {
-                            var prop = styler[i].split(':')
+                        for (let i = 0, l = styler.length; i < l; i++) {
+                            let prop = styler[i].split(':')
 
                             dom.style.set(prop[0], prop[1])
                         }
@@ -433,15 +428,15 @@ define('~/css', [], function (require, module, exports) {
 
             // append image
 
-            that.sandbox.window.document.documentElement.appendChild(image)
-        },
+            sdoc.documentElement.appendChild(image)
+        }
 
         // $
 
-        _getVariable : function (value, scope) {
-            var data = this.scope
-            var config = this.config
-            var variable = this.variable
+        _getVariable (value, scope) {
+            let data = this.scope
+            let config = this.config
+            let variable = this.variable
 
             // 解析变量
 
@@ -462,16 +457,16 @@ define('~/css', [], function (require, module, exports) {
             }
 
             return value
-        },
+        }
 
         // Helpers
 
-        _setAttr : function (name, value, depth, scope, parent) {
-            var that = this
+        _setAttr (name, value, depth, scope, parent) {
+            let that = this
 
-            var id = this.id
-            var config = this.config
-            var cssString = ''
+            let id = this.id
+            let config = this.config
+            let cssString = ''
 
             // 处理前缀
 
@@ -520,8 +515,8 @@ define('~/css', [], function (require, module, exports) {
                                 // css file
 
                                 if ( src ) {
-                                    var dom = that.element
-                                    var target = that.opts.target
+                                    let dom = that.element
+                                    let target = that.opts.target
 
                                     if ( dom ) {
 
@@ -529,16 +524,23 @@ define('~/css', [], function (require, module, exports) {
 
                                         if ( that.sandbox.window.fileCache[src] ) return url
 
-                                        var fragment = dom.parentFragment
-                                        var scroller = dom.previousScroller
-                                        var infinite = scroller && scroller.getAttrSign('infinite')
-                                        var delaying
+                                        let fragment = dom.parentFragment
+                                        let scroller = dom.previousScroller
+                                        let infinite = scroller && scroller.getAttrSign('infinite')
+                                        let delaying
+
+                                        if ( infinite ) {
+                                            var show, hide
+                                        }
 
                                         // 延时取得图片
                                         
                                         function fetch (time) {
                                             delaying = setTimeout(function () {
-                                                that._loadBackgroundImage(dom, url, src, call)
+
+                                                requestIdleCallback((deadline) => {
+                                                    that._loadBackgroundImage(dom, url, src, call)
+                                                })
                                                 
                                                 if ( infinite ) {
                                                     fragment.off('show', show).off('hide', hide)
@@ -552,9 +554,9 @@ define('~/css', [], function (require, module, exports) {
 
                                             // infinite show
 
-                                            var show = function (e) {
-                                                var scroll = scroller.scrollEvent
-                                                var timeout = 0
+                                            show = function (e) {
+                                                let scroll = scroller.scrollEvent
+                                                let timeout = 0
 
                                                 if ( scroll ) {
                                                     timeout = scroll.wrapperHeight
@@ -569,7 +571,7 @@ define('~/css', [], function (require, module, exports) {
 
                                             // infinite hide
 
-                                            var hide = function () {
+                                            hide = function () {
                                                 clearTimeout(delaying)
                                             }
 
@@ -588,7 +590,9 @@ define('~/css', [], function (require, module, exports) {
                                         function load () {
                                             this.find(parent).each(function () {
                                                 this.style.backgroundImage = 'none'
-                                                that._loadBackgroundImage(this, url, src, call, 1)
+                                                requestIdleCallback((deadline) => {
+                                                    that._loadBackgroundImage(this, url, src, call, 1)
+                                                })
                                             })
                                         }
 
@@ -615,7 +619,7 @@ define('~/css', [], function (require, module, exports) {
 
                     // gradient 兼容处理
                     
-                    var gradient = value.indexOf('gradient(')
+                    let gradient = value.indexOf('gradient(')
 
                     if ( gradient >= 0 ) {
                         cssString += '\t'.repeat(depth) + name + ': ' + value + ';\n'
@@ -633,10 +637,10 @@ define('~/css', [], function (require, module, exports) {
                     break
 
                 case '@extend':
-                    var extend = this.data.children[value]
+                    let extend = this.data.children[value]
 
                     if ( extend ) {
-                        var attributes = extend.attributes
+                        let attributes = extend.attributes
 
                         for (name in attributes) {
                             cssString += this._setAttr(name, attributes[name], depth, scope)
@@ -648,15 +652,15 @@ define('~/css', [], function (require, module, exports) {
                     break
 
                 case '@class':
-                    var methods = REGEXP.fun.exec(value),
-                        name = methods[1],
+                    let methods = REGEXP.fun.exec(value),
+                        cname = methods[1],
                         args = methods[2].split(/[\s]?\,[\s]?/),
-                        classes = this.data.children['@' + name] || CLASS[name] || {},
+                        classes = this.data.children['@' + cname] || CLASS[cname] || {},
                         argsKey = classes.args,
                         attributes = classes.attr
 
-                        for (name in attributes) {
-                            cssString += this._setAttr(name, attributes[name].replace(REGEXP.variable, function (context, variable) { return args[argsKey[variable]] || context }), depth, scope)
+                        for (let prop in attributes) {
+                            cssString += this._setAttr(prop, attributes[prop].replace(REGEXP.variable, function (context, variable) { return args[argsKey[variable]] || context }), depth, scope)
                         }
 
                         return cssString
@@ -665,10 +669,10 @@ define('~/css', [], function (require, module, exports) {
             }
 
             return '\t'.repeat(depth) + name + ': ' + value + ';\n'
-        },
+        }
 
-        _setNode : function (name, value, depth, scope) {
-            var cssString = '',
+        _setNode (name, value, depth, scope) {
+            let cssString = '',
                 descendant = value.descendant || this.descendant,
                 names = [],
                 section = 0,
@@ -699,7 +703,7 @@ define('~/css', [], function (require, module, exports) {
                         // 禁止属性作用域
                         
                         if ( this.descendant ) {
-                            for (var i in value.children) {
+                            for (let i in value.children) {
                                 value.children[i].descendant = ' '
                             }
                         }
@@ -711,7 +715,7 @@ define('~/css', [], function (require, module, exports) {
 
                         // section name
                         
-                        var sname = REGEXP.section.exec(name)
+                        let sname = REGEXP.section.exec(name)
                         
                         sname = sname ? sname[1] : 'section:error'
                         scope = scope ? scope + ' ' + sname : sname
@@ -733,13 +737,13 @@ define('~/css', [], function (require, module, exports) {
 
                         name = REGEXP.classes.exec(name)
 
-                        var className = name[1],
+                        let className = name[1],
                             classArgs = name[2]
 
-                        var argsKey = {}
-                        var argsMap = classArgs.split(/[\s]?\,[\s]?/)
+                        let argsKey = {}
+                        let argsMap = classArgs.split(/[\s]?\,[\s]?/)
 
-                        for (var i = 0, l = argsMap.length; i < l; i++) {
+                        for (let i = 0, l = argsMap.length; i < l; i++) {
                             argsKey[argsMap[i]] = i
                         }
 
@@ -761,7 +765,7 @@ define('~/css', [], function (require, module, exports) {
 
                         if ( depth == 0 ) {
                             attributes = value.attributes
-                            for (var key in attributes) {
+                            for (let key in attributes) {
                                 GLOBAL[key] = this._getVariable(attributes[key], scope)
                             }
                         }
@@ -773,7 +777,7 @@ define('~/css', [], function (require, module, exports) {
 
                         if ( depth == 0 || scope ) {
                             attributes = value.attributes
-                            for (var key in attributes) {
+                            for (let key in attributes) {
                                 if ( scope ) {
                                     if ( !this.variable.children[scope] ) this.variable.children[scope] = {}
                                     this.variable.children[scope][key] = attributes[key]
@@ -803,8 +807,8 @@ define('~/css', [], function (require, module, exports) {
                 names = name.split(',')
                 name = ''
 
-                for (var i = 0, l = names.length; i < l; i++) {
-                    var sname = names[i].trim()
+                for (let i = 0, l = names.length; i < l; i++) {
+                    let sname = names[i].trim()
 
                     // this 关键字替换
 
