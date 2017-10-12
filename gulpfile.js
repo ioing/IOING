@@ -275,78 +275,54 @@ let babelhtml = () => {
     })
 }
 
-// babel unify
-
-gulp.task("babel:unify", (cb) => {
-	let index = 'ioing_src/lib/unify.js'
-	gulp.src(index)
-		.on('end', cb)
-    	.pipe(watch(index))
-    	.pipe(babel({
-	      presets: ['es2015','stage-3']
-	    }))
-	    .pipe(gulp.dest('ioing_src/dist'))
-})
+let libs = [
+	'ioing_src/lib/unify.js',
+    'ioing_src/lib/application.js',
+    'ioing_src/lib/proto.js',
+    'ioing_src/lib/transform.js',
+    'ioing_src/lib/template.js',
+    'ioing_src/lib/dom.js',
+    'ioing_src/lib/css.js',
+    'ioing_src/lib/fetch.js',
+    'ioing_src/lib/loader.js',
+    'ioing_src/lib/sandbox.js',
+    'ioing_src/lib/promise.js',
+    'ioing_src/lib/query.js',
+    'ioing_src/lib/move.js',
+    'ioing_src/lib/touch.js',
+    'ioing_src/lib/scroll.js'
+]
 
 // bulid ioing
 
-gulp.task("build:ioing", ["babel:unify"], (cb) => {
-	let libs = [
-        'ioing_src/lib/application.js',
-        'ioing_src/lib/proto.js',
-        'ioing_src/lib/transform.js',
-        'ioing_src/lib/template.js',
-        'ioing_src/lib/dom.js',
-        'ioing_src/lib/css.js',
-        'ioing_src/lib/fetch.js',
-        'ioing_src/lib/loader.js',
-        'ioing_src/lib/sandbox.js',
-        'ioing_src/lib/promise.js',
-        'ioing_src/lib/query.js',
-        'ioing_src/lib/move.js',
-        'ioing_src/lib/touch.js',
-        'ioing_src/lib/scroll.js'
-    ]
-
-    gulp.src(libs)
+gulp.task("ioing", (cb) => {
+	let stream = gulp.src(libs) 
     	.on('end', cb)
-    	.pipe(watch(libs))
-    	.pipe(babel({
+        .pipe(babel({
 	      presets: ['es2015','stage-3'],
 	    }))
-	    .pipe(gulp.dest('ioing_src/dist'))
-})
-
-// concat ioing
-
-gulp.task("concat:ioing", ["build:ioing"], (cb) => {
-	 let dist = [
-		'ioing_src/dist/unify.js',
-        'ioing_src/dist/application.js',
-        'ioing_src/dist/proto.js',
-        'ioing_src/dist/transform.js',
-        'ioing_src/dist/template.js',
-        'ioing_src/dist/dom.js',
-        'ioing_src/dist/css.js',
-        'ioing_src/dist/fetch.js',
-        'ioing_src/dist/loader.js',
-        'ioing_src/dist/sandbox.js',
-        'ioing_src/dist/promise.js',
-        'ioing_src/dist/query.js',
-        'ioing_src/dist/move.js',
-        'ioing_src/dist/touch.js',
-        'ioing_src/dist/scroll.js'
-    ]
-
-    let stream = gulp.src(dist) 
-    	.on('end', cb)
-        .pipe(concat('ioing.js'))
 
     if ( release ) {
     	stream = stream.pipe(uglify())
     }
 
+    stream.pipe(gulp.dest(PATH.static + 'io'))
+})
+
+gulp.task("concat:ioing", (cb) => {
+	
+    let stream = gulp.src(libs) 
+    	.on('end', cb)
+        .pipe(concat('ioing.js'))
+        .pipe(babel({
+	      presets: ['es2015','stage-3'],
+	    }))
+
+    if ( release ) {
+    	stream = stream.pipe(uglify())
+    }
     stream.pipe(gulp.dest('./'))
+    stream.pipe(gulp.dest(PATH.static))
 })
 
 // clean bulid
@@ -376,50 +352,47 @@ gulp.task("moveRootJs", ["concat:ioing"], (cb) => {
 // prefetch index module
 
 gulp.task("fetchModule", ["js"], (cb) => {
-	if ( release ) {
-		let id = ''
-	    let geter = () => {
-	    	let through = require('through2')
+	let id = ''
+    let geter = () => {
+    	let through = require('through2')
 
-	    	return through.obj(function(file, enc, cb, contents) {
-		        contents = file.contents.toString()
-		        contents = contents.replace(/define\(/, function (d) {
-		        	return d + '"' + PATH.approot + id + '", '
-		        })
-		        loadcache.push('<script>\n'
-		        	+ contents + '\n'
-		        	+ '</script>')
-				
-		        cb()
-		    })
-	    }
+    	return through.obj(function(file, enc, cb, contents) {
+	        contents = file.contents.toString()
+	        contents = contents.replace(/define\(/, function (d) {
+	        	return d + '"' + PATH.approot + id + '", '
+	        })
+	        loadcache.push('<script>\n'
+	        	+ contents + '\n'
+	        	+ '</script>')
+			
+	        cb()
+	    })
+    }
 
-	    let step = () => {
-	    	id = "modules/" + prefetch.pop().id + "/config"
-	    	gulp.src([PATH.static + id + ".js"])
-				.on('end', function () {
-					if ( prefetch.length == 0 ) {
-						cb()
-					} else {
-						step()
-					}
-				})
-				.pipe(geter())
-	    }
-	 
-	    if ( prefetch.length == 0 ) {
-	    	cb()
-	    } else {
-	    	step()
-	    }
-	} else {
-		cb()
-	}
+    let step = () => {
+    	id = "modules/" + prefetch.pop().id + "/config"
+    	gulp.src([PATH.static + id + ".js"])
+			.on('end', function () {
+				if ( prefetch.length == 0 ) {
+					cb()
+				} else {
+					step()
+				}
+			})
+			.pipe(geter())
+    }
+ 
+    if ( prefetch.length == 0 ) {
+    	cb()
+    } else {
+    	step()
+    }
+    
 })
 
 // bulid index page
 
-gulp.task("index", ["fetchModule", "moveRootJs"], (cb) => {
+gulp.task("index", ["fetchModule", "serviceWorker", "moveRootJs"], (cb) => {
     gulp.src(["index.html"])
     	.on('end', cb)
         .pipe(replace(/\/\*\*::config\*\*\//g, 'App.config.root = "' + PATH.approot + '"'))
@@ -431,6 +404,12 @@ gulp.task("index", ["fetchModule", "moveRootJs"], (cb) => {
         }))
         .pipe(babelhtml())
         .pipe(gulp.dest(PATH.pages))
+})
+
+gulp.task("serviceWorker", (cb) => {
+	gulp.src(["service-worker.js"])
+		.on('end', cb)
+		.pipe(gulp.dest(PATH.pages))
 })
 
 // bulid js
@@ -488,12 +467,6 @@ gulp.task("new", () => {
 
 				fs.writeFile(uri + "/config.js", `
 export default {
-	transformstart : function () {
-	},
-	transformsend : function () {
-	},
-    preload : function () {
-    },
     resources : {
         script : {
         },
