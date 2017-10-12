@@ -1918,22 +1918,21 @@ define('~/scroll', [], function (require, module, exports) {
 					
 					distances = current - start,
 					direction = distances < 0 ? -1 : 1
-					speed = Math.min(Math.abs(distances) / DPR / time, this.options.speedLimit)
-					// speed = this.speedM == undefined ? speed : Math.min(this.speedM, speed)
-					deceleration = Math.max(this.options.deceleration - this.acceleration, 0.003)
-					distance = speed * speed / deceleration / 2 * direction
-					duration = speed / deceleration * this.options.speedRate
-					destination = current + distance
+					speed = Math.min(Math.abs(distances) / time, this.options.speedLimit)
+					speed = this.speedM == undefined ? speed : Math.min(this.speedM, speed)
+					deceleration = Math.max(this.options.deceleration - this.acceleration, 0.003) * DPR
+					distance = speed * speed / deceleration
+					destination = current + distance * direction
 
 					if ( destination < lowerMargin ) {
 						destination = wrapperSize ? lowerMargin - (wrapperSize * this.options.boundariesLimit * (speed / dP(8))) : lowerMargin
 						distance = Math.abs(destination - current)
-						duration = distance / speed * 1.7
 					} else if ( destination > upperMargin ) {
 						destination = wrapperSize ? wrapperSize * this.options.boundariesLimit * (speed / dP(8)) : 0
 						distance = Math.abs(current) + destination
-						duration = distance / speed * 1.7
 					}
+
+					duration = distance / speed * 2 * this.options.speedRate
 
 					return {
 						destination: Math.round(destination),
@@ -1995,7 +1994,7 @@ define('~/scroll', [], function (require, module, exports) {
 
 					// We need to move at least 10 pixels for the scrolling to initiate
 
-					if ( this.broken === false && this.moveTime - this.endTime > 200 && (absDistX < dP(10) && absDistY < dP(10)) ) return
+					if ( this.broken === false && this.moveTime - this.endTime > 200 && (absDistX < dP(4) && absDistY < dP(4)) ) return
 
 					// If you are scrolling in one direction lock the other
 
@@ -2305,8 +2304,8 @@ define('~/scroll', [], function (require, module, exports) {
 					absDistX		= Math.abs(this.distX)
 					absDistY		= Math.abs(this.distY)
 
-					this.speedX     = Math.abs(deltaX) / DPR / movedTime
-					this.speedY     = Math.abs(deltaY) / DPR / movedTime
+					this.speedX     = Math.abs(deltaX) / movedTime
+					this.speedY     = Math.abs(deltaY) / movedTime
 					this.speedM     = Math.max(this.speedX, this.speedY)
 
 					this.bounceDragPhase++
