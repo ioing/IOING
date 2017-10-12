@@ -66,7 +66,6 @@
     window.CompiledCSSBaseStyle = null
 
 
-
     // 设备属性检测
 
     let OS = ((navigator, userAgent, platform, appVersion) => {
@@ -204,13 +203,13 @@
         reviewport()
     }
 
+    let rootScript = document.getElementById('ioing') || document.getElementsByTagName('script')[0]
 
     let __dir = (() => {
 
         // get root
 
-        let script = document.getElementById('ioing') || document.getElementsByTagName('script')[0]
-        let root = script.getAttribute('root') 
+        let root = rootScript.getAttribute('root') 
         let paths = []
 
         if ( root ) {
@@ -220,7 +219,7 @@
                 root = location.origin + paths.join('/') + root
             }
         } else {
-            paths = script.src.split('/')
+            paths = rootScript.src.split('/')
             paths.pop()
 
             root = paths.join('/') + '/'
@@ -230,6 +229,24 @@
 
         return App.config.root = root
     })()
+
+    // serviceWorker
+
+    if ( 'serviceWorker' in navigator ) {
+        let service = rootScript.getAttribute('service-worker')
+        if ( service ) {
+
+            // service workers
+
+            navigator.serviceWorker.register(service, {
+                scope: './'
+            }).then(function (registration) {
+                console.log('service workers success!')
+            }).catch (function (error) {
+                console.log(error)  
+            })
+        }
+    }
 
     /*====================================== Define =======================================*/
 

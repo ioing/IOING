@@ -32,7 +32,7 @@ define('~/transform', [], function (require, module, exports) {
 
                 // hashchange popstate
 
-                if ( !App.id || App.equalsParam(that.prehistory, window.location.hash) ) return
+                if ( App.equalsParam(that.prehistory, window.location.hash) ) return
 
                 // pre history
 
@@ -135,12 +135,18 @@ define('~/transform', [], function (require, module, exports) {
             var param = route.param
             var module = App.modules[id]
 
+            // close App
+
+            if ( this.options.singlelocking === -1 && App._inHistory === history.length - 1 ) return window.history.back()
+
             // level == 0 return
 
-            if ( this.options.singlelocking == 1 && (this.id === "frameworks" || this.module.config.level === 0) ) {
+            if ( this.options.singlelocking === true && (this.id === "frameworks" || this.module.config.level === 0) ) {
 
                 this.singleflowtimes++
 
+                // push hash
+                
                 this.hash(this.id, this.param, 1)
 
                 // exit App

@@ -425,7 +425,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
                     // load
                     
-                    this.addEventListener(module.config.preview === 2 ? "frameworksload" : "frameworksready", function () {
+                    this.addEventListener(module.config.preview === 2 ? "applicationload" : "applicationready", function () {
                         that.readied(module, noop)
 
                         setTimeout(function () {
