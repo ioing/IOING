@@ -149,19 +149,6 @@ As a second engine, it provides a complete solution of modularization, component
             --- unify.js
     --- modules(folder)
     --- components(folder)
-    
-    
-            
-## Library referred in IOING
-该项目中有使用/借鉴修改以下仓库，对这些仓库表示感谢
-
-> Thanks for these libraries to provide helpful and reliable references for IOING
-
-1. 转动的 canvas 菊花 loader.js : [CanvasLoader.js](https://github.com/heartcode/CanvasLoader)
-2. 选择器 query.js : [jquery.js](https://github.com/jquery/jquery)
-3. 多手势库 touch.js : [hammer.js](https://github.com/hammerjs/hammer.js)
-4. 动画库 move.js (80%) : [move.js](https://github.com/visionmedia/move.js)
-5. 滚动库 iscroll.js (60%) : [iscroll.js](https://github.com/cubiq/iscroll)
   
 
 ## License
