@@ -283,12 +283,12 @@ let libs = [
     'ioing_src/lib/template.js',
     'ioing_src/lib/dom.js',
     'ioing_src/lib/css.js',
-    'ioing_src/lib/fetch.js',
+    'ioing_src/lib/source.js',
     'ioing_src/lib/loader.js',
     'ioing_src/lib/sandbox.js',
     'ioing_src/lib/promise.js',
     'ioing_src/lib/query.js',
-    'ioing_src/lib/move.js',
+    'ioing_src/lib/animate.js',
     'ioing_src/lib/touch.js',
     'ioing_src/lib/scroll.js'
 ]
@@ -334,7 +334,7 @@ gulp.task("clean", () => {
 // copy static
 
 gulp.task("copy", (cb) => {
-	let staticMedia = ["{components,modules}/**/*.{json,svg,jpg,jpeg,gif,png,webp,bmp,tpg,mp4,mp3,ogg}"]
+	let staticMedia = ["{components,modules}/**/*.{json,svg,jpg,jpeg,gif,png,webp,bmp,tpg,mp4,mp3,ogg,eot,woff,ttf}"]
     gulp.src(staticMedia)
     	.on('end', cb)
     	.pipe(watch(staticMedia))

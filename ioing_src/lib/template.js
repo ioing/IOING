@@ -3,22 +3,16 @@
 define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
     'use strict';
 
-    var CSS = require('~/css')
-    var DOM = require('~/dom')
+    const CSS = require('~/css')
+    const DOM = require('~/dom')
 
-    function Template (id) {
-
-        if ( !(this instanceof Template) ) {
-            return new Template(id)
+    class Template {
+        constructor (id) {
+            if ( id ) this.init(id)
+            return this
         }
 
-        if ( !id ) return
-
-        this.init(id)
-    }
-
-    Template.prototype = {
-        init : function (id) {
+        init (id) {
 
             // include lib
             
@@ -33,14 +27,13 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
             // first error
             
-            this.module.one('failedtoload', function (e) {
+            this.module.one('failedtoload', (e) => {
                 this.errored(this.module)
                 this.errored = noop
-            }.bind(this))
-        },
+            })
+        }
 
-        render : function (id, module, source) {
-            var that = this
+        render (id, module, source) {
             
             /*
              * dimension 确保多个异步数据完成后执行当前到达的dimension模块
@@ -61,19 +54,19 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 
                 // prefetch callback
 
-                this.fetched(module, function () {
-                    that.write(that.compile(id, source[0], source[1], source[2]))
+                this.fetched(module, () => {
+                    this.write(this.compile(id, source[0], source[1], source[2]))
                 })
             }
 
             return this
-        },
+        }
 
-        write : function (source) {
+        write (source) {
             this.config.sandbox ? this.sandbox(source[0], source[1]) : this.embed(source[0], source[1])
-        },
+        }
 
-        compile : function (id, sids, suri, data) {
+        compile (id, sids, suri, data) {
 
             this.module.scope = data.data = {}.extend(
                 App.modules.frameworks.scope || {},
@@ -113,14 +106,13 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 this.css.render(this.config.style, sids.style, data.style), 
                 this.dom.render(this.config.source[0], data.source, data.data)
             ]
-        },
+        }
 
-        include : function (id) {
-            var that = this
-            var module = this.module
-            var config = this.config
-            var dimension = module.dimension
-            var prefetched = module.prefetch[dimension]
+        include (id) {
+            let module = this.module
+            let config = this.config
+            let dimension = module.dimension
+            let prefetched = module.prefetch[dimension]
 
             // new app
 
@@ -136,30 +128,30 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
             // async!!!important 
 
-            setTimeout(function () {
-                App.async.fetch(id, config, module.param, function () {
+            setTimeout(() => {
+                App.source().fetch(id, config, module.param, (...args) => {
 
                     // render
 
-                    that.render(id, module, arguments)
+                    this.render(id, module, args)
 
                     if ( module.config.cache && !module.config.update ) {
-                        module.prefetch[module.dimension] = arguments
+                        module.prefetch[module.dimension] = args
                         module.updatetime[module.dimension] = Date.now()
                     }
-                }, function () {
-                    that.errored(module)
+                }, () => {
+                    this.errored(module)
                 })
             }, 0)
-        },
+        }
 
-        scope : function (sandbox, context, content) {
-            var id = this.id
-            var dom = this.dom
-            var config = this.config
-            var module = this.module
-            var scopeWindow = sandbox.window
-            var scopeDocument = sandbox.document
+        scope (sandbox, context, content) {
+            let id = this.id
+            let dom = this.dom
+            let config = this.config
+            let module = this.module
+            let scopeWindow = sandbox.window
+            let scopeDocument = sandbox.document
 
             // set sandbox
 
@@ -201,12 +193,10 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                 __defineProto__(sandbox.window)
 
             }
-        },
+        }
 
-        trick : function (sandbox, context) {
+        trick (sandbox, context) {
             if ( sandbox.window === window ) return
-
-            var that = this
 
             // valid window
 
@@ -214,23 +204,23 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             sandbox.window.validDocument = sandbox.window.vdocument = window.document
 
 
-            sandbox.window.document.extendProperty("getElementById", function (id) { return that.dom.DOM[0][id] || context.find('#' + id)[0] || window.document.getElementById(id) })
-            sandbox.window.document.extendProperty("getElementsByName", function (name) { return context.find('*[name=' + name + ']').toArray() || window.document.getElementsByName(name) })
-            sandbox.window.document.extendProperty("getElementsByClassName", function (name) { return context.find('.' + name).toArray() || window.document.getElementsByClassName(name) })
-            sandbox.window.document.extendProperty("getElementsByTagName", function (name) { return context.find(name).toArray() || window.document.getElementsByTagName(name) })
-            sandbox.window.document.extendProperty("getElementsByTagNameNS", function (name, namespace) { return window.document.getElementsByTagNameNS(name, namespace) })
+            sandbox.window.document.extendProperty("getElementById", (id) => { return this.dom.DOM[0][id] || context.find('#' + id)[0] || window.document.getElementById(id) })
+            sandbox.window.document.extendProperty("getElementsByName", (name) => { return context.find('*[name=' + name + ']').toArray() || window.document.getElementsByName(name) })
+            sandbox.window.document.extendProperty("getElementsByClassName", (name) => { return context.find('.' + name).toArray() || window.document.getElementsByClassName(name) })
+            sandbox.window.document.extendProperty("getElementsByTagName", (name) => { return context.find(name).toArray() || window.document.getElementsByTagName(name) })
+            sandbox.window.document.extendProperty("getElementsByTagNameNS", (name, namespace) => { return window.document.getElementsByTagNameNS(name, namespace) })
             
-        },
+        }
 
-        wrap : function (id, style, dom, type) {
+        wrap (id, style, dom, type) {
 
             // creat css
 
-            var css = document.createElement('style')
+            let css = document.createElement('style')
                 css.name = id
                 css.innerHTML = style
 
-            var body = document.createElement("module-context")
+            let body = document.createElement("module-context")
                 body.name = id
                 body.className = "module-context"
 
@@ -243,14 +233,14 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             body.appendChild(dom)
 
             return body
-        },
+        }
 
-        script : function () {
-            var id = this.id
-            var module = this.module
-            var config = module.config
-            var path = ''
-            var script = '' 
+        script () {
+            let id = this.id
+            let module = this.module
+            let config = module.config
+            let path = ''
+            let script = '' 
               
             config.script.each(function (i, name) {
                 path = module.resources.script[name]
@@ -263,16 +253,16 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             })
 
             return script
-        },
+        }
 
-        style : function (style) {
+        style (style) {
             return '<style>' + style + '</style>'
-        },
+        }
 
-        blakbox : function (target, style, script, content, puppet) {
-            var sandbox = new Sandbox(true, true, true)
-            var module = this.module
-            var config = module.config
+        blakbox (target, style, script, content, puppet) {
+            let sandbox = new Sandbox(true)
+            let module = this.module
+            let config = module.config
 
             sandbox.iframe.attr({
                 "name"     : this.id, 
@@ -314,7 +304,7 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
             // init sandbox
 
-            sandbox.init().extend()
+            sandbox.init().unify()
 
             // end sandbox
 
@@ -343,16 +333,15 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             sandbox.window.addEventListener('touchmove', preventDefaultEvent, false)
 
             return sandbox
-        },
+        }
 
-        mirroring : function (style, dom) {
-            var mirroring = this.config.mirroring
+        mirroring (style, dom) {
+            let mirroring = this.config.mirroring
 
             if ( !mirroring ) return
 
-            var that = this
-            var module = this.module
-            var sandbox = this.blakbox(this.target, this.style(style), null, null, true)
+            let module = this.module
+            let sandbox = this.blakbox(this.target, this.style(style), null, null, true)
 
             sandbox.iframe.css({
                 "z-index"   : "-1",
@@ -364,10 +353,10 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             sandbox.document.body.appendChild(dom)
 
             module.addElement('mirroring', sandbox.iframe)
-        },
+        }
 
-        container : function () {
-            var view
+        container () {
+            let view
               , mask
               , clip
               , mirroring
@@ -392,31 +381,31 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             }
 
             return this.config.shadowbox && view.createShadowRoot ? view.createShadowRoot() : view
-        },
+        }
 
-        frame : function (module) {
-            var that = this
-            var frame = document.createElement('iframe')
+        frame (module) {
+            let that = this
+            let frame = document.createElement('iframe')
+            let cwindow, cdocument
 
-            frame.src = module.config.source
+            frame.src = module.remoteframe
             frame.setAttribute('app', true)
+
+            // inset
 
             this.target.appendChild(frame)
 
             // remoteframe
 
-            module.remoteframe = frame.contentWindow
-
-            module.addElement('context', frame.contentWindow.document)
+            cwindow = frame.contentWindow
+            cdocument = frame.contentWindow.document
             module.addElement('content', frame)
-
-            // fetched
-
-            this.fetched(module, noop)
+            module.addElement('context', cdocument)
+            module.addElement('sandbox', { window : cwindow, document : cdocument, iframe : frame })
 
             // loaded
 
-            frame.contentWindow.addEventListener("load", function () {
+            cwindow.onload = function () {
                 if ( this.App ) {
                     
                     // set name
@@ -438,18 +427,24 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                         that.loaded(module, noop)
                     }, 0)
                 }
-            }, false)
+            }
+
+            // error
 
             frame.onerror = function () {
                 that.errored(module)
             }
-        },
 
-        sandbox : function (style, dom) {
-            var that = this
-            var module = this.module
-            var container = this.container()
-            var sandbox = this.blakbox(container, this.style(style), this.script())
+            // fetched
+
+            this.fetched(module, noop) 
+        }
+
+        sandbox (style, dom) {
+            let that = this
+            let module = this.module
+            let container = this.container()
+            let sandbox = this.blakbox(container, this.style(style), this.script())
 
             // ready event
 
@@ -467,15 +462,15 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
 
                 that.mirroring(style, dom[1])
             })
-        },
+        }
 
-        embed : function (style, dom) {
-            var id = this.id
-            var module = this.module
-            var config = this.config
-            var content = this.wrap(id, style, dom[0], 0)
-            var container = this.container()
-            var sandbox = this.blakbox(container, null, this.script(), content)
+        embed (style, dom) {
+            let id = this.id
+            let module = this.module
+            let config = this.config
+            let content = this.wrap(id, style, dom[0], 0)
+            let container = this.container()
+            let sandbox = this.blakbox(container, null, this.script(), content)
 
             // append context
 
@@ -492,11 +487,11 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
             // creat mirroring
 
             this.mirroring(style, dom[1])
-        },
+        }
 
-        over : function (module, window, content) {
+        over (module, window, content) {
 
-            var that = this
+            let that = this
 
             // preview
 
@@ -522,31 +517,26 @@ define('~/template', ['~/css', '~/dom'], function (require, module, exports) {
                             .end(0)
                 })
             }
-        },
+        }
 
-        prefetch : function (callback) {
+        prefetch (callback) {
             this.fetched = callback
-
             return this
-        },
+        }
 
-        then : function (callback) {
+        then (callback) {
             this.readied = callback
-
             return this
-        },
+        }
 
-        get : function (callback) {
+        get (callback) {
             this.loaded = callback
-
             this.include(this.id)
-
             return this
-        },
+        }
 
-        error : function (callback) {
+        error (callback) {
             this.errored = callback
-
             return this
         }
 

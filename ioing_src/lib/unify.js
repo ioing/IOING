@@ -234,7 +234,7 @@
 
     if ( 'serviceWorker' in navigator ) {
         let service = rootScript.getAttribute('service-worker')
-        if ( service ) {
+        if ( service && service.length ) {
 
             // service workers
 
@@ -647,14 +647,18 @@
         // 是否支持svg
 
         this.svg = window.SVGAngle ? true : false 
-
-        // 是否支持贞动画
-
-        this.keyframes = (window.CSSRule.WEBKIT_KEYFRAMES_RULE || window.CSSRule.MOZ_KEYFRAMES_RULE || window.CSSRule.MS_KEYFRAMES_RULE || window.CSSRule.O_KEYFRAMES_RULE) ? true : false
         
         // 获取贞动画前缀
 
-        this.keyframesPrefix = window.CSSRule.WEBKIT_KEYFRAMES_RULE ? '-webkit-' : false || window.CSSRule.MOZ_KEYFRAMES_RULE ? '-moz-' : false || window.CSSRule.MS_KEYFRAMES_RULE ? '-ms-' : false || window.CSSRule.O_KEYFRAMES_RULE ? '-o-' : false || ''
+        this.keyframesPrefix = window.CSSRule.WEBKIT_KEYFRAMES_RULE ? '-webkit-' : false || window.CSSRule.MOZ_KEYFRAMES_RULE ? '-moz-' : false || window.CSSRule.MS_KEYFRAMES_RULE ? '-ms-' : false || window.CSSRule.O_KEYFRAMES_RULE ? '-o-' : false || window.CSSRule.KEYFRAMES_RULE ? '' : false
+
+        // 是否支持贞动画
+
+        this.keyframes = this.keyframesPrefix === false ? false : true
+
+        // 无贞动画前缀
+
+        this.keyframesPrefix = this.keyframesPrefix || ''
 
         // 支持动画
 
@@ -830,8 +834,8 @@
             os          : OS,
             dpi         : window.devicePixelRatio,
             scale       : window.viewportScale,
-            width       : window.document.documentElement.offsetWidth || window.innerWidth,
-            height      : window.document.documentElement.offsetHeight || window.innerHeight,
+            width       : window.innerWidth,
+            height      : window.innerHeight,
             orientation : window.orientation
         }
 
@@ -1959,12 +1963,12 @@
 
                 !(function (proto) {
 
-                    // element.Move() => new Move()
+                    // element.Animate() => new Animate()
 
                     proto.extendProperty("Animate", function (options) {
 
                         if ( !this.animationEvent ) {
-                            this.extendProperty("animationEvent", window.Move(this))
+                            this.extendProperty("animationEvent", new window.Animate(this))
                         }
 
                         return this.animationEvent

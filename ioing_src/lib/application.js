@@ -1,10 +1,10 @@
-define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], function (require, module, exports) {
+define('~/application', ['~/proto', '~/source', '~/transform', '~/template'], function (require, module, exports) {
 	
 	'use strict'
 
 	// templates & trans viewport
 	
-	const Async = require('~/fetch')
+	const Source = require('~/source')
 	const Template = require('~/template')
 	const Transform = require('~/transform')
 
@@ -27,7 +27,8 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 	class Module {
 
-		constructor (id) {
+		constructor (id, model) {
+
 			// initial
 
 			this.id = id
@@ -47,6 +48,9 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			// _
 			this.events = {}
 			this._events = {}
+
+			this.extend(model)
+			this.checkCache()
 		}
 
 		init () {
@@ -95,11 +99,36 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         	var that = this
 
             return new Promise(function (resolve, reject) {
-	            App.async.async(that.id, that.param, sids, 'data', resolve)
+	            App.source().async(that.id, that.param, sids, 'data', resolve)
 
 	        }).then(function (data) {
                 callback(data[2])
             })
+        }
+
+        checkCache () {
+        	let id = this.id
+        	let key = '[[' + id + ']]:Version'
+
+        	try {
+				let version = localStorage.getItem(key)
+
+				if ( version ) {
+					if ( version !== this.version ) {
+						id = id === 'frameworks' ? null : id
+
+						App.clearLocalStorage(null, id)
+						App.clearSessionStorage(null, id)
+						App.clearFileCache(id)
+					}
+				} else if (this.version) {
+					localStorage.setItem(key, this.version)
+				}
+			} catch (e) {}
+        }
+
+        getStatus () {
+        	return this.status[this.dimension]
         }
 
         turnover (options, callback) {
@@ -176,8 +205,30 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			return this
         }
 
-		clearCache (dimension, storage) {
-			App.clearCache(this.id, dimension, storage)
+		clearCache (id, dimension, storage) {
+
+			dimension = dimension == true ? module.dimension : dimension
+
+			if ( dimension ) {
+				delete this.prefetch[dimension]
+			} else {
+				this.prefetch = {}
+			}
+
+			// claer param
+
+			this.init()
+
+			// clear storage
+
+			if ( storage ) {
+				App.clearLocalStorage(null, id)
+				App.clearSessionStorage(null, id)
+			}
+
+			// clear dimension
+
+			delete module.dimension
 
 			return this
 		}
@@ -246,11 +297,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 		}
 
 		refresh (dimension, prefetch, readied) {
+			let id = this.id
 
 			// refreshstart
 			
 			this.trigger('refresh')
-			App.trigger('refreshstart', this.id)
+			App.trigger('refreshstart', id)
 
 			// module dimension
 
@@ -258,7 +310,8 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 			// clear module cache & storeage
 
-			this.clearCache(true, true)
+			this.clearCache(id, true, true)
+			this.destroy()
 
 			// setParam
 			
@@ -270,7 +323,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
             // prefetch this module resources
 
-            App.transform.update(this.id, dimension, (render) => {
+            App.transform.update(id, dimension, (render) => {
             	if ( prefetch ) {
 					prefetch(render)
 				} else {
@@ -296,7 +349,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 					render()
 				}
 
-				App.trigger('refreshend', this.id)
+				App.trigger('refreshend', id)
 
 			})
 
@@ -309,17 +362,21 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			if ( sandbox ) {
 
 				let swindow = sandbox.window
+				let cdocument = sandbox.iframe.contentDocument
+
+				// _blank
 
 				sandbox.iframe.src = 'about:blank'
 				swindow.location.reload()
 
 				// clear document
-
-				swindow.document.write('') //清空iframe的内容
+				
+				cdocument.open()
+				cdocument.write('') //清空iframe的内容
 
 				// close iframe window
 
-				swindow.close() //避免iframe内存泄漏
+				cdocument.close() //避免iframe内存泄漏
 
 				// clear window
 
@@ -366,9 +423,6 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 	class Application {
 		constructor () {
-			if ( !(this instanceof Application) ) {
-	            return new Application()
-	        }
 
 	        // console
 
@@ -403,6 +457,13 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 	        	}
 	        }
 
+	        // lib
+
+	        this.sandbox = new Sandbox().unify()
+			this.transform = new Transform()
+
+			// init
+
 			this.init()
 		}
 
@@ -411,15 +472,13 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			this._events = {}
 			this._prefetchs = {}
 			this._callbacks = {}
-
-			this.async = new Async()
-			this.sandbox = new Sandbox(true, true).extend()
-			this.transform = new Transform()
+			this._prefetching = []
 
 			// _EXISTS
 
 			this._EXISTS = false
 			this._inHistory = history.length
+			this._inPrefetch = false
 
 			// setting
 			
@@ -432,7 +491,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 	        // console version
 
 			this.name = App.name || 'top'
-			this.version = '3.0.1'
+			this.version = '3.0.3'
 			this.console.log(this.version, 'Version', 'ioing.com')
 
 	        // lock top window
@@ -449,48 +508,48 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			this.config.extend(opts)
 		}
 
-		check () {
+		// check () {
 			
-			let check = () => {
-				return applicationCache.status == applicationCache.UPDATEREADY
-			}
+		// 	let check = () => {
+		// 		return applicationCache.status == applicationCache.UPDATEREADY
+		// 	}
 
-			let updateready = () => {
-				// Browser downloaded a new app cache.
+		// 	let updateready = () => {
+		// 		// Browser downloaded a new app cache.
 				 
-		      	// Swap it in and reload the page to get the new hotness.
-		 		try {
+		//       	// Swap it in and reload the page to get the new hotness.
+		//  		try {
 
-		      		applicationCache.swapCache()
+		//       		applicationCache.swapCache()
 
-		      		App.trigger("cachechange")
+		//       		App.trigger("cachechange")
 
-		      	} catch (e) {}
-			}
+		//       	} catch (e) {}
+		// 	}
 
-			if ( check() ) {
+		// 	if ( check() ) {
 
-				updateready()
+		// 		updateready()
 
-			} else {
-				applicationCache.addEventListener("updateready", function (e) {
+		// 	} else {
+		// 		applicationCache.addEventListener("updateready", function (e) {
 	 
-				    if ( check() ) {
+		// 		    if ( check() ) {
 				 
-				      	updateready()
+		// 		      	updateready()
 				 
-				    } else {
+		// 		    } else {
 				 
-				      	// Manifest didn’t changed. Nothing new to server.
+		// 		      	// Manifest didn’t changed. Nothing new to server.
 
-				      	App.trigger('cachenochange')
+		// 		      	App.trigger('cachenochange')
 				 
-				    }
+		// 		    }
 				 
-				}, false)
-			}
+		// 		}, false)
+		// 	}
 		
-		}
+		// }
 
 		on (types, fn) {
             types.split(' ').each((i, type) => {
@@ -575,12 +634,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				// require module config
 
-				this.fetch(id, (uri) => {
+				this.take(id, (uri) => {
 
 					// 异步回调重新检测模块是否存在
 
 					if ( modules[id] === undefined ) {
-						modules[id] = new Module(id).extend(require(uri))
+						modules[id] = new Module(id, require(uri))
 
 						// filter
 
@@ -610,7 +669,38 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				return modules[id]
 			}
+		}
 
+		take (id, callback, failed) {
+			let that = this
+			let uri = ''
+			let frame = this.frameworks 
+			let config = frame ? frame.config : {}
+			let origins = config.origins
+
+			if ( !id ) return
+
+			// module config path
+
+			if ( id.match(/^\w+\:/) === null ) {
+				uri = this.realpath(id, id, 'config')
+			} else if ( origins ) {
+				origins.each((i, origin) => {
+					if ( id.indexOf(origin) == 0 ) {
+						uri = id + '/config'
+					}
+				})
+			} else {
+				uri = id + '/config'
+			}
+
+			if ( !uri ) return
+
+			require([uri], (require) => {
+				callback && callback(uri)
+			}, () => {
+				failed && failed()
+			})
 		}
 
 		origin (id) {
@@ -663,40 +753,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
             return url
 		}
 
-		template (id) {
-			return new Template(id, DNA)
+		source () {
+			return new Source()
 		}
 
-		fetch (id, callback, failed) {
-			let that = this
-			let uri = ''
-			let frame = this.frameworks 
-			let config = frame ? frame.config : {}
-			let origins = config.origins
-
-			if ( !id ) return
-
-			// module config path
-
-			if ( id.match(/^\w+\:/) === null ) {
-				uri = this.realpath(id, id, 'config')
-			} else if ( origins ) {
-				origins.each(function (i, origin) {
-					if ( id.indexOf(origin) == 0 ) {
-						uri = id + '/config'
-					}
-				})
-			} else {
-				uri = id + '/config'
-			}
-
-			if ( !uri ) return
-
-			require([uri], function (require) {
-				callback && callback(uri)
-			}, function () {
-				failed && failed()
-			})
+		template (id) {
+			return new Template(id, DNA)
 		}
 
 		prefetching (id, param, callback) {
@@ -713,15 +775,16 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
          	 * 模块配置未存在时推入预取队列
          	 * prefetch : app 状态 > 预取队列
 			 */
-
-			param = param || null
-
-			prefetch.initial(id, []).push(param)
 			
-			if ( modules[id] === undefined || prefetch[id] === undefined ) {
-				return  this.get(id, () => {
-							this.prefetch(id, param)
-						})
+			if ( modules[id] === undefined ) {
+				return this.get(id, () => {
+					this.prefetching.apply(this, arguments)
+				})
+			} else {
+				param = this.filterParam(param, modules[id].config.route)
+				param = param[0] || null
+
+				prefetch.initial(id, []).push(param)
 			}
 
 			/*
@@ -735,6 +798,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				// remoteframe
 
 				if ( modules[id].remoteframe ) return
+				if ( modules[id].getStatus() == 1 ) return
 
 				// startTime
 
@@ -744,7 +808,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 				params = this.getParam(params)
 
-				if ( modules[id].prefetch[params] === undefined ) {
+				if ( !modules[id].prefetch[params] ) {
 
 					// waiting
 
@@ -758,7 +822,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 					// 预取资源
 
-					App.async.prefetch(id, modules[id].config, {}.extend(modules[id].initialparam, this.filterParam(params)[0]), (...args) => {
+					App.source().prefetch(id, modules[id].config, {}.extend(modules[id].initialparam, this.filterParam(params)[0]), (...args) => {
 
 						// endTime
 
@@ -790,7 +854,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 						callback()
 
-					}, function (err) {
+					}, (err) => {
 
 						delete modules[id].prefetch[params]
 
@@ -802,10 +866,43 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			delete prefetch[id]
 		}
 
-		prefetch (id, param, callback) {
-			requestIdleCallback((deadline) => {
-				this.prefetching(id, param, callback)
-			})
+		prefetch (id, param) {
+			let that = this
+
+			// push
+
+			this._prefetching.push([id, param])
+
+			// check
+
+			if ( this._inPrefetch ) return
+
+			// lock
+
+			this._inPrefetch = true
+
+			// loop
+
+			function step () {	
+				requestIdleCallback((deadline) => {
+					if ( that._prefetching.length === 0 ) return that._inPrefetch = false
+						
+					let args = that._prefetching.shift()
+					let next = setTimeout(function () {
+						step()	
+					}, 1200)
+					that.prefetching(args[0], args[1], function () {
+						clearTimeout(next)
+						setTimeout(function () {
+							step()
+						}, 300)
+					})
+				})
+			}
+
+			// start
+
+			step()
 		}
 
 		refresh () {
@@ -886,11 +983,11 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				try {
 					if ( ('caches' in window) && ((location.protocol === 'https:') || (location.hostname === 'localhost')) ) {
 						caches.open(id).then(function (cache) {
-						  	cache.put(key, new Response(response, { status: 200 }))
+						  	cache.put(key, new Response(response, { status: 200, statusText : Date.now() }))
 						  	resolve(key)
 						})
 					} else {
-	                    localStorage.setItem(key, response)
+	                    localStorage.setItem('[[' + id + ']]:' + key, response)
 	                    module.storagemaps.push(cacid)
 	                    resolve(key)
 					}
@@ -900,7 +997,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			})
 		}
 
-		getFileCache (id, key) {
+		getFileCache (id, key, timeout) {
 			let that = this
 
 			return new Promise(function (resolve, reject) {
@@ -909,7 +1006,8 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 						caches.open(id).then(function (cache) {
 							return cache.match(key)
 						}).then(function (response) {
-							if ( !response ) reject()
+							if ( !response ) return reject(key)
+							if ( timeout && Date.now - response.statusText >= timeout ) return reject(key)
 							return response.text()
 						}).then(function (body) {
 							resolve(body)
@@ -929,34 +1027,20 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			})
 		}
 
-		clearCache (id, dimension, storage) {
-			let module = this.modules[id]
-
-			if ( !module ) return
-
-			dimension = dimension == true ? module.dimension : dimension
-
-			if ( dimension ) {
-				delete module.prefetch[dimension]
+		clearFileCache (id) {
+			if ( 'caches' in window ) {
+				if ( id ) {
+					caches.delete(id)
+				} else {
+					caches.keys().then(function (keys) {
+						for (let id of keys) {
+							caches.delete(id)
+						}
+					})
+				}
 			} else {
-				module.prefetch = {}
+				this.clearLocalStorage()
 			}
-
-			// claer param
-
-			module.init()
-
-			// clear storage
-
-			if ( storage ) {
-				this.clearLocalStorage(null, id)
-				this.clearSessionStorage(null, id)
-			}
-
-			// clear dimension
-
-			delete module.dimension
-			
 		}
 
 		getParam (param) {
@@ -1122,6 +1206,14 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         		if ( id == "system" ) {
         			config.shadowbox = true
         		}
+
+        		if ( id == "frameworks" ) {
+        			this.config.debug = module.debug
+
+        			if ( config.baseStyles ) {
+        				CSSBaseStyle += config.baseStyles
+        			}
+        		}
         	}
 
         	// reset level
@@ -1143,8 +1235,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
         	// app type
         	
         	if ( typeof config.source === 'string' ) {
-        		module.remoteframe = true
-        		config.source = this.realpath(null, null, config.source, true)
+        		module.remoteframe = this.realpath(null, null, config.source, true)
         	}
 
             // shadowRoot
@@ -1226,7 +1317,6 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 	// document ready after
 
 	document.ready(function () {
-
 		let route = App.route()
 		let id = route.id
 		let od = id
@@ -1235,7 +1325,7 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 
 		// async get current page config 
 
-		App.fetch(id)
+		App.prefetching(id)
 
 		// start main view
 
@@ -1246,6 +1336,12 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 			let mainc = module.config
 			let index = mainc.index
 			let system = mainc.system
+
+			// prefet index
+
+			if ( id !== index ) {
+				App.prefetching(index)
+			}
 
 			// current page
 
@@ -1279,10 +1375,6 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 				// applicationready
 
 				window.trigger('applicationready')
-
-				// check
-				
-				App.check()
 
 				// no transform
 				
@@ -1333,16 +1425,15 @@ define('~/application', ['~/proto', '~/fetch', '~/transform', '~/template'], fun
 		}, function () {
 			App.console.error('Module[frameworks]', 'Fatal error', 'is necessary')
 		})
-
-		// error
-
-		window.onerror = function () {
-			App.console.error(arguments[1] || '(anonymous function)', 'Error', arguments[2] + ':' + arguments[3])
-			App.trigger('unknownerror', arguments)
-
-			return false
-		}
-
+		
 	})
 
+	// error
+
+	window.onerror = function () {
+		App.console.error(arguments[1] || '(anonymous function)', 'Error', arguments[2] + ':' + arguments[3])
+		App.trigger('unknownerror', arguments)
+
+		return false
+	}
 })

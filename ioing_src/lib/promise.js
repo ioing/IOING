@@ -5,13 +5,14 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
     "use strict"
 
     var Sandbox = require('~/sandbox').sandbox
-      , sandbox = new Sandbox(true)
+      , sandbox = new Sandbox()
       , sandboxWindow = sandbox.window
       , sandboxDocument = sandbox.document
       , sandboxDocumentHead = sandboxDocument.head
       , _jsonPID = 0
       , _tryAgain = []
 
+      sandbox.unify(true)
 
 
     /* ------------------------------------------ Promise ------------------------------------------ */
@@ -696,11 +697,11 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
 
 
     function ajax (method, url, data, headers, settings, type, id, prefetch) {
-        if ( method.toUpperCase === 'JSONP' || /=\~/.test(url) ) {
-            return origin(url, data, settings.caller, type, id)
+        if ( method.toUpperCase() === 'JSONP' || /=\~/.test(url) ) {
+            return origin(url, data, settings.caller, settings.callee, type, id)
         }
 
-        return new Promise(function(resolve, reject){
+        return new Promise(function (resolve, reject) {
 
             var xhr
 
@@ -777,7 +778,7 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
                 abort()
 
                 if ( tryAgain(url, abort, send, id) == false ) {
-                    p.done(true, {}, {})
+                    reject()
                 }
             }
 
@@ -833,97 +834,97 @@ define('~/promise', ['~/sandbox'], function (require, module, exports) {
         }
     }
 
-    function origin (url, data, caller, type, id) {
-        var p = new Promise1()
-        var callbackName = !caller ? '__' + type + '__' + caller : '__call__' + (++_jsonPID)
-        var script = sandboxDocument.createElement("script")
+    function origin (url, data, caller, callee, type, id) {
+        return new Promise(function (resolve, reject) {
+            var callbackName = callee || (caller ? '__call__' + (++_jsonPID) : '__' + type + '__' + id)
+            var script = sandboxDocument.createElement("script")
 
-        var data = data || {}
+            var data = data || {}
 
-        // JsonP data
-        
-        if ( caller ) {
-            data[caller] = callbackName
-        }
+            // JsonP data
+            
+            if ( caller ) {
+                data[caller] = callbackName
+            }
 
-        var payload = Object.objectToParams(data)
+            var payload = Object.objectToParams(data)
 
-        if ( payload ) {
-            url += (url.indexOf('?') != -1 ? '&' : '?') + payload
-            payload = null
-        }
+            if ( payload ) {
+                url += (url.indexOf('?') != -1 ? '&' : '?') + payload
+                payload = null
+            }
 
-        // JsonP URL
+            // JsonP URL
 
-        url = url.replace(/=\~/, '=' + callbackName)
+            url = url.replace(/=\~/, '=' + callbackName)
 
-        // abort
+            // abort
 
-        function abort () {
+            function abort () {
+                if ( timeout ) {
+                    clearTimeout(tid)
+                }
+
+                try {
+                    sandboxDocumentHead.removeChild(script)
+                } catch (e) {}
+            }
+
+            // send
+
+            function send () {
+                script = sandboxDocument.createElement("script")
+                script.charset = 'utf-8'
+                script.src = url
+
+                // failed
+
+                script.onerror = over
+
+                sandboxDocumentHead.appendChild(script)
+            }
+
+            // 错误处理
+
+            function over () {
+
+                abort()
+
+                if ( tryAgain(url, abort, send, id) == false ) {
+                    reject()
+                }
+            }
+
+            // DEBUG
+
+            sandboxWindow.onerror = function (e) {
+                over()
+                application.trigger('jsonerror', e)
+            }
+
+            // timeout
+            
+            var timeout = promise.ajaxTimeout
             if ( timeout ) {
-                clearTimeout(tid)
+                var tid = setTimeout(over, timeout)
             }
 
-            try {
-                sandboxDocumentHead.removeChild(script)
-            } catch (e) {}
-        }
+            // callback ! 超时被移除的script加载成功后仍会被执行
+            
+            sandboxWindow[callbackName] = function (data, type) {
+                abort()
 
-        // send
+                if ( (type == 'data' || type == 'js') && typeof data !== 'object' ) return
 
-        function send () {
-            script = sandboxDocument.createElement("script")
-            script.charset = 'utf-8'
-            script.src = url
+                delete sandboxWindow[callbackName]
+                delete _tryAgain[url]
 
-            // failed
-
-            script.onerror = over
-
-            sandboxDocumentHead.appendChild(script)
-        }
-
-        // 错误处理
-
-        function over () {
-
-            abort()
-
-            if ( tryAgain(url, abort, send, id) == false ) {
-                p.done(true, {}, {})
+                resolve([data, {response:data}])
             }
-        }
 
-        // DEBUG
+            send()
 
-        sandboxWindow.onerror = function (e) {
-            over()
-            application.trigger('jsonerror', e)
-        }
-
-        // timeout
-        
-        var timeout = promise.ajaxTimeout
-        if ( timeout ) {
-            var tid = setTimeout(over, timeout)
-        }
-
-        // callback ! 超时被移除的script加载成功后仍会被执行
-        
-        sandboxWindow[callbackName] = function (data, type) {
-            abort()
-
-            if ( (type == 'data' || type == 'js') && typeof data !== 'object' ) return
-
-            delete sandboxWindow[callbackName]
-            delete _tryAgain[url]
-
-            p.done(null, data, {})
-        }
-
-        send()
-
-        return p
+        })
     }
 
     function tryAgain (url, abort, send, id) {

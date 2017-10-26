@@ -32,9 +32,6 @@ define('~/dom', [], function (require, module, exports) {
 
     class DOM {
         constructor () {
-            if ( !(this instanceof DOM) ) {
-                return new DOM()
-            }
 
             // helper
         
@@ -1346,6 +1343,19 @@ define('~/dom', [], function (require, module, exports) {
                             }
                         }
 
+                        dom.on('touchstart mousedown', function () {
+
+                            // 当指令被修改时，触发时获取未来模块
+
+                            var param = that.commands('param', node).value
+                            
+                            // 预测
+
+                            requestIdleCallback(function () {
+                                App.prefetching(id, param)
+                            })
+                        })
+
                         // EVENT
 
                         dom.Touch().on(value[1] || 'tap', function (event) {
@@ -1357,7 +1367,7 @@ define('~/dom', [], function (require, module, exports) {
 
                             // 去重
                             
-                            if ( Date.now() - actionTime < 300 ) return false 
+                            if ( Date.now() - actionTime < 200 ) return false 
                             
                             // actionTime
                             
@@ -1378,6 +1388,12 @@ define('~/dom', [], function (require, module, exports) {
                             return false
                         })
                     })
+                    
+                    // tap-highlight
+                    
+                    if ( node.getAttribute('tap-highlight') === null ) {
+                        node.setAttribute('tap-highlight', '-tap-highlight-')
+                    }
 
                 break
 
@@ -1428,6 +1444,12 @@ define('~/dom', [], function (require, module, exports) {
                             return false
                         })
                     })
+
+                    // tap-highlight
+                    
+                    if ( node.getAttribute('tap-highlight') === null ) {
+                        node.setAttribute('tap-highlight', '-tap-highlight-')
+                    }
 
                 break
 
@@ -1646,6 +1668,12 @@ define('~/dom', [], function (require, module, exports) {
                                     App.trigger('touch', { data: eventData ? eventData.paramsToObject() : {}, event : event })
 
                                 })
+
+                                // tap-highlight
+                    
+                                if ( scopeEventName.indexOf('tap') !== -1 && node.getAttribute('tap-highlight') === null ) {
+                                    node.setAttribute('tap-highlight', '-tap-highlight-')
+                                }
                                 
                                 break
 
@@ -2248,7 +2276,6 @@ define('~/dom', [], function (require, module, exports) {
                             freeScroll : this.sign(name, command, 'free', -1, null, true, false),
                             stepLimit : this.sign(name, command, 'step-limit', -1, null, false, 120),
                             speedLimit : this.sign(name, command, 'speed-limit', -1, null, false, 5),
-                            speedRate : this.sign(name, command, 'speed-rate', -1, null, false, 1),
                             scrollbars : this.sign(name, command, 'scrollbars', -1, null, true, true),
                             indicator : this.sign(name, command, 'indicator', -1, null, true, null),
                             snap : this.sign(name, command, 'snap', -1, null, true, false),
@@ -2258,6 +2285,7 @@ define('~/dom', [], function (require, module, exports) {
                             mouseWheel : this.sign(name, command, 'mouse-wheel', -1, null, true, true),
                             deferred: this.sign(name, command, 'deferred', -1, null, true, false),
                             deceleration : this.sign(name, command, 'deceleration', -1, null, false, 0.003),
+                            boundariesLimit : this.sign(name, command, 'boundaries-limit', -1, null, false, 0.15),
                             useTransition : this.sign(name, command, 'use-transition', -1, null, true, true),
                             interactive : this.sign(name, command, 'interactive', -1, null, true, true),
                             bindToWrapper : this.sign(name, command, 'bind-event-self', -1, null, true, true),
@@ -3059,8 +3087,9 @@ define('~/dom', [], function (require, module, exports) {
                     this.setProperty(root, node)
 
                     // let's replace attributes
+                    // 注意，length 动态
 
-                    for ( var i = 0, l = node.attributes.length; i < l; i++ ) {
+                    for ( var i = 0; i < node.attributes.length; i++ ) {
                         var name = node.attributes[i].name
                         var value = node.attributes[i].value
 

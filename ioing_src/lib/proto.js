@@ -1,6 +1,6 @@
 // 信言不美，美言不信。善者不辩，辩者不善。知者不博，博者不知。
 
-define('~/proto', ['~/query', '~/sandbox', '~/move', '~/promise', '~/scroll', '~/touch', '~/loader'], function (require, module, exports) {
+define('~/proto', ['~/query', '~/sandbox', '~/animate', '~/promise', '~/scroll', '~/touch', '~/loader'], function (require, module, exports) {
     
     'use strict'
 
@@ -54,10 +54,10 @@ define('~/proto', ['~/query', '~/sandbox', '~/move', '~/promise', '~/scroll', '~
                 return new window.Worker(window.URL.createObjectURL(new Blob([typeof content === 'string' ? content : content.toString()])))
             })
 
-            // move
+            // animate
 
-            Object.defineProperty(window, "move", {configurable:true, writable:true})
-            window.Move = require('~/move')
+            Object.defineProperty(window, "animate", {configurable:true, writable:true})
+            window.Animate = require('~/animate')
 
             // Promise
             

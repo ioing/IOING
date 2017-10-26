@@ -6,24 +6,24 @@ define('~/sandbox', [], function (require, module, exports) {
 
     // Sandbox
 
-    function Sandbox (unify, proto, whitebox) {
-        var sandbox, content, context
+    class Sandbox {
+        constructor (whitebox) {
+            let sandbox, content, context
 
-        this.sandbox = this.iframe = sandbox = document.createElement('iframe')
+            this.sandbox = this.iframe = sandbox = document.createElement('iframe')
 
-        // 沙箱拓为明箱及暗箱之别 whitebox && blackbox
+            // 沙箱拓为明箱及暗箱之别 whitebox && blackbox
 
-        if ( !whitebox ) {
-            sandbox.style.display = 'none'
-            document.head.appendChild(sandbox)
+            if ( !whitebox ) {
+                sandbox.style.display = 'none'
+                document.head.appendChild(sandbox)
 
-            this.init()
+                this.init()
+            }
         }
-    }
 
-    Sandbox.prototype = {
-        init : function () {
-            var content = this.sandbox.contentDocument
+        init () {
+            let content = this.sandbox.contentDocument
 
             // init
 
@@ -35,9 +35,9 @@ define('~/sandbox', [], function (require, module, exports) {
             this.document = this.sandbox.contentWindow.document
 
             return this
-        },
+        }
 
-        extend : function (un) {
+        unify (un) {
 
             // 获取被支持的iframe
 
@@ -48,16 +48,16 @@ define('~/sandbox', [], function (require, module, exports) {
             }
 
             return this
-        },
+        }
 
-        open : function () {
+        open () {
             this.sandbox.contentDocument.open()
 
             return this
-        },
+        }
 
-        write : function (style, script) {
-            var context
+        write (style, script) {
+            let context
 
             if ( style || script ) {
                 context = '<!DOCTYPE html>'
@@ -77,21 +77,21 @@ define('~/sandbox', [], function (require, module, exports) {
             
 
             return this
-        },
+        }
 
-        close : function () {
+        close () {
             this.sandbox.contentDocument.close()
-        },
+        }
 
-        exit : function () {
+        exit () {
             document.head.removeChild(this.sandbox)
-        },
+        }
 
-        load : function (files, callback) {
+        load (files, callback) {
             files = typeof files == 'object' ? files : [files]
 
-            var html = ''
-            for (var i = files.length - 1; i >= 0; i--) {
+            let html = ''
+            for (let i = files.length - 1; i >= 0; i--) {
                 html += '<object data=' + files[i] + '</object>';
             }
 
@@ -107,20 +107,20 @@ define('~/sandbox', [], function (require, module, exports) {
 
     // SandboxFunction
 
-    var sandbox = new Sandbox(),
+    let sandbox = new Sandbox(),
         sandboxWindow = sandbox.window,
         SandboxFunction = sandboxWindow.Function
 
-    sandbox.extend(true)
+    sandbox.unify(true)
     sandbox.exit()
 
     // shadowRootFunction
 
-    var shadowRoot = new Sandbox()
+    let shadowRoot = new Sandbox()
       , shadowRootWindow = shadowRoot.window
       , ShadowRootFunction = shadowRootWindow.Function
 
-    shadowRoot.extend(true)
+    shadowRoot.unify(true)
 
     module.exports = {
         sandbox : Sandbox,

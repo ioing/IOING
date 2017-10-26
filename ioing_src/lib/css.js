@@ -60,9 +60,6 @@ define('~/css', [], function (require, module, exports) {
 
     class CSS {
         constructor () {
-            if ( !(this instanceof CSS) ) {
-                return new CSS()
-            }
         }
 
         init (id, module) {
@@ -815,6 +812,8 @@ define('~/css', [], function (require, module, exports) {
                     if ( sname.indexOf('this') == 0 ) {
                         sname = sname.substr(4)
                         proto = true
+                    } else if ( sname.match(/\:tap$/) ) {
+                        sname = sname.replace(':tap', '.-tap-highlight-')
                     }
 
                     // 连续声明迭代

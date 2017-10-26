@@ -4,22 +4,118 @@ define('~/transform', [], function (require, module, exports) {
     
     'use strict'
 
-    var rAF = window.requestAnimationFrame
+    const rAF = window.requestAnimationFrame
+    const rIC = window.requestIdleCallback
+    const Animations = {
+        flip : function (e) {
+            e.in.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*e.direction).end(function () {
+                e.out.duration(300).perspective(1000).rotate3d(0, 1, 0, -90*e.direction).end(function () {
+                    e.out.duration(0).opacity(0).end()
+                    e.in.duration(0).to(0, 0, 0).opacity(1).rotate3d(0, 1, 0, 90*e.direction).end(function () {
+                        e.in.duration(300).rotate3d(0, 1, 0, 0).end(function () {
+                            e.callback(false)
+                        })
+                    })
+                })
+            })
+        },
+        fade : function (type) {
+            return function (e) {
+                let inO, outO, inV, outV
+                switch (type) {
+                    case 0:
+                        inO = 1
+                        outO = 0
+                        inV = e.in
+                        outV = e.out
+                    break
+                    case 1:
+                        inO = 0
+                        outO = 1
+                        inV = outV = e.in
+                }
+                inV.duration(0).to(0, 0, 0).opacity(inO).end(function () {
+                    outV.duration(300).opacity(outO).end(function () {
+                        e.callback(false)
+                    })
+                })
+            }
+        },
+        slide : function (type) {
+            return function (e) {
+                let inX, outX, inY, outY
+                switch (type) {
+                    case 0:
+                        outY = e.height
+                        inY = -outY
+                        inX = outX = 0
+                    break
+                    case 1:
+                        inX = e.width
+                        outX = -inX
+                        inY = outY = 0
+                    break
+                    case 2:
+                        inY = e.height
+                        outY = -inY
+                        inX = outX = 0
+                    break
+                    case 3:
+                        outX = e.width
+                        inX = -outX
+                        inY = outY = 0
+                    break
+                }
+
+                e.in.duration(0).to(inX, inY, 0).end(function () {
+                    e.in.duration(300).to(0, 0, 0).end()
+                    e.out.duration(300).to(outX, outY, 0).end(function () {
+                        e.callback(false)
+                    })
+                })
+            }
+        },
+        zoom : function (type) {
+            return function (e) {
+                switch (type) {
+                    case 0:
+                        e.in.origin(e.attach).duration(0).to(0, 0, 0).scale(2.5).end(function () {
+                            e.out.origin(e.origin).duration(0).to(0, 0, 0).opacity(1).scale(1).end(function () {
+                                e.in.duration(300).scale(1).end()
+                                e.out.duration(300).opacity(0).scale(0).end(function () {
+                                    e.callback(false)
+                                })
+                            })
+                        })
+                    break
+                    case 1:
+                        e.in.origin(e.origin).duration(0).to(0, 0, 0).scale(0).end(function () {
+                            e.out.origin(e.attach).duration(0).to(0, 0).scale(1).end(function () {
+                                e.in.to(0, 0, 0).duration(300).scale(1).end(function () {
+                                    e.callback(false)
+                                })
+                                e.out.duration(300).scale(2.5).end()
+                            })
+                        })
+                    break
+                }
+
+            }
+        }
+    }
 
     // Trans to this module
 
-    function Transform () {
+    class Transform {
+        constructor () {
+            // animations
 
-        if ( !(this instanceof Transform) ) {
-            return new Transform()
+            this.Animations = Animations 
         }
 
-    }
+        init (DNA) {
 
-    Transform.prototype = {
-        init : function (DNA) {
-
-            var that = this
+            let that = this
 
             this.DNA = DNA
             this.LIMIT = []
@@ -51,7 +147,7 @@ define('~/transform', [], function (require, module, exports) {
 
             // creat relative view
 
-            var relativeViewport = document.createElement('relative-windows')
+            let relativeViewport = document.createElement('relative-windows')
                 relativeViewport.id = "relative-viewport"
                 relativeViewport.style.position = "absolute"
                 relativeViewport.style.zIndex = 1
@@ -66,7 +162,7 @@ define('~/transform', [], function (require, module, exports) {
 
             // creat absolute view
 
-            var absoluteViewport = document.createElement('absolute-windows')
+            let absoluteViewport = document.createElement('absolute-windows')
                 absoluteViewport.id = "absolute-viewport"
                 absoluteViewport.style.position = "absolute"
                 absoluteViewport.style.zIndex = 10000
@@ -81,7 +177,7 @@ define('~/transform', [], function (require, module, exports) {
 
             // creat fixed view
 
-            var fixedViewport = document.createElement('fixed-windows')
+            let fixedViewport = document.createElement('fixed-windows')
                 fixedViewport.id = "fixed-viewport"
                 fixedViewport.style.position = "fixed"
                 fixedViewport.style.zIndex = 999999
@@ -100,17 +196,17 @@ define('~/transform', [], function (require, module, exports) {
             document.body.appendChild(App.relativeViewport)
             document.body.appendChild(App.absoluteViewport)
             document.body.appendChild(App.fixedViewport)
-        },
+        }
 
-        setup : function (options) {
+        setup (options) {
 
             this.options = options
 
-            var currpage = options.currpage
-            var homepage = options.homepage || "frameworks"
-            var exists = options.exists
-            var singleflow = options.singleflow
-            var singlelocking = options.singlelocking
+            let currpage = options.currpage
+            let homepage = options.homepage || "frameworks"
+            let exists = options.exists
+            let singleflow = options.singleflow
+            let singlelocking = options.singlelocking
 
             if ( singleflow ) {
 
@@ -124,16 +220,16 @@ define('~/transform', [], function (require, module, exports) {
                     this.hash(homepage, null, 1)
                 }
             }
-        },
+        }
 
-        back : function () {
+        back () {
 
             // Target module id & param
 
-            var route = App.route()
-            var id = route.id || this.options.homepage || 'frameworks'
-            var param = route.param
-            var module = App.modules[id]
+            let route = App.route()
+            let id = route.id || this.options.homepage || 'frameworks'
+            let param = route.param
+            let module = App.modules[id]
 
             // close App
 
@@ -178,9 +274,9 @@ define('~/transform', [], function (require, module, exports) {
             // history back event
 
             App.trigger('back', { id : id, module : module })
-        },
+        }
 
-        hash : function (id, param, prepush) {
+        hash (id, param, prepush) {
 
             id = id || this.id
 
@@ -214,9 +310,9 @@ define('~/transform', [], function (require, module, exports) {
             // mark EXISTS
 
             App.exists(true)
-        },
+        }
 
-        status : function (id, param, push) {
+        status (id, param, push) {
             // param = (this.module.param || this.param || {}).extend(param).objectToParams()
 
             id = id || this.id
@@ -234,24 +330,23 @@ define('~/transform', [], function (require, module, exports) {
             }
 
             this.module.setParam(param)
-        },
+        }
 
-        reid : function (id) {
+        reid (id) {
             
             // remot module id
             
             return /\//.test(id) && id.indexOf('[') !== 0 ? '!' + id + '!' : id
-        },
+        }
 
-        get : function (id, od, param, history, events, callback) {
-            var that = this
-            var nofind = that.options.nofindpage || '404'
+        get (id, od, callback) {
+            let nofind = this.options.nofindpage || '404'
 
             // open loading
 
             this.loading(od, 1)
 
-            App.get(id, function (module) {
+            App.get(id, (module) => {
 
                 if ( !App.modules[id] && id !== module.id ) {
                     App.modules[id] = module.cloneAsNew(id)
@@ -259,35 +354,29 @@ define('~/transform', [], function (require, module, exports) {
                 
                 // close loading
 
-                that.loading(od, 0)
+                this.loading(od, 0)
 
                 // RE
 
-                that.to.apply(that, [id, param, history, events, that.callback])
-            }, function () {
+                callback()
+            }, () => {
                 if ( id === nofind ) return
-                that.loading(od, 0)
-                that.to(nofind)
+                this.loading(od, 0)
+                this.to(nofind)
             })
 
             return this
-        },
+        }
 
-        to : function (id, param, history, events, callback) {
-            var that = this
+        to (id, param, history, events, callback) {
+            let args = arguments
 
             // filter
-            
-            if ( this.inProcess === 0 ) {
 
-                if ( history === -1 ) this.queue.push(arguments)
-
+            if ( this._process === 0 ) {
+                this.queue.push(args)
                 return this
             }
-
-            // in the process
-
-            this.inProcess = 0
 
             // clear again back
 
@@ -296,8 +385,6 @@ define('~/transform', [], function (require, module, exports) {
             // is number ? go to history
 
             if ( !isNaN(id) ) {
-                that.inProcess = -1
-
                 switch (Number(id)) {
                     case -1:
                         window.history.back()
@@ -309,11 +396,17 @@ define('~/transform', [], function (require, module, exports) {
                 }
             }
 
+            // in the process !!! after: history.back()
+
+            this._process = 0
+
             // check module config
 
             if ( App.modules[id] === undefined ) {
-                this.inProcess = -1
-                return this.get(id, od, param, history, events)
+                return this.get(id, od, () => {
+                    this._process = -1
+                    this.to.apply(this, args)
+                })
             }
 
             // nomal param url
@@ -329,11 +422,11 @@ define('~/transform', [], function (require, module, exports) {
 
             // od & id
 
-            var od = this.od || (App._EXISTS ? "frameworks" : null)
-            var ids = od ? [id, od] : [id]
-            var module = App.modules[id]
-            var modulu = App.modules[od]
-            var moduli = od ? [module, modulu] : [module]
+            let od = this.od || (App._EXISTS ? "frameworks" : null)
+            let ids = od ? [id, od] : [id]
+            let module = App.modules[id]
+            let modulu = App.modules[od]
+            let moduli = od ? [module, modulu] : [module]
 
             // update events
             
@@ -354,15 +447,16 @@ define('~/transform', [], function (require, module, exports) {
             // close pre loading
 
             this.loading(od, 0)
+            this.loading(id, 0)
 
             // check fetch
 
-            this.fetch(module, param)
+            this.check(module, param)
 
             // activity page = this page ? return
 
             if ( od && this.self && module.dimension === param && module.loaded && !module.update ) {
-                that.inProcess = -1
+                this._process = -1
                 return this
             }
 
@@ -376,6 +470,12 @@ define('~/transform', [], function (require, module, exports) {
             // set param && update
             
             module.rsetParam().setParam(param, true)
+
+            // check update
+
+            if ( module.getStatus() !== 1 ) {
+                module.update = true
+            }
 
             // get animation
 
@@ -397,22 +497,15 @@ define('~/transform', [], function (require, module, exports) {
 
             if ( !module.elements.container ) this.container(id)
 
-
-            // 初始化模块
-
             // transform start
 
-            this.start(function () {
-
-                // return trans to
-
-                if ( that.module !== module ) return
+            this.start(() => {
 
                 // first page
 
                 if ( !od ) {
-                    that.cut()
-                    that.end()
+                    this.cut()
+                    this.end()
                 }
 
                 // history -1 ? 0 : ++
@@ -421,40 +514,54 @@ define('~/transform', [], function (require, module, exports) {
                  * hashchange 应该在试图转换之前插入，因为右滑会退效果会记录hashchange后的dom改变视图
                 */
 
-                if ( history !== -1 ) that.hash(id, param, history)
+                if ( history !== -1 ) this.hash(id, param, history)
 
                 // pre module
 
-                App.id = that.od = !App._EXISTS && id === "frameworks" ? null : id
+                App.id = this.od = !App._EXISTS && id === "frameworks" ? null : id
                 App.module = module
 
                 // build content
 
-                that.build(id, function (module, callback) {
+                this.build(id, (module, fn) => {
 
-                    callback = callback || noop
+                    let callback = () => {
+
+                        fn && fn()
+
+                        // _process
+
+                        this._process = 1
+                        this.next()
+                    }
 
                     // not first ?
 
                     if ( od ) {
-                        that.transform(function () {
+                        this.transform(() => {
                             callback()
-                            that.inProcess = 1
                         })
                     } else {
                         callback()
-                        that.inProcess = 1
                     }
                 })
 
             })
 
             return this
-        },
+        }
 
-        // 检测cache 周期
+        next () {
+            // queue
 
-        fetch : function (module, param) {
+            if ( this.queue.length ) {
+                this.to.apply(this, this.queue.shift())
+            }
+        }
+
+        // 检测 cache 周期
+
+        check (module, param) {
 
             if ( Date.now() - module.updatetime[param] > module.config.cache * 1000 ) {
                 delete module.prefetch[param]
@@ -465,15 +572,24 @@ define('~/transform', [], function (require, module, exports) {
             // is prefetched ?
 
             this.prefetched = module.prefetch[param] ? true : false
-        },
+        }
 
-        build : function (id, readied) {
-            var that = this
-              , module = this.module
+        build (id, readied) {
+            let module = this.module
+            let config = module.config
+            let timeout = config.timeout
+
+            if ( typeof timeout === 'number' ) {
+                if ( timeout === 0 ) {
+                    module.update = true
+                } else if ( Date.now() - module.timestamp >= timeout ) {
+                    module.timeout = true
+                }
+            }
 
             if ( module.loaded !== true
                 || module.update === true 
-                || module.config.update === true ) 
+                || config.update === true ) 
             {   
                 // 毁灭
 
@@ -481,13 +597,11 @@ define('~/transform', [], function (require, module, exports) {
 
                 // 联网且预览或预取
                 
-                if ( navigator.onLine !== false && (this.prefetched || module.config.preview) ) {
+                if ( App._EXISTS == true && navigator.onLine !== false && (this.prefetched || config.preview) ) {
                     this.include(id, null, readied)
                 } else {
-                    readied(module, function () {
-                        that.include(id, null, function (module, callback) { 
-                            callback && callback()
-                        })
+                    readied(module, () => {
+                        this.include(id)
                     })
                 }
             } else {
@@ -495,15 +609,16 @@ define('~/transform', [], function (require, module, exports) {
 
                     // 刷新远程应用
 
-                    if ( module.remoteframe ) {
+                    if ( module.timeout ) {
+                        module.timeout = false
                         module.refresh()
                     }
                 })
             }
-        },
+        }
 
-        limit : function (id, module) {
-            var index = this.LIMIT.indexOf(id)
+        limit (id, module) {
+            let index = this.LIMIT.indexOf(id)
 
             // 不可被极限破坏
             
@@ -523,13 +638,13 @@ define('~/transform', [], function (require, module, exports) {
                 App.modules[this.LIMIT.splice(0, 1)].clearCache(true, true).destroy(-1)
             }
 
-        },
+        }
 
-        reset : function (id, rested) {
-            var module = App.modules[id]
-            var config = module.config
-            var container = module.elements.container
-            var frameworks = ["frameworks", "system"].consistOf(id)
+        reset (id, rested) {
+            let module = App.modules[id]
+            let config = module.config
+            let container = module.elements.container
+            let frameworks = ["frameworks", "system"].consistOf(id)
 
             // clear style
 
@@ -543,9 +658,9 @@ define('~/transform', [], function (require, module, exports) {
                     "transform" : rested ? "translate(0, 0)" : "translate(200%, 200%)"
                 })
             }
-        },
+        }
 
-        update : function (id, param, prefetch, readied) {
+        update (id, param, prefetch, readied) {
             this.include(id, function (module, render) { 
                 if ( prefetch ) {
                     prefetch(render)
@@ -559,16 +674,13 @@ define('~/transform', [], function (require, module, exports) {
                     render()
                 }
             })
-        },
+        }
 
-        include : function (id, prefetch, readied) {
-            var that = this
-            var module = this.module
-            var dimension = module.dimension
-
-            // no update && status == waiting return
-
-            if ( module.inupdate !== true && module.status[dimension] === 0 ) return
+        include (id, prefetch, readied) {
+            let that = this
+            let module = this.module
+            let dimension = module.dimension
+            let transTimeoutId, loadTimeoutId
 
             // lock module
 
@@ -581,13 +693,29 @@ define('~/transform', [], function (require, module, exports) {
 
             // open loading
 
-            this.loadingTimeId = setTimeout(function () {
+            loadTimeoutId = setTimeout(() => {
                 module.loading(1)
 
-                if ( that.modulu ) {
-                    that.modulu.loading(1)
+                if ( this.modulu && module.config.preview ) {
+                    this.modulu.loading(1)
                 }
             }, 1200) 
+
+            // 最长加载超时
+
+            if ( readied ) {
+                transTimeoutId = setTimeout(() => {
+
+                    // 超时转场
+
+                    readied(module)
+
+                    // 防止二次专场
+
+                    this._process = module.status[dimension] = -2
+
+                }, 2000)
+            }
 
             // preload on event
 
@@ -601,6 +729,12 @@ define('~/transform', [], function (require, module, exports) {
 
                 module.trigger('fetch')
 
+                // close pre loading
+
+                if ( that.modulu ) {
+                    that.modulu.loading(0)
+                }
+
                 // callback
                 
                 if ( prefetch ) {
@@ -611,9 +745,17 @@ define('~/transform', [], function (require, module, exports) {
 
             }).then(function (module, callback) {
 
+                // clear loadingTimeId
+
+                clearTimeout(loadTimeoutId)
+
+                // clear transTimeoutId
+
+                clearTimeout(transTimeoutId)
+
                 // module status
 
-                module.status[dimension] = 'loaded'
+                module.status[dimension] = 1
 
                 // module element loaded
                 
@@ -622,8 +764,13 @@ define('~/transform', [], function (require, module, exports) {
 
                 // callback
                 
-                if ( readied ) {
-                    readied(module, callback)
+                if ( readied && that._process !== -2 ) {
+
+                    // 给足 DOM 渲染时间
+
+                    rIC(() => {
+                        readied(module, callback)
+                    })
                 } else {
                     callback()
                 }
@@ -644,36 +791,23 @@ define('~/transform', [], function (require, module, exports) {
 
             }).get(function (module) {
 
-                // clear loadingTimeId
+                // end time
 
-                clearTimeout(that.loadingTimeId)
+                module.timestamp = Date.now()
 
                 // close loading
 
                 module.loading(0)
 
-                if ( that.modulu ) {
-                    that.modulu.loading(0)
-                }
-
-                // timeout refresh
-
-                if ( module.timeout ) {
-                    if ( id == 'frameworks' ) return
-                    setTimeout(function () {
-                        module.refresh()
-                    }, 100)
-                }
-
             }).error(function (module) {
 
-                that.inProcess = -1
+                that._process = -1
 
                 module.trigger('error')
 
                 // module status
 
-                module.status[dimension] = 'error'
+                module.status[dimension] = -1
 
                 // callback
                 
@@ -687,10 +821,10 @@ define('~/transform', [], function (require, module, exports) {
                     module.onerror()
                 }
             })
-        },
+        }
 
-        loading : function (id, display) {
-            var modules = App.modules
+        loading (id, display) {
+            let modules = App.modules
               , module = modules[id]
               , loader
 
@@ -771,15 +905,15 @@ define('~/transform', [], function (require, module, exports) {
                     break
             }
 
-        },
+        }
 
-        container : function (id) {
-            var that = this
-            var module = App.modules[id]
-            var config = module.config
-            var target = id == "system" ? App.fixedViewport : config.absolute === false ? App.relativeViewport : App.absoluteViewport
+        container (id) {
+            let that = this
+            let module = App.modules[id]
+            let config = module.config
+            let target = id == "system" ? App.fixedViewport : config.absolute === false ? App.relativeViewport : App.absoluteViewport
 
-            var container = document.createElement("module-container")
+            let container = document.createElement("module-container")
                 container.setAttribute("name", id)
                 container.setAttribute("type", ["frameworks", "system"].consistOf(id) ? id : "module")
 
@@ -798,9 +932,9 @@ define('~/transform', [], function (require, module, exports) {
             // append
 
             target.appendChild(container)
-        },
+        }
 
-        animations : function (type) {
+        animations (type) {
             var A = this.Animations
 
             switch (type) {
@@ -845,20 +979,20 @@ define('~/transform', [], function (require, module, exports) {
                     return false
                 break
             }
-        },
+        }
 
-        transform : function (callback) {
-            var that = this
-            var events = this.events
-            var module = this.module
-            var modulu = this.modulu
-            var modules = this.moduli
-            var cutting = this.cutting
-            var backset = (modules.length === 1 || module.config.level === modulu.config.level) ? false : (module.config.level > modulu.config.level ? 0 : 1)
-            var reverse = backset === 0 ? false : true
-            var animation = function (event) { event.callback() }
+        transform (callback) {
+            let that = this
+            let events = this.events
+            let module = this.module
+            let modulu = this.modulu
+            let modules = this.moduli
+            let cutting = this.cutting
+            let backset = (modules.length === 1 || module.config.level === modulu.config.level) ? false : (module.config.level > modulu.config.level ? 0 : 1)
+            let reverse = backset === 0 ? false : true
+            let animation = function (event) { event.callback() }
 
-            var views = cutting ? [
+            let views = cutting ? [
                                     module.config.absolute === false 
                                     ? App.relativeViewport 
                                     : App.absoluteViewport
@@ -871,10 +1005,10 @@ define('~/transform', [], function (require, module, exports) {
                                     modulu.elements.container
                                 ]
 
-            var x = 0, y = 0, attach = "center", origin = "center"
-            var width = device.ui.width
-            var height = device.ui.height
-            var touches = events ? events.touches : null
+            let x = 0, y = 0, attach = "center", origin = "center"
+            let width = device.ui.width
+            let height = device.ui.height
+            let touches = events ? events.touches : null
 
             touches = touches ? touches.srcEvent : null
             
@@ -919,13 +1053,6 @@ define('~/transform', [], function (require, module, exports) {
                 }
             }
 
-            // prefetched
-
-            if ( this.prefetched ) {
-                callback()
-                callback = noop
-            }
-
             // animation end
 
             function end (stillness) {
@@ -949,8 +1076,8 @@ define('~/transform', [], function (require, module, exports) {
                     view       : views,
                     x          : x,
                     y          : y,
-                    in         : views[0].Animate(),
-                    out        : views[1].Animate(),
+                    in         : views[0].Animate().clear(),
+                    out        : views[1].Animate().clear(),
                     width      : width,
                     height     : height,
                     viewport   : [App.relativeViewport, App.absoluteViewport],
@@ -964,10 +1091,10 @@ define('~/transform', [], function (require, module, exports) {
                     touches    : touches
                 })
             })
-        },
+        }
 
-        dispatch : function () {
-            var events = {
+        dispatch () {
+            let events = {
                     ids : this.ids, 
                     modules : this.moduli
                 }
@@ -980,9 +1107,9 @@ define('~/transform', [], function (require, module, exports) {
                 this.module.trigger('show', events)
                 this.modulu.trigger('hide', events)
             } catch (e) {}
-        },
+        }
 
-        start : function (callback) {
+        start (callback) {
 
             // transformstart on event
 
@@ -1012,9 +1139,9 @@ define('~/transform', [], function (require, module, exports) {
                 ids: this.ids,
                 modules: this.moduli
             })
-        },
+        }
 
-        end : function (stillness) {
+        end (stillness) {
 
             /*
              * cutting 模块类型集装箱视图切换
@@ -1028,7 +1155,7 @@ define('~/transform', [], function (require, module, exports) {
 
                     // clear cache
             
-                    if ( !this.self && (this.modulu.config.update || this.modulu.config.cache <= 0) ) {
+                    if ( !this.self && (this.modulu.config.update || this.modulu.config.destroy || this.modulu.config.cache <= 0) ) {
                         this.modulu.destroy(1)
                     }
 
@@ -1058,15 +1185,9 @@ define('~/transform', [], function (require, module, exports) {
                 ids: this.ids,
                 modules: this.moduli
             })
+        }
 
-            // queue
-
-            if ( this.queue.length ) {
-                this.to.apply(this, this.queue.pop())
-            }
-        },
-
-        cut : function (stillness) {
+        cut (stillness) {
             
             /*
              * cut : 场景切牌
@@ -1091,125 +1212,14 @@ define('~/transform', [], function (require, module, exports) {
                 }
             }
 
-        },
+        }
 
-        then : function (callback) {
+        then (callback) {
             this.callback = callback || noop
 
             return this
         }
     }
-
-
-    // Animations
-
-    Transform.prototype.Animations = {
-        flip : function (e) {
-            e.in.duration(0).perspective(1000).to(0, 0, 0).opacity(0).rotate3d(0, 1, 0, 90*e.direction).end(function () {
-                e.out.duration(300).perspective(1000).rotate3d(0, 1, 0, -90*e.direction).end(function () {
-                    e.out.duration(0).opacity(0).end()
-                    e.in.duration(0).opacity(1).end(function () {
-                        e.in.duration(300).rotate3d(0, 1, 0, 0).end(function () {
-                            e.callback(false)
-                        })
-                    })
-                })
-            })
-        },
-        fade : function (type) {
-            return function (e) {
-                var inO, outO, inV, outV
-                switch (type) {
-                    case 0:
-                        inO = 1
-                        outO = 0
-                        inV = e.in
-                        outV = e.out
-                    break
-                    case 1:
-                        inO = 0
-                        outO = 1
-                        inV = outV = e.in
-                }
-                inV.duration(0).to(0, 0, 0).opacity(inO).end(function () {
-                    outV.duration(300).opacity(outO).end(function () {
-                        e.callback(false)
-                    })
-                })
-            }
-        },
-        slide : function (type) {
-            return function (e) {
-                var inX, outX, inY, outY
-                switch (type) {
-                    case 0:
-                        outY = e.height
-                        inY = -outY
-                        inX = outX = 0
-                    break
-                    case 1:
-                        inX = e.width
-                        outX = -inX
-                        inY = outY = 0
-                    break
-                    case 2:
-                        inY = e.height
-                        outY = -inY
-                        inX = outX = 0
-                    break
-                    case 3:
-                        outX = e.width
-                        inX = -outX
-                        inY = outY = 0
-                    break
-                }
-
-                if ( e.reverse ) {
-                    e.in.duration(0).to(inX, inY, 0).end(function () {
-                        e.in.duration(300).to(0, 0, 0).end()
-                        e.out.duration(300).to(outX, outY, 0).end(function () {
-                            e.callback(false)
-                        })
-                    })
-                } else {
-                    e.in.duration(0).to(inX, inY, 0).end(function () {
-                            e.out.duration(300).to(outX, outY, 0).end()
-                            e.in.duration(300).to(0, 0, 0).end(function () {
-                                e.callback(false)
-                            })
-                        })
-                    }
-                }
-        },
-        zoom : function (type) {
-            return function (e) {
-                switch (type) {
-                    case 0:
-                        e.in.origin(e.attach).duration(0).to(0, 0, 0).scale(2.5).end(function () {
-                            e.out.origin(e.origin).duration(0).to(0, 0, 0).opacity(1).scale(1).end(function () {
-                                e.in.duration(300).scale(1).end()
-                                e.out.duration(300).opacity(0).scale(0).end(function () {
-                                    e.callback(false)
-                                })
-                            })
-                        })
-                    break
-                    case 1:
-                        e.in.origin(e.origin).duration(0).to(0, 0, 0).scale(0).end(function () {
-                            e.out.origin(e.attach).duration(0).to(0, 0).scale(1).end(function () {
-                                e.in.to(0, 0, 0).duration(300).scale(1).end(function () {
-                                    e.callback(false)
-                                })
-                                e.out.duration(300).scale(2.5).end()
-                            })
-                        })
-                    break
-                }
-
-            }
-        }
-    }
-
 
     module.exports = Transform
 })
