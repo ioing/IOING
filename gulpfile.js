@@ -89,21 +89,21 @@ let mkdirs = (dirpath, mode) => {
 
 
 let libs = [
-  'src/lib/unify.js',
-  'src/lib/application.js',
-  'src/lib/proto.js',
-  'src/lib/transform.js',
-  'src/lib/template.js',
-  'src/lib/dom.js',
-  'src/lib/css.js',
-  'src/lib/source.js',
-  'src/lib/loader.js',
-  'src/lib/sandbox.js',
-  'src/lib/promise.js',
-  'src/lib/query.js',
-  'src/lib/animate.js',
-  'src/lib/touch.js',
-  'src/lib/scroll.js'
+  'src/ioing/unify.js',
+  'src/ioing/application.js',
+  'src/ioing/proto.js',
+  'src/ioing/transform.js',
+  'src/ioing/template.js',
+  'src/ioing/dom.js',
+  'src/ioing/css.js',
+  'src/ioing/source.js',
+  'src/ioing/loader.js',
+  'src/ioing/sandbox.js',
+  'src/ioing/promise.js',
+  'src/ioing/query.js',
+  'src/ioing/animate.js',
+  'src/ioing/touch.js',
+  'src/ioing/scroll.js'
 ]
 
 // bulid ioing
