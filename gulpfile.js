@@ -89,21 +89,21 @@ let mkdirs = (dirpath, mode) => {
 
 
 let libs = [
-  'src/ioing/unify.js',
-  'src/ioing/application.js',
-  'src/ioing/proto.js',
-  'src/ioing/transform.js',
-  'src/ioing/template.js',
-  'src/ioing/dom.js',
-  'src/ioing/css.js',
-  'src/ioing/source.js',
-  'src/ioing/loader.js',
-  'src/ioing/sandbox.js',
-  'src/ioing/promise.js',
-  'src/ioing/query.js',
-  'src/ioing/animate.js',
-  'src/ioing/touch.js',
-  'src/ioing/scroll.js'
+  'dist/ioing-es.js',
+  // 'src/ioing/application.js',
+  // 'src/ioing/proto.js',
+  // 'src/ioing/transform.js',
+  // 'src/ioing/template.js',
+  // 'src/ioing/dom.js',
+  // 'src/ioing/css.js',
+  // 'src/ioing/source.js',
+  // 'src/ioing/loader.js',
+  // 'src/ioing/sandbox.js',
+  // 'src/ioing/promise.js',
+  // 'src/ioing/query.js',
+  // 'src/ioing/animate.js',
+  // 'src/ioing/touch.js',
+  // 'src/ioing/scroll.js'
 ]
 
 // bulid ioing
@@ -129,6 +129,7 @@ gulp.task("concat:ioing", (cb) => {
     .pipe(concat('ioing.js'))
     .pipe(babel({
       presets: ['es2015', 'stage-3'],
+      "compact": false,
     }))
 
   if (release) {

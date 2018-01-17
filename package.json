@@ -4,28 +4,35 @@
   "description": "",
   "main": "gulpfile.js",
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "extract-text-webpack-plugin": "^0.8.2",
-    "git-rev-sync": "^1.9.1"
-  },
-  "devDependencies": {
+    "babel-eslint": "^8.0.3",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-stage-3": "^6.11.0",
     "del": "^2.2.1",
+    "es6-imports-to-commonjs": "^1.0.0",
+    "eslint": "^4.13.0",
+    "extract-text-webpack-plugin": "^0.8.2",
+    "git-rev-sync": "^1.9.1",
     "gulp": "^3.9.1",
-    "gulp-livereload": "^3.8.1",
-    "gulp-webserver": "^0.9.1",
-    "gulp-replace": "^0.5.3",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
-    "gulp-cssnano": "^2.1.2",
-    "gulp-rename": "^1.2.2",
+    "gulp-babel-script-tag": "^1.0.0",
     "gulp-concat": "^2.6.0",
+    "gulp-create-ioing-demo": "^1.0.2",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-imports-to-commonjs": "^1.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.3",
     "gulp-uglify": "^2.0.0",
-    "gulp-watch": "^4.3.9"
+    "gulp-watch": "^4.3.9",
+    "gulp-webserver": "^0.9.1",
+    "rollup": "^0.51.3",
+    "rollup-plugin-babel": "^3.0.2",
+    "uglify-js": "^3.1.8"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node src/build/build.js"
   },
   "author": "",
   "license": "ISC"
