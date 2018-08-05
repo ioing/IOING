@@ -1,0 +1,16 @@
+
+h1 {
+  position: absolute;
+    width: 100%;
+    top: 45%;
+  font-size: 36dp;
+  color: #333;
+  font-weight: 300;
+  text-align: center;
+  opacity: 0;
+  transition: opacity .3s;
+}
+h1.active {
+  opacity: 1;
+}
+          

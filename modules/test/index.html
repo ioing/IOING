@@ -1,0 +1,21 @@
+
+<script sync>
+  scope.cur = 0
+</script>
+<scroll fullscreen>
+  <scrolling>
+    <loop lang as val i>
+      <h1 class="{{cur == i ? 'active' : ''}}">{val}</h1>
+    </loop>
+  </scrolling>
+</scroll>
+<script>
+    setInterval(function () {
+      if ( scope.cur == scope.lang.length - 1 ) {
+        scope.cur = 0
+      } else {
+        scope.cur++
+      }
+    }, 2500)
+</script>
+          
