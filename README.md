@@ -80,7 +80,7 @@ animation = [type]
 <switch-slider value=on></switch-slider>
 ```
 ### DOM Plus: Function Tag Development
-```html
+```xml
 <scroll>
   <scrolling>
     <loop colorful as value key>
