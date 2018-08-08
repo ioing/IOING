@@ -1,8 +1,8 @@
 
 
-# 第一步：sudo npm install -g ioing-cli  （全局安装 ioing）
-# 第二部：ioi init （会车后？Template输入 ioing ，按照引导生成项目）
-# 第三部：ioi build 或者 ioi dev （运行项目）
+## 第一步：sudo npm install -g ioing-cli  （全局安装 ioing）
+## 第二部：ioi init （会车后？Template输入 ioing ，按照引导生成项目）
+## 第三部：ioi build 或者 ioi dev （运行项目）
 
 
 
