@@ -1,15 +1,8 @@
 
 
 
-
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
-# NEW: https://github.com/ioing/Lath
+<h1 style="font-size: 70px; color: red; text-algin: center">新版更名为 Lath</h1>
+<h1 style="font-size: 40px; color: red">请访问新版: https://github.com/ioing/Lath</h1>
 
 
 
@@ -18,21 +11,14 @@
 
 
 
+<hr />
 
 
----------------------------------OLD---------------------------------
----------------------------------OLD---------------------------------
----------------------------------OLD---------------------------------
----------------------------------OLD---------------------------------
----------------------------------OLD---------------------------------
+---------------------------------该仓库已废弃---------------------------------
 
 ## 第一步：sudo npm install -g ioing-cli  （全局安装 ioing）
 ## 第二部：ioi init （会车后？Template输入 ioing ，按照引导生成项目）
 ## 第三部：ioi build 或者 ioi dev （运行项目）
-
-
-
-
 
 
 
